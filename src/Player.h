@@ -77,8 +77,7 @@ public:
 
 			void				SetVolume(float volume);
 			float				Volume() const { return fVolume; }
-			void				SetNormalized(bool normalized)
-									{ fLoudness.SetEnabled(normalized); }
+			void				SetNormalized(bool normalized);
 									// the loudness evened (Loudness)
 
 			int32				SubtitleCount() const;

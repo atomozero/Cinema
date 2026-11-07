@@ -71,6 +71,20 @@ Loudness::Reset()
 }
 
 
+float
+Loudness::GainDB() const
+{
+	return 20.0f * log10f(std::max(fGain, 1e-6f));
+}
+
+
+float
+Loudness::LevelDB() const
+{
+	return 10.0f * log10f(std::max(fPower, 1e-12f));
+}
+
+
 void
 Loudness::Process(const float* in, int16* out, int32 frames, int32 channels,
 	float rate)

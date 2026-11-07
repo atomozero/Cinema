@@ -1256,13 +1256,16 @@ Player::_LiveLoop()
 			fprintf(stderr, "live: decoded %d shown %d dropped %d late %d "
 				"audio %d skip %d | clock %.2f next %.2f | packets %zu "
 				"(%.1fs) frames %zu read %zu sound %.2fs | %s cinema %.0f%% "
-				"system %.0f%%\n", decoded, shown, dropped,
+				"system %.0f%% | level %.1f dB gain %+.1f dB%s\n", decoded,
+				shown, dropped,
 				lateCount, audioFrames, fLiveSkipLevel, _LiveClock() / 1e6,
 				head / 1e6, packets.size(), queuedSpan() / 1e6, frames.size(),
 				readCount,
 				fFrameSize > 0 && fSound.frame_rate > 0
 					? fill / (double)fFrameSize / fSound.frame_rate : 0.0,
-				fOverlay != NULL ? "overlay" : "bgra", teamLoad, systemLoad);
+				fOverlay != NULL ? "overlay" : "bgra", teamLoad, systemLoad,
+				fLoudness.LevelDB(), fLoudness.GainDB(),
+				fLoudness.IsEnabled() ? "" : " (even volume off)");
 			decoded = shown = dropped = lateCount = audioFrames = 0;
 			nextReport += 5000000;
 		}

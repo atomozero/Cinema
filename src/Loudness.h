@@ -32,6 +32,9 @@ public:
 			bool				IsEnabled() const { return fEnabled; }
 			void				Reset();
 									// another video: its level is not known
+			float				GainDB() const;
+			float				LevelDB() const;
+									// now, for the reports of the player
 
 			void				Process(const float* in, int16* out,
 									int32 frames, int32 channels, float rate);

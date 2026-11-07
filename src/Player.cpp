@@ -548,6 +548,17 @@ Player::SetVolume(float volume)
 	steps of 10% of the arrow keys could hardly be heard.
 */
 void
+Player::SetNormalized(bool normalized)
+{
+	// CINEMA_EVEN_VOLUME=0 or 1 overrides the setting, to compare the two
+	const char* forced = getenv("CINEMA_EVEN_VOLUME");
+	if (forced != NULL && forced[0] != '\0')
+		normalized = strcmp(forced, "0") != 0;
+	fLoudness.SetEnabled(normalized);
+}
+
+
+void
 Player::_ApplyVolume()
 {
 	if (fSoundPlayer == NULL)
