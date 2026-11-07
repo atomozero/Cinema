@@ -445,7 +445,10 @@ Player::_OpenLive()
 		if (rate > 0 && channels > 0) {
 			AVChannelLayout layout;
 			av_channel_layout_default(&layout, channels);
-			swr_alloc_set_opts2(&fLiveResampler, &layout, AV_SAMPLE_FMT_S16,
+			// float: without the normalization of the matrix swresample
+			// does for 16-bit samples, which turned 5.1 down by 7.6 dB,
+			// dialogue included; Loudness makes them 16-bit ones
+			swr_alloc_set_opts2(&fLiveResampler, &layout, AV_SAMPLE_FMT_FLT,
 				rate, &fLiveAudio->ch_layout, fLiveAudio->sample_fmt,
 				fLiveAudio->sample_rate, 0, NULL);
 			av_channel_layout_uninit(&layout);
@@ -818,7 +821,7 @@ Player::_LivePushSound(AVFrame* frame)
 		AVChannelLayout out;
 		av_channel_layout_default(&out, fSound.channel_count);
 		swr_free(&fLiveResampler);
-		swr_alloc_set_opts2(&fLiveResampler, &out, AV_SAMPLE_FMT_S16,
+		swr_alloc_set_opts2(&fLiveResampler, &out, AV_SAMPLE_FMT_FLT,
 			(int)fSound.frame_rate, &frame->ch_layout,
 			(AVSampleFormat)frame->format, frame->sample_rate, 0, NULL);
 		av_channel_layout_uninit(&out);
@@ -833,16 +836,18 @@ Player::_LivePushSound(AVFrame* frame)
 	int most = swr_get_out_samples(fLiveResampler, frame->nb_samples);
 	if (most <= 0)
 		return;
-	size_t before = fLivePcm.size();
-	fLivePcm.resize(before + most * fFrameSize);
-	uint8_t* planes[1] = { fLivePcm.data() + before };
+	int channels = fSound.channel_count;
+	fLiveFloat.resize((size_t)most * channels);
+	uint8_t* planes[1] = { (uint8_t*)fLiveFloat.data() };
 	int written = swr_convert(fLiveResampler, planes, most,
 		(const uint8_t**)frame->extended_data, frame->nb_samples);
-	if (written <= 0) {
-		fLivePcm.resize(before);
+	if (written <= 0)
 		return;
-	}
+	// evened, limited and made 16-bit, at the end of what waits for the ring
+	size_t before = fLivePcm.size();
 	fLivePcm.resize(before + written * fFrameSize);
+	fLoudness.Process(fLiveFloat.data(), (int16*)(fLivePcm.data() + before),
+		written, channels, fSound.frame_rate);
 	if (fLiveSoundEnd != AV_NOPTS_VALUE)
 		fLiveSoundEnd += (int64)written * 1000000 / (int64)fSound.frame_rate;
 }

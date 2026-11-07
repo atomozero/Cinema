@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	3879561304
+1	ukrainian	application/x-vnd.atomozero-Cinema	1009050093
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -59,6 +59,7 @@ Music	Categories		Музика
 The key works.	Settings		Ключ працює.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
+Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
 Download	Detail		Завантажити
 Remove	Settings		Вилучити
 Downloaded	Window		Завантажені

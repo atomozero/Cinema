@@ -157,6 +157,7 @@ CinemaWindow::CinemaWindow()
 	fPlayer = new Player(BMessenger(this));
 	// as it was left the last time
 	fPlayer->SetVolume(fSettings.volume);
+	fPlayer->SetNormalized(fSettings.evenVolume);
 	fPlayer->SetSubtitlePreference(fSettings.subtitleLanguage.String());
 	fPlayerView = new PlayerView(fPlayer);
 	fPlayerShown = false;
@@ -1144,6 +1145,8 @@ CinemaWindow::MessageReceived(BMessage* message)
 		{
 			int32 height = fSettings.videoHeight;
 			fSettings = Settings::Load();
+			// at once, on the video playing too
+			fPlayer->SetNormalized(fSettings.evenVolume);
 			if (!fSettings.searchSource.IsEmpty())
 				fSearchProvider = fSettings.searchSource;
 			_UpdateSources();

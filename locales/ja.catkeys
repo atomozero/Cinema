@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	3879561304
+1	japanese	application/x-vnd.atomozero-Cinema	1009050093
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -59,6 +59,7 @@ Music	Categories		音楽
 The key works.	Settings		キーは有効です。
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
+Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
 Download	Detail		ダウンロード
 Remove	Settings		削除
 Downloaded	Window		ダウンロード済み

@@ -76,6 +76,10 @@ star, and the stars have a **Favorites** tab of their own.
 The settings, in the **≡** menu or with Alt+,, hold the TMDB key, the folders
 of the library, the TV lists, the video quality, whether videos play in Cinema
 or in MediaPlayer and from where they were left, and where a search goes first.
+**Even volume**, on unless you turn it off, brings films and TV, which are
+mastered well below music to leave room for their peaks, up to the level of
+music, and keeps an explosion from drowning the dialogue after it; it costs
+about half a percent of one core of the AC100.
 
 Everything works from the keyboard: the arrows choose, **Enter** or **Space**
 plays, **D** downloads, **S** gives a star, **F** toggles full screen and

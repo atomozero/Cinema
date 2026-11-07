@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	3879561304
+1	portuguese	application/x-vnd.atomozero-Cinema	1009050093
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -59,6 +59,7 @@ Music	Categories		Música
 The key works.	Settings		A chave funciona.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: vídeos para Haiku e RenkuOS, do YouTube, do Internet Archive, do PeerTube, do BitTorrent e das suas próprias pastas.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		O Cinema precisa do yt-dlp e do python3, e do cinema-helper.py ao lado
+Even volume: films and TV as loud as music	Settings		Volume uniforme: filmes e TV tão altos quanto a música
 Download	Detail		Baixar
 Remove	Settings		Remover
 Downloaded	Window		Baixados

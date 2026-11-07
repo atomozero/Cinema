@@ -63,6 +63,7 @@ private:
 			BMenuField*			fTvCountry;
 			BCheckBox*			fPlayInCinema;
 			BCheckBox*			fResume;
+			BCheckBox*			fEvenVolume;
 			BMenuField*			fQuality;
 			BMenuField*			fSource;
 			BFilePanel*			fPanel;

@@ -139,6 +139,10 @@ Player::_Start(const char* address, bigtime_t startAt, bool sameVideo)
 	// tracks the helper gave and their text, stay
 	fSameVideo = sameVideo;
 	_Close(sameVideo);
+	// another video: its loudness is measured again; the same one opened
+	// again at another place keeps it, without a jump
+	if (!sameVideo)
+		fLoudness.Reset();
 	// its threads are gone: what they sent is of a session before
 	fSession++;
 	fStatStart = 0;
@@ -548,10 +552,12 @@ Player::_ApplyVolume()
 {
 	if (fSoundPlayer == NULL)
 		return;
+	// 40 log10: -4 dB at 80%, -12 at 50%, -28 at 20%, as the ear hears it;
+	// 3 dB each tenth made 80% sound much softer than other players
 	if (fVolume < 0.05f)
 		fSoundPlayer->SetVolume(0);
 	else
-		fSoundPlayer->SetVolumeDB(-30.0f * (1.0f - fVolume));
+		fSoundPlayer->SetVolumeDB(40.0f * log10f(fVolume));
 }
 
 
@@ -766,6 +772,11 @@ Player::_AudioLoop()
 		if (generation != fGeneration)
 			continue;
 		_StreamTime(header.start_time);
+		// evened and limited, as the sound of FFmpeg
+		if (fSound.format == media_raw_audio_format::B_AUDIO_SHORT) {
+			fLoudness.Process((int16*)buffer, (int32)frames,
+				(int32)fSound.channel_count, fSound.frame_rate);
+		}
 
 		BAutolock ring(fRingLock);
 		size_t bytes = std::min((size_t)frames * fFrameSize,

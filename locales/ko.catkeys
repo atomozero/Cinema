@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	3879561304
+1	korean	application/x-vnd.atomozero-Cinema	1009050093
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -59,6 +59,7 @@ Music	Categories		음악
 The key works.	Settings		키가 작동합니다.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube, Internet Archive, PeerTube, BitTorrent 및 내 폴더의 동영상을 보는 Haiku와 RenkuOS용 앱.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema를 사용하려면 yt-dlp와 python3, 그리고 같은 위치의 cinema-helper.py가 필요합니다
+Even volume: films and TV as loud as music	Settings		균일한 음량: 영화와 TV를 음악만큼 크게
 Download	Detail		다운로드
 Remove	Settings		제거
 Downloaded	Window		다운로드한 동영상

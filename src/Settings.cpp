@@ -68,6 +68,7 @@ Settings::Load()
 	settings.tvOffered = archive.GetBool("tv offered", false);
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
+	settings.evenVolume = archive.GetBool("even volume", true);
 	return settings;
 }
 
@@ -86,6 +87,7 @@ Settings::Save() const
 	archive.AddBool("tv offered", tvOffered);
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);
+	archive.AddBool("even volume", evenVolume);
 	write_file(path, &archive, NULL);
 }
 

@@ -14,6 +14,7 @@
 #include <atomic>
 #include <vector>
 
+#include "Loudness.h"
 #include "Subtitles.h"
 
 
@@ -76,6 +77,9 @@ public:
 
 			void				SetVolume(float volume);
 			float				Volume() const { return fVolume; }
+			void				SetNormalized(bool normalized)
+									{ fLoudness.SetEnabled(normalized); }
+									// the loudness evened (Loudness)
 
 			int32				SubtitleCount() const;
 			bool				SubtitleTrack(int32 index,
@@ -209,6 +213,8 @@ private:
 			int64				fLiveBase;		// stream time of the clock's 0
 			int64				fLiveSoundEnd;	// stream time of the sound queued
 			std::vector<uint8>	fLivePcm;
+			std::vector<float>	fLiveFloat;	// out of the resampler
+			Loudness			fLoudness;
 			std::atomic<bool>	fLiveStopRead;	// the reader of the stream stops
 
 			Subtitles			fSubtitles;

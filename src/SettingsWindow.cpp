@@ -47,6 +47,7 @@ static const uint32 kMsgRemove = 'srem';
 static const uint32 kMsgFolderSelected = 'ssel';
 static const uint32 kMsgPlayInCinema = 'splc';
 static const uint32 kMsgResume = 'sres';
+static const uint32 kMsgEvenVolume = 'sevn';
 static const uint32 kMsgSource = 'ssrc';
 static const uint32 kMsgQuality = 'squa';
 static const uint32 kMsgTvSelected = 'stvs';
@@ -164,6 +165,10 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		"was left"), new BMessage(kMsgResume));
 	fResume->SetValue(fSettings.resume);
 	fResume->SetEnabled(fSettings.playInCinema);
+	fEvenVolume = new BCheckBox("even volume", B_TRANSLATE("Even volume: "
+		"films and TV as loud as music"), new BMessage(kMsgEvenVolume));
+	fEvenVolume->SetValue(fSettings.evenVolume);
+	fEvenVolume->SetEnabled(fSettings.playInCinema);
 
 	// how big the pictures of YouTube and PeerTube are
 	BPopUpMenu* qualities = new BPopUpMenu("qualities");
@@ -197,6 +202,7 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		.SetInsets(0)
 		.Add(fPlayInCinema)
 		.Add(fResume)
+		.Add(fEvenVolume)
 		.Add(fQuality)
 		.Add(qualityNote);
 
@@ -341,6 +347,7 @@ SettingsWindow::_Changed()
 	saved.resume = fSettings.resume;
 	saved.searchSource = fSettings.searchSource;
 	saved.videoHeight = fSettings.videoHeight;
+	saved.evenVolume = fSettings.evenVolume;
 	fSettings = saved;
 	fSettings.Save();
 	fTarget.SendMessage(kMsgSettingsChanged);
@@ -461,6 +468,11 @@ SettingsWindow::MessageReceived(BMessage* message)
 		case kMsgPlayInCinema:
 			fSettings.playInCinema = fPlayInCinema->Value() == B_CONTROL_ON;
 			fResume->SetEnabled(fSettings.playInCinema);
+			fEvenVolume->SetEnabled(fSettings.playInCinema);
+			_Changed();
+			break;
+		case kMsgEvenVolume:
+			fSettings.evenVolume = fEvenVolume->Value() == B_CONTROL_ON;
 			_Changed();
 			break;
 		case kMsgResume:
