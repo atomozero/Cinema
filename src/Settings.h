@@ -29,11 +29,23 @@ struct Settings {
 								// music, without jumps (Loudness)
 	bool		overlay;		// the video overlay of the graphics card,
 								// where it has one: off where it shows
-								// only its key color, green
+								// only its key color, green. On by default
+								// on ARM, where the AC100's works and the
+								// processor needs it; off on x86, where
+								// some drivers accept it and show nothing
 
 				Settings() : playInCinema(true), resume(true),
 					videoHeight(0), tvOffered(false), volume(1.0f),
-					evenVolume(true), overlay(true) {}
+					evenVolume(true), overlay(OverlayByDefault()) {}
+
+	static	bool		OverlayByDefault()
+						{
+#if defined(__arm__) || defined(__aarch64__)
+							return true;
+#else
+							return false;
+#endif
+						}
 
 	static	Settings	Load();
 			void		Save() const;

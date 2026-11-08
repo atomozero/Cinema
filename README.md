@@ -41,10 +41,11 @@ volume, shown upright at the right, **F** goes to full screen, **Esc** closes
 the video and **M** plays it in MediaPlayer instead. Subtitles come from
 YouTube, from a subtitle file next to the video, or from the text tracks inside
 it: the **CC** button chooses one and **V** turns them on and off. The star
-next to it, or **S**, keeps the video among the favorites. Where the graphics
-card has a video overlay Cinema uses it; if videos show only a green
-background, its driver offers one it does not show: press **O** while a video
-plays, or turn it off in the settings. The video
+next to it, or **S**, keeps the video among the favorites. On 32-bit ARM
+Cinema shows videos through the video overlay of the graphics card, which
+spares the processor; on x86 it draws them itself unless you turn the overlay
+on in the settings, as some drivers accept one and show only its green
+background. **O** switches it while a video plays. The video
 quality is in the settings: Automatic means 360p on 32-bit ARM and 720p
 elsewhere, and you can ask for anything from 360p to 1080p. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for

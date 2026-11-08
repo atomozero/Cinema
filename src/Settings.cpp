@@ -69,7 +69,10 @@ Settings::Load()
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
 	settings.evenVolume = archive.GetBool("even volume", true);
-	settings.overlay = archive.GetBool("overlay", true);
+	// a key of its own since 1.4.3: 1.4.2 saved "overlay" on for all, and
+	// x86 is off by default now
+	settings.overlay = archive.GetBool("use overlay",
+		Settings::OverlayByDefault());
 	return settings;
 }
 
@@ -89,7 +92,7 @@ Settings::Save() const
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);
 	archive.AddBool("even volume", evenVolume);
-	archive.AddBool("overlay", overlay);
+	archive.AddBool("use overlay", overlay);
 	write_file(path, &archive, NULL);
 }
 
