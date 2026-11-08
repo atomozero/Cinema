@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2165559810
+1	japanese	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -27,6 +27,7 @@ technology review	Categories		テクノロジー レビュー
 Continue watching	Window		続きを見る
 Move to Trash	Window		ゴミ箱に移動
 Getting the video ready	Player		動画を準備中
+Follow	Grid		フォロー
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
 %eta% left	Window		残り %eta%
 The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
@@ -55,6 +56,7 @@ Downloaded	Categories		ダウンロード済み
 This video can't be played here, try another one.	Window		この動画はここでは再生できません。別の動画をお試しください。
 TV series	Window		テレビシリーズ
 yesterday	Detail		昨日
+Following	Grid		フォロー中
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
 No subtitles available	Player		利用できる字幕がありません
 Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
@@ -102,6 +104,7 @@ science explained	Categories		科学 解説
 Download	Grid		ダウンロード
 Movies	Window		映画
 Looking for the videos…	Window		動画を検索中…
+%count% subscribers	Detail		チャンネル登録者数 %count%人
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容
 Following	Detail		フォロー中
 automatic	Player		自動生成

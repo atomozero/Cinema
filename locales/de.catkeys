@@ -1,4 +1,4 @@
-1	german	application/x-vnd.atomozero-Cinema	2165559810
+1	german	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		YouTube ist nicht erreichbar: Ist das Netzwerk an?
 Video quality:	Settings		Videoqualität:
 Downloaded	Detail		Heruntergeladen
@@ -27,6 +27,7 @@ technology review	Categories		Technik Test
 Continue watching	Window		Weiterschauen
 Move to Trash	Window		In den Papierkorb verschieben
 Getting the video ready	Player		Das Video wird vorbereitet
+Follow	Grid		Folgen
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{vor # Woche} other{vor # Wochen}}
 %eta% left	Window		noch %eta%
 The video could not be moved to the Trash: %error%	Window		Das Video konnte nicht in den Papierkorb verschoben werden: %error%
@@ -55,6 +56,7 @@ Downloaded	Categories		Heruntergeladen
 This video can't be played here, try another one.	Window		Dieses Video kann hier nicht abgespielt werden, versuche ein anderes.
 TV series	Window		Serien
 yesterday	Detail		gestern
+Following	Grid		Gefolgt
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{vor # Monat} other{vor # Monaten}}
 No subtitles available	Player		Keine Untertitel verfügbar
 Move \"%title%\" to the Trash?	Window		„%title%“ in den Papierkorb verschieben?
@@ -102,6 +104,7 @@ science explained	Categories		Wissenschaft erklärt
 Download	Grid		Herunterladen
 Movies	Window		Filme
 Looking for the videos…	Window		Suche nach Videos…
+%count% subscribers	Detail		%count% Abonnenten
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Ein Reiter der oberen Leiste pro Zeile: Name = was auf YouTube gesucht wird
 Following	Detail		Gefolgt
 automatic	Player		automatisch

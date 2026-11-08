@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	2165559810
+1	chinese	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -27,6 +27,7 @@ technology review	Categories		科技评测
 Continue watching	Window		继续观看
 Move to Trash	Window		移到废纸篓
 Getting the video ready	Player		正在准备视频
+Follow	Grid		关注
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#周前}}
 %eta% left	Window		剩余 %eta%
 The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
@@ -55,6 +56,7 @@ Downloaded	Categories		已下载
 This video can't be played here, try another one.	Window		此视频无法在这里播放，请换一个试试。
 TV series	Window		电视剧
 yesterday	Detail		昨天
+Following	Grid		已关注
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
 No subtitles available	Player		没有可用的字幕
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
@@ -102,6 +104,7 @@ science explained	Categories		科学解说
 Download	Grid		下载
 Movies	Window		电影
 Looking for the videos…	Window		正在查找视频…
+%count% subscribers	Detail		%count% 位订阅者
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 每行一个顶部栏标签：名称 = 要在 YouTube 上搜索的内容
 Following	Detail		已关注
 automatic	Player		自动生成

@@ -318,6 +318,7 @@ CinemaWindow::_Search(const char* query, const char* provider)
 	fCards->SetVisibleItem((int32)0);
 	fCard = 0;
 	fGeneration++;
+	fGrid->ClearChannelHeader();
 	fGrid->SetMessage(B_TRANSLATE("Looking for the videos" B_UTF8_ELLIPSIS));
 	fHelper->Search(fGeneration, kResultCount, query, provider);
 }
@@ -403,6 +404,8 @@ CinemaWindow::_ShowCategory(int32 index)
 	const Category& category = fCategories[index];
 	if (category.IsChannel()) {
 		fGeneration++;
+		_SetChannelHeader(category.name.String(), category.channel.String(),
+			category.provider.String());
 		fGrid->SetMessage(B_TRANSLATE("Looking for the videos"
 			B_UTF8_ELLIPSIS));
 		fHelper->Channel(fGeneration, kResultCount, category.channel,
@@ -435,6 +438,7 @@ CinemaWindow::_ShowChannel(const char* name, const char* id)
 	fChannelProvider = provider != fChannelProviders.end()
 		? provider->second : BString();
 	fGeneration++;
+	_SetChannelHeader(name, id, fChannelProvider.String());
 	fGrid->SetMessage(B_TRANSLATE("Looking for the videos" B_UTF8_ELLIPSIS));
 	fHelper->Channel(fGeneration, kResultCount, id,
 		fChannelProvider.String());
@@ -476,6 +480,37 @@ CinemaWindow::_AddChannel(const char* name, const char* id)
 /*!	The tabs changed: the shelves of the home, which know them by their
 	place, are made again, now or when the page of a video over them closes.
 */
+/*!	The head of the videos of a channel: what is known of it now; the rest
+	comes with its videos.
+*/
+void
+CinemaWindow::_SetChannelHeader(const char* name, const char* id,
+	const char* provider)
+{
+	BString source(provider != NULL && provider[0] != '\0' ? provider
+		: fProvider.String());
+	// the channels of people: not TV lists, folders or the favorites
+	if ((source != "youtube" && source != "peertube" && source != "archive")
+		|| strcmp(id, "series") == 0) {
+		fGrid->ClearChannelHeader();
+		return;
+	}
+	ChannelHeader header;
+	if (fGrid->HasChannelHeader() && fGrid->Header().id == id)
+		header = fGrid->Header();
+	header.provider = source;
+	header.id = id;
+	if (header.name.IsEmpty() || header.id != fGrid->Header().id)
+		header.name = name;
+	MediaItem channel;
+	channel.provider = source;
+	channel.channelId = id;
+	header.followed = _Followed(channel);
+	header.favorite = Favorites::Has(id);
+	fGrid->SetChannelHeader(header);
+}
+
+
 /*!	1 when the channel of the item is one of the tabs, 0 when it is not, -1
 	when it has none that can be one (a file of the library, TV).
 */
@@ -496,7 +531,18 @@ CinemaWindow::_Followed(const MediaItem& item) const
 void
 CinemaWindow::_HomeChanged()
 {
-	// the button of the page shown follows the tabs
+	// the buttons of the page and of the channel shown follow the tabs
+	if (fGrid->HasChannelHeader()) {
+		ChannelHeader header = fGrid->Header();
+		MediaItem channel;
+		channel.provider = header.provider;
+		channel.channelId = header.id;
+		int32 followed = _Followed(channel);
+		if (followed != header.followed) {
+			header.followed = followed;
+			fGrid->SetChannelHeader(header);
+		}
+	}
 	if (fDetailsShown) {
 		MediaItem shown = fDetail->Item();
 		fDetail->SetFollowed(shown.channelId.String(), _Followed(shown));
@@ -594,6 +640,24 @@ CinemaWindow::_Thumbnails(const std::vector<MediaItem>& videos,
 void
 CinemaWindow::_ShowResults(BMessage* message)
 {
+	const char* aboutName;
+	if (fGrid->HasChannelHeader()
+		&& message->FindString("about name", &aboutName) == B_OK) {
+		ChannelHeader header = fGrid->Header();
+		if (aboutName[0] != '\0')
+			header.name = aboutName;
+		header.handle = message->GetString("about handle", "");
+		header.followers = message->GetInt64("about followers", 0);
+		header.description = message->GetString("about description", "");
+		header.avatarUrl = message->GetString("about avatar", "");
+		fGrid->SetChannelHeader(header);
+		if (!header.avatarUrl.IsEmpty()) {
+			BMessage fetch(kMsgFetchPicture);
+			fetch.AddString("id", BString("avatar:") << header.id);
+			fetch.AddString("url", header.avatarUrl);
+			fWorker->PostMessage(&fetch);
+		}
+	}
 	std::vector<MediaItem> videos = _Videos(message);
 	if (videos.empty()) {
 		fGrid->SetMessage(B_TRANSLATE("No videos found"));
@@ -884,6 +948,14 @@ void
 CinemaWindow::_Picture(BMessage* message)
 {
 	BString id = message->GetString("id", "");
+	if (id.StartsWith("avatar:")) {
+		if (fGrid->HasChannelHeader()
+			&& id == BString("avatar:") << fGrid->Header().id) {
+			fGrid->SetChannelAvatar(Pictures::Load(
+				message->GetString("path", ""), S(96)));
+		}
+		return;
+	}
 	if (!fDetailsShown || id != fDetailsId)
 		return;
 	BBitmap* picture = Pictures::Load(message->GetString("path", ""),
@@ -1483,6 +1555,13 @@ CinemaWindow::MessageReceived(BMessage* message)
 				_ShowChannel(title.String(), id.String());
 				break;
 			}
+			if (strcmp(message->GetString("kind", ""), "channel") == 0) {
+				// a channel given a star: its latest videos
+				if (provider != NULL && provider[0] != '\0')
+					fChannelProviders[id] = provider;
+				_ShowChannel(title.String(), id.String());
+				break;
+			}
 			const char* path = message->GetString("path", NULL);
 			auto downloaded = fDownloaded.find(id);
 			if (path == NULL && downloaded != fDownloaded.end()
@@ -2021,6 +2100,7 @@ CinemaWindow::_ShowDownloads()
 	fCard = 0;
 	fCategoryBar->SetSelected(fCategoryBar->DownloadsIndex());
 	fChannelId = "";
+	fGrid->ClearChannelHeader();
 	// what is still on its way for a search is not wanted any more
 	fGeneration++;
 	fDownloaded.clear();

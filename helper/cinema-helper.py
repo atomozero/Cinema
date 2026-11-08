@@ -376,6 +376,38 @@ def keep_stream(media_id, url):
 		pass
 
 
+def about_path(provider_id, channel_id):
+	if not cache:
+		return None
+	key = hashlib.sha1(("%s %s" % (provider_id, channel_id)).encode())
+	return os.path.join(cache, "about-%s.json" % key.hexdigest()[:16])
+
+
+def keep_about(provider_id, channel_id, about):
+	"""What a channel is, kept with its list: shown even when the list comes
+	from the cache."""
+	path = about_path(provider_id, channel_id)
+	if not path or not about or not about.get("name"):
+		return
+	temporary = path + ".part.%d" % threading.get_ident()
+	try:
+		with open(temporary, "w", encoding="utf-8") as file:
+			json.dump(about, file, ensure_ascii=False)
+		os.replace(temporary, path)
+	except OSError:
+		pass
+
+
+def kept_about(provider_id, channel_id):
+	path = about_path(provider_id, channel_id)
+	try:
+		with open(path, encoding="utf-8") as file:
+			about = json.load(file)
+		return about if isinstance(about, dict) else None
+	except (OSError, TypeError, ValueError):
+		return None
+
+
 def cached_details(name, fetch):
 	"""The MediaItem fetch() gives, from the cache when it is recent enough.
 
@@ -739,6 +771,8 @@ class YouTubeProvider(Provider):
 				"youtube": {"approximate_date": [""]}})
 		with self.borrowed(self, ("list", count), options) as ydl:
 			info = ydl.extract_info(url, download=False)
+		if channel_id:
+			keep_about(self.id, channel_id, self.about(info))
 		videos = []
 		for entry in info.get("entries") or []:
 			video = self.item(entry,
@@ -747,6 +781,33 @@ class YouTubeProvider(Provider):
 			if video is not None:
 				videos.append(video)
 		return videos
+
+	@staticmethod
+	def about(info):
+		"""What the list of a channel says of it: its name, handle, followers,
+		the start of its description and its picture."""
+		avatar = ""
+		square = 0
+		for thumbnail in info.get("thumbnails") or []:
+			url = thumbnail.get("url") or ""
+			if thumbnail.get("id") == "avatar_uncropped" and url:
+				avatar = url
+				break
+			width = as_int(thumbnail.get("width"), 0)
+			if url and width and width == as_int(thumbnail.get("height"), 0) \
+					and width > square:
+				avatar, square = url, width
+		# the pictures of googleusercontent take their size at the end
+		avatar = re.sub(r"=s\d+(-[^/]*)?$", "=s176", avatar) \
+			if "googleusercontent" in avatar else avatar
+		description = clean(info.get("description") or "")
+		return {
+			"name": clean(info.get("channel") or info.get("uploader") or ""),
+			"handle": info.get("uploader_id") or "",
+			"followers": as_int(info.get("channel_follower_count"), 0),
+			"description": description[:400],
+			"avatar": avatar,
+		}
 
 	def search(self, query, count):
 		return self.videos_of("ytsearch%d:%s" % (count, query), count)
@@ -2271,7 +2332,11 @@ def job_channel(provider, tag, count, channel_id):
 		else:
 			wait_for_play()
 			items = provider.channel(channel_id, count)
-		answer({"type": "results", "tag": tag, "items": items})
+		message = {"type": "results", "tag": tag, "items": items}
+		about = kept_about(provider.id, channel_id)
+		if about:
+			message["about"] = about
+		answer(message)
 	except Exception:
 		answer({"type": "nothing", "tag": tag})
 
@@ -2454,7 +2519,7 @@ def prune_cache():
 			continue
 		if name.endswith(".jpg"):
 			most = 60 * 24 * 60 * 60
-		elif name.startswith(("videos-", "details-")) \
+		elif name.startswith(("videos-", "details-", "about-")) \
 				and name.endswith(".json"):
 			most = 30 * 24 * 60 * 60
 		elif name.startswith("stream-") and name.endswith(".json"):

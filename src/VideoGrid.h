@@ -19,6 +19,20 @@ class BBitmap;
 class BMessageRunner;
 
 
+/*!	What a channel is, shown above its videos. */
+struct ChannelHeader {
+	BString		provider;
+	BString		id;
+	BString		name;
+	BString		handle;			// "@TEDEd"
+	BString		description;
+	BString		avatarUrl;
+	int64		followers = 0;
+	int32		followed = -1;	// among the tabs: 1, 0, or -1 for none
+	bool		favorite = false;
+};
+
+
 /*!	The videos found, as big pictures in rows. A click, or Enter on the chosen
 	one, sends kMsgPlay to the window; a click on the name of its channel
 	sends kMsgChannel. D, or the menu of a right click, sends kMsgDownload. It can also show a message instead
@@ -61,6 +75,14 @@ public:
 			void				SetMessage(const char* message);
 			void				SetBusy(const char* title);
 									// NULL when no longer busy
+			void				SetChannelHeader(const ChannelHeader& header);
+									// above the videos of a channel: its
+									// name, followers, a star and Follow
+			void				ClearChannelHeader();
+			bool				HasChannelHeader() const { return fHasHeader; }
+			const ChannelHeader&	Header() const { return fHeader; }
+			void				SetChannelAvatar(BBitmap* avatar);
+									// its own to delete
 
 private:
 			void				_Clear();
@@ -81,6 +103,13 @@ private:
 			void				_ShowMenu(int32 index, BPoint where);
 			void				_DrawTile(int32 index, BRect frame);
 			void				_DrawBusy();
+			float				_HeaderHeight() const;
+			BRect				_HeaderFrame() const;
+			BRect				_AvatarFrame() const;
+			BRect				_StarFrame() const;
+			BRect				_FollowFrame() const;
+			int32				_HeaderButtonAt(BPoint where) const;
+			void				_DrawHeader();
 
 			std::vector<MediaItem>	fVideos;
 			BString				fMessage;
@@ -92,6 +121,10 @@ private:
 			bool				fShelf;
 			float				fShelfTileWidth;
 			BMessageRunner*		fAnimation;
+			ChannelHeader		fHeader;
+			bool				fHasHeader = false;
+			BBitmap*			fAvatar = NULL;
+			int32				fHeaderHover = 0;	// 1 star, 2 follow
 };
 
 

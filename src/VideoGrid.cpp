@@ -59,6 +59,7 @@ VideoGrid::VideoGrid()
 VideoGrid::~VideoGrid()
 {
 	delete fAnimation;
+	delete fAvatar;
 	_Clear();
 }
 
@@ -235,6 +236,10 @@ VideoGrid::SetDownloaded(const char* id, bool downloaded)
 void
 VideoGrid::SetFavorite(const char* id, bool favorite)
 {
+	if (fHasHeader && fHeader.id == id && fHeader.favorite != favorite) {
+		fHeader.favorite = favorite;
+		Invalidate(_StarFrame().InsetByCopy(-2, -2));
+	}
 	for (size_t i = 0; i < fVideos.size(); i++) {
 		if (fVideos[i].id == id) {
 			fVideos[i].favorite = favorite;
@@ -310,7 +315,8 @@ VideoGrid::_TileFrame(int32 index) const
 	float pictureHeight = roundf(tileWidth * 9 / 16);
 	float tileHeight = pictureHeight + S(kBaseTitleHeight);
 	float left = S(kBaseGap) + (index % columns) * (tileWidth + S(kBaseGap));
-	float top = S(kBaseGap) + (index / columns) * (tileHeight + S(kBaseGap));
+	float top = _HeaderHeight() + S(kBaseGap)
+		+ (index / columns) * (tileHeight + S(kBaseGap));
 	return BRect(left, top, left + tileWidth, top + tileHeight);
 }
 
@@ -375,7 +381,7 @@ VideoGrid::_UpdateScrollBar()
 		bar->SetProportion(1);
 		return;
 	}
-	float content = fVideos.empty() ? 0
+	float content = fVideos.empty() ? _HeaderHeight()
 		: _TileFrame(fVideos.size() - 1).bottom + S(kBaseGap);
 	float visible = Bounds().Height() + 1;
 	float range = std::max(0.0f, content - visible);
@@ -410,10 +416,13 @@ VideoGrid::Draw(BRect updateRect)
 	FillRect(updateRect);
 
 	BRect bounds = Bounds();
+	if (fHasHeader && !fShelf && _HeaderFrame().Intersects(updateRect))
+		_DrawHeader();
 	if (fVideos.empty()) {
+		float top = std::max(bounds.top, _HeaderHeight());
 		DrawCentered(this, fMessage.String(), BRect(bounds.left,
-			bounds.top + bounds.Height() / 2 - 40, bounds.right,
-			bounds.top + bounds.Height() / 2), Font(18), kTextDim);
+			top + (bounds.bottom - top) / 2 - 40, bounds.right,
+			top + (bounds.bottom - top) / 2), Font(18), kTextDim);
 	} else {
 		for (int32 i = 0; i < _VisibleCount(); i++) {
 			BRect frame = _TileFrame(i);
@@ -909,6 +918,33 @@ void
 VideoGrid::MouseDown(BPoint where)
 {
 	MakeFocus(true);
+	int32 button = _HeaderButtonAt(where);
+	if (button == 1) {
+		// the channel among the favorites, as a video would be
+		BMessage favorite(kMsgToggleFavorite);
+		favorite.AddString("id", fHeader.id);
+		favorite.AddString("provider", fHeader.provider);
+		favorite.AddString("kind", "channel");
+		favorite.AddString("title", fHeader.name);
+		favorite.AddString("description", fHeader.description);
+		favorite.AddString("channel", fHeader.name);
+		favorite.AddString("channel id", fHeader.id);
+		favorite.AddInt32("duration", 0);
+		favorite.AddInt32("year", 0);
+		favorite.AddString("poster", fHeader.avatarUrl);
+		favorite.AddString("thumbnail", fHeader.avatarUrl);
+		Window()->PostMessage(&favorite);
+		return;
+	}
+	if (button == 2) {
+		BMessage follow(kMsgFollowChannel);
+		follow.AddString("channel", fHeader.name);
+		follow.AddString("channel id", fHeader.id);
+		follow.AddString("provider", fHeader.provider);
+		follow.AddBool("follow", fHeader.followed == 0);
+		Window()->PostMessage(&follow);
+		return;
+	}
 	int32 channel = _ChannelAt(where);
 	if (channel >= 0) {
 		BMessage show(kMsgChannel);
@@ -949,6 +985,15 @@ void
 VideoGrid::MouseMoved(BPoint where, uint32 transit,
 	const BMessage* dragMessage)
 {
+	int32 headerButton = transit == B_EXITED_VIEW ? 0
+		: _HeaderButtonAt(where);
+	if (headerButton != fHeaderHover) {
+		fHeaderHover = headerButton;
+		Invalidate(_HeaderFrame());
+		BCursor cursor(headerButton != 0
+			? B_CURSOR_ID_FOLLOW_LINK : B_CURSOR_ID_SYSTEM_DEFAULT);
+		SetViewCursor(&cursor);
+	}
 	int32 channel = transit == B_EXITED_VIEW ? -1 : _ChannelAt(where);
 	if (channel != fHoverChannel) {
 		if (fHoverChannel >= 0)
@@ -981,4 +1026,234 @@ VideoGrid::MessageReceived(BMessage* message)
 		return;
 	}
 	BView::MessageReceived(message);
+}
+
+
+void
+VideoGrid::SetChannelHeader(const ChannelHeader& header)
+{
+	if (!fHasHeader || header.id != fHeader.id) {
+		delete fAvatar;
+		fAvatar = NULL;
+	}
+	float before = _HeaderHeight();
+	fHeader = header;
+	fHasHeader = true;
+	if (_HeaderHeight() != before)
+		_UpdateScrollBar();
+	Invalidate();
+}
+
+
+void
+VideoGrid::ClearChannelHeader()
+{
+	if (!fHasHeader)
+		return;
+	fHasHeader = false;
+	fHeader = ChannelHeader();
+	delete fAvatar;
+	fAvatar = NULL;
+	fHeaderHover = 0;
+	_UpdateScrollBar();
+	Invalidate();
+}
+
+
+void
+VideoGrid::SetChannelAvatar(BBitmap* avatar)
+{
+	delete fAvatar;
+	fAvatar = avatar;
+	if (fHasHeader)
+		Invalidate(_AvatarFrame());
+}
+
+
+float
+VideoGrid::_HeaderHeight() const
+{
+	return fHasHeader && !fShelf ? S(132) : 0;
+}
+
+
+BRect
+VideoGrid::_HeaderFrame() const
+{
+	if (!fHasHeader || fShelf)
+		return BRect();
+	BRect bounds = Bounds();
+	return BRect(0, 0, bounds.Width(), _HeaderHeight() - 1);
+}
+
+
+BRect
+VideoGrid::_AvatarFrame() const
+{
+	BRect header = _HeaderFrame();
+	if (!header.IsValid())
+		return BRect();
+	float size = S(96);
+	float top = header.top + (header.Height() - size) / 2;
+	return BRect(header.left + S(kBaseGap), top,
+		header.left + S(kBaseGap) + size, top + size);
+}
+
+
+BRect
+VideoGrid::_StarFrame() const
+{
+	BRect header = _HeaderFrame();
+	if (!header.IsValid())
+		return BRect();
+	float size = S(36);
+	float top = header.top + S(28);
+	return BRect(header.right - S(kBaseGap) - size, top,
+		header.right - S(kBaseGap), top + size);
+}
+
+
+BRect
+VideoGrid::_FollowFrame() const
+{
+	if (!fHasHeader || fShelf || fHeader.followed < 0)
+		return BRect();
+	BRect star = _StarFrame();
+	BFont font = Font(14, true);
+	float width = std::max(font.StringWidth(B_TRANSLATE("Follow")),
+		font.StringWidth(B_TRANSLATE("Following"))) + S(28);
+	return BRect(star.left - S(10) - width, star.top, star.left - S(10),
+		star.bottom);
+}
+
+
+int32
+VideoGrid::_HeaderButtonAt(BPoint where) const
+{
+	if (!fHasHeader || fShelf)
+		return 0;
+	if (_StarFrame().Contains(where))
+		return 1;
+	if (_FollowFrame().Contains(where))
+		return 2;
+	return 0;
+}
+
+
+/*!	The picture of the channel, its name, handle and followers, the start of
+	what it says of itself; a star and Follow at the right.
+*/
+void
+VideoGrid::_DrawHeader()
+{
+	BRect header = _HeaderFrame();
+	BRect avatar = _AvatarFrame();
+	SetDrawingMode(B_OP_ALPHA);
+	SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
+	if (fAvatar != NULL) {
+		DrawBitmap(fAvatar, fAvatar->Bounds(), avatar,
+			B_FILTER_BITMAP_BILINEAR);
+	} else {
+		FillRound(this, avatar, S(48), kCard);
+		BString initial(fHeader.name);
+		initial.Truncate(1);
+		DrawCentered(this, initial.String(), avatar, Font(36, true),
+			kTextDim);
+	}
+
+	BRect follow = _FollowFrame();
+	BRect star = _StarFrame();
+	float right = (follow.IsValid() ? follow.left : star.left) - S(16);
+	float left = avatar.right + S(20);
+	float width = std::max(S(40), right - left);
+
+	BFont nameFont = Font(24, true);
+	BFont small = Font(14);
+	font_height nameHeight, smallHeight;
+	nameFont.GetHeight(&nameHeight);
+	small.GetHeight(&smallHeight);
+	float smallLine = smallHeight.ascent + smallHeight.descent
+		+ smallHeight.leading + S(2);
+
+	float y = avatar.top + nameHeight.ascent;
+	BString name(fHeader.name);
+	nameFont.TruncateString(&name, B_TRUNCATE_END, width);
+	DrawText(this, name.String(), BPoint(left, y), nameFont, kText);
+
+	BString line(fHeader.handle);
+	if (fHeader.followers > 0) {
+		if (!line.IsEmpty())
+			line << " · ";
+		line << followers_text(fHeader.followers);
+	}
+	y += nameHeight.descent + S(6) + smallHeight.ascent;
+	if (!line.IsEmpty()) {
+		small.TruncateString(&line, B_TRUNCATE_END, width);
+		DrawText(this, line.String(), BPoint(left, y), small, kTextDim);
+		y += smallLine;
+	}
+
+	// two lines of the description at most, the rest left out
+	BString text(fHeader.description);
+	text.ReplaceAll('\n', ' ');
+	for (int32 row = 0; row < 2 && !text.IsEmpty() && y < header.bottom;
+			row++) {
+		BString part(text);
+		if (small.StringWidth(part.String()) > width) {
+			// as many words as fit
+			int32 cut = part.Length();
+			while (cut > 0 && small.StringWidth(part.String(), cut) > width)
+				cut = part.FindLast(' ', cut - 1);
+			if (cut <= 0 || row == 1) {
+				small.TruncateString(&part, B_TRUNCATE_END, width);
+				text = "";
+			} else {
+				part.Truncate(cut);
+				text.Remove(0, cut + 1);
+			}
+		} else
+			text = "";
+		DrawText(this, part.String(), BPoint(left, y), small, kTextDim);
+		y += smallLine;
+	}
+
+	if (follow.IsValid()) {
+		bool following = fHeader.followed > 0;
+		rgb_color fill = following ? kCard : kAccent;
+		if (fHeaderHover == 2) {
+			fill.red = std::min(255, fill.red + 18);
+			fill.green = std::min(255, fill.green + 18);
+			fill.blue = std::min(255, fill.blue + 18);
+		}
+		FillRound(this, follow, S(8), fill);
+		if (following)
+			StrokeRound(this, follow, S(8), 1, kTextDim);
+		DrawCentered(this, following ? B_TRANSLATE("Following")
+			: B_TRANSLATE("Follow"), follow, Font(14, true), kText);
+	}
+
+	// the star, as on the page of a video
+	FillRound(this, star, S(8), fHeaderHover == 1 ? kCard : kBar);
+	StrokeRound(this, star, S(8), 1, kTextDim);
+	BPoint center(star.left + star.Width() / 2,
+		star.top + star.Height() / 2 + S(1));
+	float outer = star.Height() * 0.34f;
+	float inner = outer * 0.42f;
+	BPoint points[10];
+	for (int32 i = 0; i < 10; i++) {
+		float radius = i % 2 == 0 ? outer : inner;
+		float angle = -M_PI / 2 + i * M_PI / 5;
+		points[i] = BPoint(center.x + radius * cosf(angle),
+			center.y + radius * sinf(angle));
+	}
+	SetDrawingMode(B_OP_ALPHA);
+	if (fHeader.favorite) {
+		SetHighColor(kAccent);
+		FillPolygon(points, 10);
+	} else {
+		SetHighColor(kText);
+		SetPenSize(S(1.5f));
+		StrokePolygon(points, 10);
+		SetPenSize(1);
+	}
 }

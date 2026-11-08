@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	2165559810
+1	korean	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -27,6 +27,7 @@ technology review	Categories		기술 리뷰
 Continue watching	Window		이어서 보기
 Move to Trash	Window		휴지통으로 이동
 Getting the video ready	Player		동영상 준비 중
+Follow	Grid		팔로우
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#주 전}}
 %eta% left	Window		%eta% 남음
 The video could not be moved to the Trash: %error%	Window		동영상을 휴지통으로 옮길 수 없습니다: %error%
@@ -55,6 +56,7 @@ Downloaded	Categories		다운로드한 동영상
 This video can't be played here, try another one.	Window		이 동영상은 여기서 재생할 수 없습니다. 다른 동영상을 시도해 보세요.
 TV series	Window		TV 시리즈
 yesterday	Detail		어제
+Following	Grid		팔로잉
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#개월 전}}
 No subtitles available	Player		사용 가능한 자막 없음
 Move \"%title%\" to the Trash?	Window		'%title%'을(를) 휴지통으로 이동할까요?
@@ -102,6 +104,7 @@ science explained	Categories		과학 설명
 Download	Grid		다운로드
 Movies	Window		영화
 Looking for the videos…	Window		동영상을 찾는 중…
+%count% subscribers	Detail		구독자 %count%명
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 한 줄에 상단 막대의 탭 하나: 이름 = YouTube에서 검색할 내용
 Following	Detail		팔로잉
 automatic	Player		자동 생성

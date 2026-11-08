@@ -19,18 +19,35 @@
 #define B_TRANSLATION_CONTEXT "Detail"
 
 
+static BString
+short_number(int64 count)
+{
+	BString number;
+	if (count >= 1000000000)
+		number.SetToFormat("%.1fB", count / 1000000000.0);
+	else if (count >= 1000000)
+		number.SetToFormat("%.1fM", count / 1000000.0);
+	else if (count >= 1000)
+		number.SetToFormat("%.1fK", count / 1000.0);
+	else
+		number.SetToFormat("%lld", (long long)count);
+	return number;
+}
+
+
+BString
+followers_text(int64 followers)
+{
+	BString text(B_TRANSLATE("%count% subscribers"));
+	text.ReplaceFirst("%count%", short_number(followers).String());
+	return text;
+}
+
+
 BString
 views_text(int64 views)
 {
-	BString number;
-	if (views >= 1000000000)
-		number.SetToFormat("%.1fB", views / 1000000000.0);
-	else if (views >= 1000000)
-		number.SetToFormat("%.1fM", views / 1000000.0);
-	else if (views >= 1000)
-		number.SetToFormat("%.1fK", views / 1000.0);
-	else
-		number.SetToFormat("%lld", (long long)views);
+	BString number = short_number(views);
 	BString text(B_TRANSLATE("%views% views"));
 	text.ReplaceFirst("%views%", number.String());
 	return text;

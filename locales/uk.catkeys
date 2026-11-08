@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2165559810
+1	ukrainian	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -27,6 +27,7 @@ technology review	Categories		огляд технологій
 Continue watching	Window		Продовжити перегляд
 Move to Trash	Window		Перемістити до смітника
 Getting the video ready	Player		Підготовка відео
+Follow	Grid		Стежити
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# тиждень тому} few{# тижні тому} many{# тижнів тому} other{# тижня тому}}
 %eta% left	Window		лишилось %eta%
 The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
@@ -55,6 +56,7 @@ Downloaded	Categories		Завантажені
 This video can't be played here, try another one.	Window		Це відео не можна відтворити тут, спробуйте інше.
 TV series	Window		Серіали
 yesterday	Detail		учора
+Following	Grid		Ви стежите
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
 No subtitles available	Player		Немає доступних субтитрів
 Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
@@ -102,6 +104,7 @@ science explained	Categories		наука простими словами
 Download	Grid		Завантажити
 Movies	Window		Фільми
 Looking for the videos…	Window		Пошук відео…
+%count% subscribers	Detail		%count% підписників
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube
 Following	Detail		Ви стежите
 automatic	Player		автоматичні

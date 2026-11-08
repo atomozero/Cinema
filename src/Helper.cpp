@@ -429,6 +429,20 @@ Helper::_Handle(const BString& line)
 		if (items != NULL && items->IsArray())
 			for (const Json& item : items->Elements())
 				add_item(results, item, fallback.String());
+		// a channel: what it is, for the head of its videos
+		const Json* about = answer.Find("about");
+		if (about != NULL && about->IsObject()) {
+			results.AddString("about name",
+				about->GetString("name", "").c_str());
+			results.AddString("about handle",
+				about->GetString("handle", "").c_str());
+			results.AddInt64("about followers",
+				(int64)about->GetDouble("followers", 0));
+			results.AddString("about description",
+				about->GetString("description", "").c_str());
+			results.AddString("about avatar",
+				about->GetString("avatar", "").c_str());
+		}
 		Deliver(fTarget, &results, &fStopping);
 		return;
 	}

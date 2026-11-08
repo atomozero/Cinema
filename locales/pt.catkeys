@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	2165559810
+1	portuguese	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -27,6 +27,7 @@ technology review	Categories		análise tecnologia
 Continue watching	Window		Continuar assistindo
 Move to Trash	Window		Mover para a lixeira
 Getting the video ready	Player		Preparando o vídeo
+Follow	Grid		Seguir
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{há # semana} other{há # semanas}}
 %eta% left	Window		faltam %eta%
 The video could not be moved to the Trash: %error%	Window		Não foi possível mover o vídeo para a lixeira: %error%
@@ -55,6 +56,7 @@ Downloaded	Categories		Baixados
 This video can't be played here, try another one.	Window		Este vídeo não pode ser reproduzido aqui, tente outro.
 TV series	Window		Séries
 yesterday	Detail		ontem
+Following	Grid		Seguindo
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{há # mês} other{há # meses}}
 No subtitles available	Player		Nenhuma legenda disponível
 Move \"%title%\" to the Trash?	Window		Mover "%title%" para a lixeira?
@@ -102,6 +104,7 @@ science explained	Categories		ciência explicada
 Download	Grid		Baixar
 Movies	Window		Filmes
 Looking for the videos…	Window		Procurando os vídeos…
+%count% subscribers	Detail		%count% inscritos
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Uma aba da barra superior por linha: nome = o que pesquisar no YouTube
 Following	Detail		Seguindo
 automatic	Player		automáticas

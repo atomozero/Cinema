@@ -17,11 +17,12 @@ Cinema opens on a home screen of shelves: what you were watching, what you
 downloaded, and a row for each tab at the top. A tab is either a search kept
 for later, or a channel whose latest videos it shows. The channel's name is
 under each of its videos, with how many views it has and how long ago it came
-out: a click on the name shows its latest videos. To follow a channel, press
-**Follow** next to its name on the page of one of its videos, the **+** button
-next to its tab, or right click the name: it becomes a tab, and its latest
-videos a shelf of the home. A right click on a tab removes it, and so does
-**Following** on the page. Each video has a page of its own, with its details
+out: a click on the name shows its latest videos, under its picture, name,
+followers and what it says of itself, with a star to keep it among the
+favorites. To follow a channel, press **Follow** there or next to its name on
+the page of one of its videos, the **+** button next to its tab, or right click
+the name: it becomes a tab, and its latest videos a shelf of the home. A right
+click on a tab removes it, and so does **Following**. Each video has a page of its own, with its details
 and views and the buttons to play or download it.
 
 The menu next to the search field chooses where to search, YouTube, the

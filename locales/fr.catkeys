@@ -1,4 +1,4 @@
-1	french	application/x-vnd.atomozero-Cinema	2165559810
+1	french	application/x-vnd.atomozero-Cinema	3266572196
 YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
@@ -27,6 +27,7 @@ technology review	Categories		test technologie
 Continue watching	Window		Reprendre
 Move to Trash	Window		Mettre à la corbeille
 Getting the video ready	Player		Préparation de la vidéo
+Follow	Grid		Suivre
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{il y a # semaine} other{il y a # semaines}}
 %eta% left	Window		%eta% restant
 The video could not be moved to the Trash: %error%	Window		Impossible de mettre la vidéo à la corbeille : %error%
@@ -55,6 +56,7 @@ Downloaded	Categories		Téléchargées
 This video can't be played here, try another one.	Window		Cette vidéo ne peut pas être lue ici, essayez-en une autre.
 TV series	Window		Séries
 yesterday	Detail		hier
+Following	Grid		Suivi
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{il y a # mois} other{il y a # mois}}
 No subtitles available	Player		Aucun sous-titre disponible
 Move \"%title%\" to the Trash?	Window		Mettre « %title% » à la corbeille ?
@@ -102,6 +104,7 @@ science explained	Categories		science expliquée
 Download	Grid		Télécharger
 Movies	Window		Films
 Looking for the videos…	Window		Recherche des vidéos…
+%count% subscribers	Detail		%count% abonnés
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Un onglet de la barre du haut par ligne : nom = ce qu'il faut chercher sur YouTube
 Following	Detail		Suivi
 automatic	Player		automatiques

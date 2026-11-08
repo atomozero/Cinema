@@ -11,6 +11,8 @@
 
 // "1.2M views"
 BString		views_text(int64 views);
+// "23.0M subscribers"
+BString		followers_text(int64 followers);
 // how long ago a date (YYYY-MM-DD) was: "today", "3 days ago", "2 years
 // ago"; empty when it is not one, or still to come
 BString		age_text(const BString& date);
