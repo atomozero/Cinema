@@ -132,7 +132,10 @@ time_text(bigtime_t time)
 
 PlayerView::PlayerView(Player* player)
 	:
-	BView("player", B_WILL_DRAW | B_NAVIGABLE | B_FULL_UPDATE_ON_RESIZE),
+	// frame events: FrameResized() puts the overlay and the subtitles where
+	// the new size wants them
+	BView("player", B_WILL_DRAW | B_NAVIGABLE | B_FULL_UPDATE_ON_RESIZE
+		| B_FRAME_EVENTS),
 	fPlayer(player),
 	fOpened(false),
 	fDirect(false),
@@ -292,6 +295,11 @@ void
 PlayerView::FrameResized(float width, float height)
 {
 	BView::FrameResized(width, height);
+	// given again from scratch: set a second time with the same bitmap, the
+	// overlay of the AC100 kept its old size and place, and the new key
+	// color around it showed as a green frame
+	if (fOverlay != NULL)
+		ClearViewOverlay();
 	_PlaceOverlay();
 	_UpdateSubtitle();
 }
