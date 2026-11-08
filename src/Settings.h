@@ -27,10 +27,13 @@ struct Settings {
 								// empty for the languages of the system
 	bool		evenVolume;		// films and TV brought to the level of
 								// music, without jumps (Loudness)
+	bool		overlay;		// the video overlay of the graphics card,
+								// where it has one: off where it shows
+								// only its key color, green
 
 				Settings() : playInCinema(true), resume(true),
 					videoHeight(0), tvOffered(false), volume(1.0f),
-					evenVolume(true) {}
+					evenVolume(true), overlay(true) {}
 
 	static	Settings	Load();
 			void		Save() const;

@@ -74,6 +74,7 @@ enum {
 	kMsgPlayerTick		= 'pltk',	// the time shown, the controls hidden
 	kMsgPlayerSave		= 'plsv',	// where it is, to go on later
 	kMsgPlayerClose		= 'plcl',
+	kMsgToggleOverlay	= 'plov',	// the O key: the overlay off or on
 	kMsgPlayInMediaPlayer = 'plmp',	// the same address, in MediaPlayer
 	kMsgSubtitles		= 'plts',	// "id", then for each track
 									// "language", "name", "automatic"

@@ -157,6 +157,7 @@ CinemaWindow::CinemaWindow()
 	fPlayer = new Player(BMessenger(this));
 	// as it was left the last time
 	fPlayer->SetVolume(fSettings.volume);
+	fPlayer->SetOverlayAllowed(fSettings.overlay);
 	fPlayer->SetNormalized(fSettings.evenVolume);
 	fPlayer->SetSubtitlePreference(fSettings.subtitleLanguage.String());
 	fPlayerView = new PlayerView(fPlayer);
@@ -480,6 +481,18 @@ CinemaWindow::_AddChannel(const char* name, const char* id)
 /*!	The tabs changed: the shelves of the home, which know them by their
 	place, are made again, now or when the page of a video over them closes.
 */
+/*!	The overlay as the settings want it, on the video playing too: its view
+	gives up the key color first.
+*/
+void
+CinemaWindow::_ApplyOverlay()
+{
+	if (!fSettings.overlay && fPlayer->Overlay() != NULL)
+		fPlayerView->ClearOverlay();
+	fPlayer->SetOverlayAllowed(fSettings.overlay);
+}
+
+
 /*!	The head of the videos of a channel: what is known of it now; the rest
 	comes with its videos.
 */
@@ -1091,6 +1104,16 @@ CinemaWindow::MessageReceived(BMessage* message)
 			_ShowChannel(message->GetString("channel", ""),
 				message->GetString("channel id", ""));
 			break;
+		case kMsgToggleOverlay:
+		{
+			// kept for the next videos and the next time Cinema starts
+			Settings saved = Settings::Load();
+			saved.overlay = !fPlayer->IsOverlayAllowed();
+			saved.Save();
+			fSettings.overlay = saved.overlay;
+			_ApplyOverlay();
+			break;
+		}
 		case kMsgFollowChannel:
 		{
 			BString id = message->GetString("channel id", "");
@@ -1263,6 +1286,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 			fSettings = Settings::Load();
 			// at once, on the video playing too
 			fPlayer->SetNormalized(fSettings.evenVolume);
+			_ApplyOverlay();
 			if (!fSettings.searchSource.IsEmpty())
 				fSearchProvider = fSettings.searchSource;
 			_UpdateSources();

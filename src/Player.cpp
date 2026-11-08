@@ -55,6 +55,7 @@ Player::Player(const BMessenger& target)
 	fFirstTime(-1),
 	fLive(false),
 	fNoOverlay(no_overlay()),
+	fOverlayAllowed(true),
 	fLiveFormat(NULL),
 	fLiveVideo(NULL),
 	fLiveAudio(NULL),
@@ -127,7 +128,7 @@ Player::~Player()
 void
 Player::Open(const char* address, bigtime_t startAt)
 {
-	fNoOverlay = no_overlay();
+	fNoOverlay = no_overlay() || !fOverlayAllowed;
 	_Start(address, startAt);
 }
 
@@ -519,6 +520,26 @@ Player::SetPaused(bool paused)
 	fPaused = paused;
 	if (!paused)
 		_DropPausedPicture();
+}
+
+
+/*!	The overlay allowed or not, from the settings or the O key: on the video
+	playing at once, from where it is.
+*/
+void
+Player::SetOverlayAllowed(bool allowed)
+{
+	if (fOverlayAllowed.exchange(allowed) == allowed)
+		return;
+	if (!allowed) {
+		DisableOverlay();
+		return;
+	}
+	if (no_overlay() || !fNoOverlay.exchange(false) || !fOpened
+		|| fAddress.IsEmpty())
+		return;
+	BString address(fAddress);
+	_Start(address.String(), Position(), true);
 }
 
 

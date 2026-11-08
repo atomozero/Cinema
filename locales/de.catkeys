@@ -1,4 +1,4 @@
-1	german	application/x-vnd.atomozero-Cinema	4188601695
+1	german	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		YouTube ist nicht erreichbar: Ist das Netzwerk an?
 Video quality:	Settings		Videoqualität:
 Downloaded	Detail		Heruntergeladen
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		Für BitTorren
 Cancel	Window		Abbrechen
 Back	Detail		Zurück
 Documentaries	Categories		Dokumentationen
-Play the videos in Cinema, not in MediaPlayer	Settings		Videos in Cinema abspielen, nicht in MediaPlayer
 TMDB does not accept this key.	Settings		TMDB akzeptiert diesen Schlüssel nicht.
+Play the videos in Cinema, not in MediaPlayer	Settings		Videos in Cinema abspielen, nicht in MediaPlayer
 technology review	Categories		Technik Test
 Continue watching	Window		Weiterschauen
 Move to Trash	Window		In den Papierkorb verschieben
@@ -65,6 +65,7 @@ Show the latest videos	Grid		Neueste Videos anzeigen
 Music	Categories		Musik
 The key works.	Settings		Der Schlüssel funktioniert.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: Videos für Haiku und RenkuOS, von YouTube, dem Internet Archive, PeerTube, BitTorrent und aus deinen eigenen Ordnern.
+Use the video overlay of the graphics card	Settings		Video-Overlay der Grafikkarte verwenden
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema braucht yt-dlp und python3, und cinema-helper.py daneben
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{vor # Tag} other{vor # Tagen}}
 Even volume: films and TV as loud as music	Settings		Gleichmäßige Lautstärke: Filme und TV so laut wie Musik
@@ -77,6 +78,7 @@ Choose…	Settings		Auswählen…
 news today	Categories		Nachrichten heute
 Move to Trash	Detail		In den Papierkorb verschieben
 Get a key…	Settings		Schlüssel holen…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		Ausschalten, wenn Videos nur einen grünen Hintergrund zeigen (oder während eines Videos O drücken).
 %peers% sources	Window		%peers% Quellen
 M3U list:	Settings		M3U-Liste:
 %views% views	Detail		%views% Aufrufe

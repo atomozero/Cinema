@@ -1,4 +1,4 @@
-1	french	application/x-vnd.atomozero-Cinema	4188601695
+1	french	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		Les téléchar
 Cancel	Window		Annuler
 Back	Detail		Retour
 Documentaries	Categories		Documentaires
-Play the videos in Cinema, not in MediaPlayer	Settings		Lire les vidéos dans Cinema, pas dans MediaPlayer
 TMDB does not accept this key.	Settings		TMDB n'accepte pas cette clé.
+Play the videos in Cinema, not in MediaPlayer	Settings		Lire les vidéos dans Cinema, pas dans MediaPlayer
 technology review	Categories		test technologie
 Continue watching	Window		Reprendre
 Move to Trash	Window		Mettre à la corbeille
@@ -65,6 +65,7 @@ Show the latest videos	Grid		Afficher les dernières vidéos
 Music	Categories		Musique
 The key works.	Settings		La clé fonctionne.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema : des vidéos pour Haiku et RenkuOS, depuis YouTube, l'Internet Archive, PeerTube, BitTorrent et vos propres dossiers.
+Use the video overlay of the graphics card	Settings		Utiliser l’overlay vidéo de la carte graphique
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema a besoin de yt-dlp et python3, et de cinema-helper.py à côté
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{il y a # jour} other{il y a # jours}}
 Even volume: films and TV as loud as music	Settings		Volume uniforme : films et TV aussi forts que la musique
@@ -77,6 +78,7 @@ Choose…	Settings		Choisir…
 news today	Categories		actualités du jour
 Move to Trash	Detail		Mettre à la corbeille
 Get a key…	Settings		Obtenir une clé…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		Désactivez-le si les vidéos n’affichent qu’un fond vert (ou appuyez sur O pendant une vidéo).
 %peers% sources	Window		%peers% sources
 M3U list:	Settings		Liste M3U :
 %views% views	Detail		%views% vues

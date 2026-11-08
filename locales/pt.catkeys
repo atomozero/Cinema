@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	4188601695
+1	portuguese	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		Os downloads B
 Cancel	Window		Cancelar
 Back	Detail		Voltar
 Documentaries	Categories		Documentários
-Play the videos in Cinema, not in MediaPlayer	Settings		Reproduzir os vídeos no Cinema, não no MediaPlayer
 TMDB does not accept this key.	Settings		O TMDB não aceita esta chave.
+Play the videos in Cinema, not in MediaPlayer	Settings		Reproduzir os vídeos no Cinema, não no MediaPlayer
 technology review	Categories		análise tecnologia
 Continue watching	Window		Continuar assistindo
 Move to Trash	Window		Mover para a lixeira
@@ -65,6 +65,7 @@ Show the latest videos	Grid		Mostrar os vídeos mais recentes
 Music	Categories		Música
 The key works.	Settings		A chave funciona.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: vídeos para Haiku e RenkuOS, do YouTube, do Internet Archive, do PeerTube, do BitTorrent e das suas próprias pastas.
+Use the video overlay of the graphics card	Settings		Usar o overlay de vídeo da placa gráfica
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		O Cinema precisa do yt-dlp e do python3, e do cinema-helper.py ao lado
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{há # dia} other{há # dias}}
 Even volume: films and TV as loud as music	Settings		Volume uniforme: filmes e TV tão altos quanto a música
@@ -77,6 +78,7 @@ Choose…	Settings		Escolher…
 news today	Categories		notícias de hoje
 Move to Trash	Detail		Mover para a lixeira
 Get a key…	Settings		Obter uma chave…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		Desative se os vídeos mostrarem só um fundo verde (ou carregue em O durante um vídeo).
 %peers% sources	Window		%peers% fontes
 M3U list:	Settings		Lista M3U:
 %views% views	Detail		%views% visualizações

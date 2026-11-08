@@ -121,6 +121,7 @@ private:
 			void				_ShowResults(BMessage* message);
 			bool				_Ready(const BString& id) const;
 			void				_HomeChanged();
+			void				_ApplyOverlay();
 			int32				_Followed(const MediaItem& item) const;
 			void				_SetChannelHeader(const char* name,
 									const char* id, const char* provider);

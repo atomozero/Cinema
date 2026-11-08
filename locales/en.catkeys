@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	4188601695
+1	english	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent dow
 Cancel	Window		Cancel
 Back	Detail		Back
 Documentaries	Categories		Documentaries
-Play the videos in Cinema, not in MediaPlayer	Settings		Play the videos in Cinema, not in MediaPlayer
 TMDB does not accept this key.	Settings		TMDB does not accept this key.
+Play the videos in Cinema, not in MediaPlayer	Settings		Play the videos in Cinema, not in MediaPlayer
 technology review	Categories		technology review
 Continue watching	Window		Continue watching
 Move to Trash	Window		Move to Trash
@@ -65,6 +65,7 @@ Show the latest videos	Grid		Show the latest videos
 Music	Categories		Music
 The key works.	Settings		The key works.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.
+Use the video overlay of the graphics card	Settings		Use the video overlay of the graphics card
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema needs yt-dlp and python3, and cinema-helper.py next to it
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# day ago} other{# days ago}}
 Even volume: films and TV as loud as music	Settings		Even volume: films and TV as loud as music
@@ -77,6 +78,7 @@ Choose…	Settings		Choose…
 news today	Categories		news today
 Move to Trash	Detail		Move to Trash
 Get a key…	Settings		Get a key…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		Turn it off if videos show only a green background (or press O while one plays).
 %peers% sources	Window		%peers% sources
 M3U list:	Settings		M3U list:
 %views% views	Detail		%views% views

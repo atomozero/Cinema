@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	4188601695
+1	japanese	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent で
 Cancel	Window		キャンセル
 Back	Detail		戻る
 Documentaries	Categories		ドキュメンタリー
-Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer ではなく Cinema で動画を再生
 TMDB does not accept this key.	Settings		TMDB はこのキーを受け付けません。
+Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer ではなく Cinema で動画を再生
 technology review	Categories		テクノロジー レビュー
 Continue watching	Window		続きを見る
 Move to Trash	Window		ゴミ箱に移動
@@ -65,6 +65,7 @@ Show the latest videos	Grid		最新の動画を表示
 Music	Categories		音楽
 The key works.	Settings		キーは有効です。
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
+Use the video overlay of the graphics card	Settings		グラフィックカードのビデオオーバーレイを使う
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#日前}}
 Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
@@ -77,6 +78,7 @@ Choose…	Settings		選択…
 news today	Categories		今日のニュース
 Move to Trash	Detail		ゴミ箱に移動
 Get a key…	Settings		キーを取得…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		動画が緑の背景だけになる場合はオフにしてください (再生中に O を押しても切り替えられます)。
 %peers% sources	Window		ソース %peers% 件
 M3U list:	Settings		M3U リスト:
 %views% views	Detail		%views% 回視聴

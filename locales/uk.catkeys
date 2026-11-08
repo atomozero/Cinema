@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	4188601695
+1	ukrainian	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		Для зав�
 Cancel	Window		Скасувати
 Back	Detail		Назад
 Documentaries	Categories		Документальні фільми
-Play the videos in Cinema, not in MediaPlayer	Settings		Відтворювати відео в Cinema, а не в MediaPlayer
 TMDB does not accept this key.	Settings		TMDB не приймає цей ключ.
+Play the videos in Cinema, not in MediaPlayer	Settings		Відтворювати відео в Cinema, а не в MediaPlayer
 technology review	Categories		огляд технологій
 Continue watching	Window		Продовжити перегляд
 Move to Trash	Window		Перемістити до смітника
@@ -65,6 +65,7 @@ Show the latest videos	Grid		Показати останні відео
 Music	Categories		Музика
 The key works.	Settings		Ключ працює.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
+Use the video overlay of the graphics card	Settings		Використовувати відеооверлей відеокарти
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
 Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
@@ -77,6 +78,7 @@ Choose…	Settings		Вибрати…
 news today	Categories		новини сьогодні
 Move to Trash	Detail		Перемістити до смітника
 Get a key…	Settings		Отримати ключ…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		Вимкніть, якщо відео показує лише зелене тло (або натисніть O під час відео).
 %peers% sources	Window		%peers% джерел
 M3U list:	Settings		Список M3U:
 %views% views	Detail		%views% переглядів

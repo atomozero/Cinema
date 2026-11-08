@@ -111,6 +111,9 @@ public:
 									// itself, when the overlay was free:
 									// LockFrame() is not needed then
 			void				DisableOverlay();
+			void				SetOverlayAllowed(bool allowed);
+			bool				IsOverlayAllowed() const
+									{ return fOverlayAllowed; }
 			void				NoteDrawn();
 									// the view drew a picture of its own
 									// (not the overlay): counted for the
@@ -196,6 +199,7 @@ private:
 										// what comes before, after a seek,
 										// is not played; INT64_MIN for none
 			std::atomic<bool>	fNoOverlay;
+			std::atomic<bool>	fOverlayAllowed;	// by the settings
 
 			AVFormatContext*	fLiveFormat;
 			AVCodecContext*		fLiveVideo;

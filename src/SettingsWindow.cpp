@@ -48,6 +48,7 @@ static const uint32 kMsgFolderSelected = 'ssel';
 static const uint32 kMsgPlayInCinema = 'splc';
 static const uint32 kMsgResume = 'sres';
 static const uint32 kMsgEvenVolume = 'sevn';
+static const uint32 kMsgOverlay = 'sovl';
 static const uint32 kMsgSource = 'ssrc';
 static const uint32 kMsgQuality = 'squa';
 static const uint32 kMsgTvSelected = 'stvs';
@@ -169,6 +170,13 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		"films and TV as loud as music"), new BMessage(kMsgEvenVolume));
 	fEvenVolume->SetValue(fSettings.evenVolume);
 	fEvenVolume->SetEnabled(fSettings.playInCinema);
+	fOverlay = new BCheckBox("overlay", B_TRANSLATE("Use the video overlay "
+		"of the graphics card"), new BMessage(kMsgOverlay));
+	fOverlay->SetValue(fSettings.overlay);
+	fOverlay->SetEnabled(fSettings.playInCinema);
+	BStringView* overlayNote = new BStringView("overlay note",
+		B_TRANSLATE("Turn it off if videos show only a green background (or "
+			"press O while one plays)."));
 
 	// how big the pictures of YouTube and PeerTube are
 	BPopUpMenu* qualities = new BPopUpMenu("qualities");
@@ -203,6 +211,8 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		.Add(fPlayInCinema)
 		.Add(fResume)
 		.Add(fEvenVolume)
+		.Add(fOverlay)
+		.Add(overlayNote)
 		.Add(fQuality)
 		.Add(qualityNote);
 
@@ -348,6 +358,7 @@ SettingsWindow::_Changed()
 	saved.searchSource = fSettings.searchSource;
 	saved.videoHeight = fSettings.videoHeight;
 	saved.evenVolume = fSettings.evenVolume;
+	saved.overlay = fSettings.overlay;
 	fSettings = saved;
 	fSettings.Save();
 	fTarget.SendMessage(kMsgSettingsChanged);
@@ -469,6 +480,11 @@ SettingsWindow::MessageReceived(BMessage* message)
 			fSettings.playInCinema = fPlayInCinema->Value() == B_CONTROL_ON;
 			fResume->SetEnabled(fSettings.playInCinema);
 			fEvenVolume->SetEnabled(fSettings.playInCinema);
+			fOverlay->SetEnabled(fSettings.playInCinema);
+			_Changed();
+			break;
+		case kMsgOverlay:
+			fSettings.overlay = fOverlay->Value() == B_CONTROL_ON;
 			_Changed();
 			break;
 		case kMsgEvenVolume:

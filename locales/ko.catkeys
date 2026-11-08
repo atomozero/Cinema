@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	4188601695
+1	korean	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 다
 Cancel	Window		취소
 Back	Detail		뒤로
 Documentaries	Categories		다큐멘터리
-Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer가 아닌 Cinema에서 동영상 재생
 TMDB does not accept this key.	Settings		TMDB가 이 키를 받아들이지 않습니다.
+Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer가 아닌 Cinema에서 동영상 재생
 technology review	Categories		기술 리뷰
 Continue watching	Window		이어서 보기
 Move to Trash	Window		휴지통으로 이동
@@ -65,6 +65,7 @@ Show the latest videos	Grid		최신 동영상 보기
 Music	Categories		음악
 The key works.	Settings		키가 작동합니다.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube, Internet Archive, PeerTube, BitTorrent 및 내 폴더의 동영상을 보는 Haiku와 RenkuOS용 앱.
+Use the video overlay of the graphics card	Settings		그래픽 카드의 비디오 오버레이 사용
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema를 사용하려면 yt-dlp와 python3, 그리고 같은 위치의 cinema-helper.py가 필요합니다
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#일 전}}
 Even volume: films and TV as loud as music	Settings		균일한 음량: 영화와 TV를 음악만큼 크게
@@ -77,6 +78,7 @@ Choose…	Settings		선택…
 news today	Categories		오늘의 뉴스
 Move to Trash	Detail		휴지통으로 이동
 Get a key…	Settings		키 받기…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		동영상이 초록색 배경만 보이면 끄세요 (또는 재생 중에 O를 누르세요).
 %peers% sources	Window		소스 %peers%개
 M3U list:	Settings		M3U 목록:
 %views% views	Detail		조회수 %views%회

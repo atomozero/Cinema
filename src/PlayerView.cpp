@@ -853,6 +853,11 @@ PlayerView::KeyDown(const char* bytes, int32 count)
 		case 'M':
 			Window()->PostMessage(kMsgPlayInMediaPlayer);
 			break;
+		case 'o':
+		case 'O':
+			// only a green background: the picture drawn by Cinema instead
+			Window()->PostMessage(kMsgToggleOverlay);
+			break;
 		case 's':
 		case 'S':
 			if (fFavorite >= 0) {

@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	4188601695
+1	chinese	application/x-vnd.atomozero-Cinema	2681905046
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -21,8 +21,8 @@ BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 下
 Cancel	Window		取消
 Back	Detail		返回
 Documentaries	Categories		纪录片
-Play the videos in Cinema, not in MediaPlayer	Settings		在 Cinema 中播放视频，而不是在 MediaPlayer 中
 TMDB does not accept this key.	Settings		TMDB 不接受此密钥。
+Play the videos in Cinema, not in MediaPlayer	Settings		在 Cinema 中播放视频，而不是在 MediaPlayer 中
 technology review	Categories		科技评测
 Continue watching	Window		继续观看
 Move to Trash	Window		移到废纸篓
@@ -65,6 +65,7 @@ Show the latest videos	Grid		显示最新视频
 Music	Categories		音乐
 The key works.	Settings		密钥有效。
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema：适用于 Haiku 和 RenkuOS 的视频应用，来自 YouTube、Internet Archive、PeerTube、BitTorrent 以及你自己的文件夹。
+Use the video overlay of the graphics card	Settings		使用显卡的视频叠加层
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema 需要 yt-dlp 和 python3，并且 cinema-helper.py 需在同一位置
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#天前}}
 Even volume: films and TV as loud as music	Settings		音量均衡：电影和电视与音乐一样响亮
@@ -77,6 +78,7 @@ Choose…	Settings		选择…
 news today	Categories		今日新闻
 Move to Trash	Detail		移到废纸篓
 Get a key…	Settings		获取密钥…
+Turn it off if videos show only a green background (or press O while one plays).	Settings		如果视频只显示绿色背景，请关闭此项（或在播放时按 O）。
 %peers% sources	Window		%peers% 个来源
 M3U list:	Settings		M3U 列表：
 %views% views	Detail		%views% 次观看
