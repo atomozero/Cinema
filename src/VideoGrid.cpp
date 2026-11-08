@@ -347,7 +347,9 @@ VideoGrid::_ChannelFrame(int32 index) const
 	if (index < 0 || index >= (int32)fVideos.size())
 		return BRect();
 	const MediaItem& video = fVideos[index];
-	if (video.channel.IsEmpty() || video.channelId.IsEmpty())
+	// a channel's own card is the link, as a whole
+	if (video.channel.IsEmpty() || video.channelId.IsEmpty()
+		|| video.kind == "channel")
 		return BRect();
 	BRect frame = _TileFrame(index);
 	BFont font = Font(kChannelSize);
@@ -457,6 +459,10 @@ VideoGrid::_DrawTile(int32 index, BRect frame)
 	const MediaItem& video = fVideos[index];
 	bool selected = index == fSelected && (!fShelf || IsFocus());
 	bool hover = index == fHover;
+	if (video.kind == "channel") {
+		_DrawChannelTile(index, frame, selected, hover);
+		return;
+	}
 
 	BRect picture(frame.left, frame.top, frame.right,
 		frame.bottom - S(kBaseTitleHeight));
@@ -736,7 +742,7 @@ VideoGrid::_Download(int32 index)
 		return;
 	const MediaItem& video = fVideos[index];
 	if (video.downloaded || video.progress >= 0 || !video.path.IsEmpty()
-		|| video.kind == "live")
+		|| video.kind == "live" || video.kind == "channel")
 		return;
 	BMessage download = _DownloadMessage(index);
 	Window()->PostMessage(&download);
@@ -759,6 +765,11 @@ VideoGrid::_ShowDetails(int32 index)
 {
 	if (index < 0 || index >= (int32)fVideos.size())
 		return;
+	// a channel has its own page: its videos
+	if (fVideos[index].kind == "channel") {
+		_Play(index);
+		return;
+	}
 	BMessage details = _DetailsMessage(index);
 	Window()->PostMessage(&details);
 }
@@ -810,6 +821,23 @@ void
 VideoGrid::_ShowMenu(int32 index, BPoint where)
 {
 	const MediaItem& video = fVideos[index];
+	if (video.kind == "channel") {
+		// a channel among the favorites: opened, or taken away
+		BPopUpMenu* menu = new BPopUpMenu("channel", false, false);
+		BMessage* open = new BMessage(kMsgChannel);
+		open->AddString("channel", video.title);
+		open->AddString("channel id", video.id);
+		menu->AddItem(new BMenuItem(B_TRANSLATE("Open the channel"), open));
+		BMessage* favorite = new BMessage(_DetailsMessage(index));
+		favorite->what = kMsgToggleFavorite;
+		menu->AddItem(new BMenuItem(video.favorite
+			? B_TRANSLATE("Remove from favorites")
+			: B_TRANSLATE("Add to favorites"), favorite));
+		menu->SetTargetForItems(Window());
+		ScaleMenu(menu);
+		menu->Go(ConvertToScreen(where), true, false, true);
+		return;
+	}
 	BPopUpMenu* menu = new BPopUpMenu("video", false, false);
 	BMessage* details = new BMessage(_DetailsMessage(index));
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Details"), details));
@@ -1256,4 +1284,91 @@ VideoGrid::_DrawHeader()
 		StrokePolygon(points, 10);
 		SetPenSize(1);
 	}
+}
+
+
+/*!	A channel given a star: its picture in a circle, its name, "Channel";
+	a click opens its videos.
+*/
+void
+VideoGrid::_DrawChannelTile(int32 index, BRect frame, bool selected,
+	bool hover)
+{
+	const MediaItem& video = fVideos[index];
+	BRect picture(frame.left, frame.top, frame.right,
+		frame.bottom - S(kBaseTitleHeight));
+	rgb_color back = kCard;
+	if (hover) {
+		back.red = std::min(255, back.red + 14);
+		back.green = std::min(255, back.green + 14);
+		back.blue = std::min(255, back.blue + 14);
+	}
+	FillRound(this, picture, S(kBaseRadius), back);
+
+	float size = roundf(picture.Height() * 0.78f);
+	BRect circle(0, 0, size - 1, size - 1);
+	circle.OffsetTo(picture.left + roundf((picture.Width() - size) / 2),
+		picture.top + roundf((picture.Height() - size) / 2));
+	if (video.picture != NULL) {
+		SetDrawingMode(B_OP_COPY);
+		BRect source = video.picture->Bounds();
+		// the middle square of it, if it is not one
+		float side = std::min(source.Width(), source.Height());
+		source.left += roundf((source.Width() - side) / 2);
+		source.top += roundf((source.Height() - side) / 2);
+		source.right = source.left + side;
+		source.bottom = source.top + side;
+		DrawBitmap(video.picture, source, circle, B_FILTER_BITMAP_BILINEAR);
+		// round: a ring of the card's color over the corners
+		float ring = size / 2;
+		SetDrawingMode(B_OP_COPY);
+		SetHighColor(back);
+		SetPenSize(ring);
+		StrokeEllipse(circle.InsetByCopy(-ring / 2 + 1, -ring / 2 + 1));
+		SetPenSize(1);
+	} else {
+		SetHighColor(kBar);
+		FillEllipse(circle);
+		BString initial(video.title);
+		initial.Truncate(1);
+		DrawCentered(this, initial.String(), circle, Font(size * 0.4f / S(1),
+			true), kTextDim);
+	}
+	if (selected)
+		StrokeRound(this, picture.InsetByCopy(-S(3), -S(3)),
+			S(kBaseRadius) + S(2), S(2), kAccent);
+
+	if (video.favorite) {
+		BRect mark(picture.left + S(6), picture.top + S(6),
+			picture.left + S(28), picture.top + S(28));
+		FillRound(this, mark, S(11), (rgb_color){ 0, 0, 0, 190 });
+		BPoint center(mark.left + mark.Width() / 2,
+			mark.top + mark.Height() / 2 + S(1));
+		BPoint points[10];
+		for (int32 i = 0; i < 10; i++) {
+			float radius = i % 2 == 0 ? S(8.5f) : S(3.6f);
+			float angle = -M_PI / 2 + i * M_PI / 5;
+			points[i] = center + BPoint(radius * cosf(angle),
+				radius * sinf(angle));
+		}
+		SetDrawingMode(B_OP_OVER);
+		SetHighColor(255, 196, 0);
+		FillPolygon(points, 10);
+	}
+
+	// its name, and what it is
+	BFont font = Font(kTitleSize);
+	font_height height;
+	font.GetHeight(&height);
+	BString name(video.title);
+	font.TruncateString(&name, B_TRUNCATE_END, frame.Width());
+	float top = frame.bottom - S(kBaseTitleHeight) + S(8);
+	DrawText(this, name.String(), BPoint(frame.left, top + height.ascent),
+		font, kText);
+	BFont small = Font(kChannelSize);
+	font_height smallHeight;
+	small.GetHeight(&smallHeight);
+	DrawText(this, B_TRANSLATE("Channel"), BPoint(frame.left,
+		top + line_height(font) + S(4) + smallHeight.ascent), small,
+		kTextDim);
 }

@@ -103,6 +103,8 @@ private:
 			void				_ShowMenu(int32 index, BPoint where);
 			void				_DrawTile(int32 index, BRect frame);
 			void				_DrawBusy();
+			void				_DrawChannelTile(int32 index, BRect frame,
+									bool selected, bool hover);
 			float				_HeaderHeight() const;
 			BRect				_HeaderFrame() const;
 			BRect				_AvatarFrame() const;

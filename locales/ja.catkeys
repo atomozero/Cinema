@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	3266572196
+1	japanese	application/x-vnd.atomozero-Cinema	4188601695
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -97,11 +97,13 @@ Cinema	System name		Cinema
 Folders of the library	Settings		ライブラリのフォルダー
 No videos found	Window		動画が見つかりません
 See all	Home		すべて表示
+Open the channel	Grid		チャンネルを開く
 Check	Settings		確認
 Playback	Settings		再生
 Subtitles	Subtitles		字幕
 science explained	Categories		科学 解説
 Download	Grid		ダウンロード
+Channel	Grid		チャンネル
 Movies	Window		映画
 Looking for the videos…	Window		動画を検索中…
 %count% subscribers	Detail		チャンネル登録者数 %count%人

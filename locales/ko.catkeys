@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	3266572196
+1	korean	application/x-vnd.atomozero-Cinema	4188601695
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -97,11 +97,13 @@ Cinema	System name		Cinema
 Folders of the library	Settings		라이브러리 폴더
 No videos found	Window		동영상을 찾을 수 없습니다
 See all	Home		모두 보기
+Open the channel	Grid		채널 열기
 Check	Settings		확인
 Playback	Settings		재생
 Subtitles	Subtitles		자막
 science explained	Categories		과학 설명
 Download	Grid		다운로드
+Channel	Grid		채널
 Movies	Window		영화
 Looking for the videos…	Window		동영상을 찾는 중…
 %count% subscribers	Detail		구독자 %count%명
