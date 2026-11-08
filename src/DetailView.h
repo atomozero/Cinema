@@ -44,6 +44,10 @@ public:
 			void				SetDownloaded(const char* id,
 									bool downloaded);
 			void				SetLoading(bool loading);
+			void				SetFollowed(const char* channelId,
+									int32 followed);
+									// 1 among the tabs, 0 not, -1 nothing
+									// to follow
 			void				SetFavorite(const char* id, bool favorite);
 
 			const MediaItem&	Item() const { return fItem; }
@@ -55,6 +59,7 @@ private:
 			void				_Play();
 			void				_Download();
 			void				_Channel();
+			void				_ToggleFollow();
 			void				_Back();
 			void				_ToggleFavorite();
 			void				_Trash();
@@ -101,6 +106,8 @@ private:
 			BRect				fStarFrame;		// a favorite or not
 			BRect				fTrashFrame;	// downloaded videos only
 			BRect				fChannelFrame;
+			BRect				fFollowFrame;	// follow its channel
+			int32				fFollowed = -1;
 			int32				fHover;
 			bool				fLoading;
 };

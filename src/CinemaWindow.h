@@ -121,6 +121,7 @@ private:
 			void				_ShowResults(BMessage* message);
 			bool				_Ready(const BString& id) const;
 			void				_HomeChanged();
+			int32				_Followed(const MediaItem& item) const;
 			void				_Find(const BString& id);
 			void				_PrefetchWanted();
 			void				_Play(const char* url, const char* title,

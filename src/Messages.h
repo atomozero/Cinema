@@ -94,6 +94,8 @@ enum {
 									// "tv": the lists of TV channels
 	kMsgAddFolder		= 'fadd',	// "path"
 	kMsgRemoveFolder	= 'frem',	// "path"
+	kMsgFollowChannel	= 'folc',	// "channel", "channel id", "provider",
+									// "follow": kept among the tabs or not
 	kMsgToggleFavorite	= 'favt',	// the fields of the item, as for details
 	kMsgAddTvList		= 'tvad',	// "address": of a list M3U, or its path
 	kMsgRemoveTvList	= 'tvrm',	// "address"

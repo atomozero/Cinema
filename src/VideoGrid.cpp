@@ -18,6 +18,7 @@
 #include <ScrollBar.h>
 #include <Window.h>
 
+#include "Format.h"
 #include "Messages.h"
 #include "Style.h"
 
@@ -31,8 +32,9 @@ using namespace Style;
 
 static const float kBaseMinTileWidth = 260;
 static const float kBaseGap = 20;
-static const float kBaseTitleHeight = 74;
-	// two lines of title, one with the channel
+static const float kBaseTitleHeight = 92;
+	// two lines of title, one with the channel, one with the views and how
+	// long ago it came out
 static const float kTitleSize = 15;
 static const float kChannelSize = 13;
 static const float kBaseRadius = 6;
@@ -625,6 +627,20 @@ VideoGrid::_DrawTile(int32 index, BRect frame)
 			StrokeLine(BPoint(channel.left, baseline + S(2)),
 				BPoint(channel.right, baseline + S(2)));
 		}
+	}
+
+	// the views and how long ago, below, as far as the source tells them
+	BString info = views_and_age(video.views, video.date);
+	if (!info.IsEmpty()) {
+		BFont small = Font(kChannelSize);
+		font_height smallHeight;
+		small.GetHeight(&smallHeight);
+		small.TruncateString(&info, B_TRUNCATE_END, frame.Width());
+		float baseline = frame.bottom - S(kBaseTitleHeight) + S(8)
+			+ 2 * line_height(Font(kTitleSize)) + S(4) + line_height(small)
+			+ S(2) + smallHeight.ascent;
+		DrawText(this, info.String(), BPoint(frame.left, baseline), small,
+			kTextDim);
 	}
 }
 

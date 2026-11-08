@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	1009050093
+1	english	application/x-vnd.atomozero-Cinema	2165559810
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -7,9 +7,10 @@ Search first in:	Settings		Search first in:
 Add to favorites	Grid		Add to favorites
 OK	Window		OK
 Add this channel to the tabs	Categories		Add this channel to the tabs
-Video downloaded	Window		Video downloaded
 Play	Grid		Play
+Video downloaded	Window		Video downloaded
 Getting the video ready	Grid		Getting the video ready
+today	Detail		today
 Downloading…	Detail		Downloading…
 Settings…	Window		Settings…
 Add to the tabs	Grid		Add to the tabs
@@ -26,6 +27,7 @@ technology review	Categories		technology review
 Continue watching	Window		Continue watching
 Move to Trash	Window		Move to Trash
 Getting the video ready	Player		Getting the video ready
+{0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# week ago} other{# weeks ago}}
 %eta% left	Window		%eta% left
 The video could not be moved to the Trash: %error%	Window		The video could not be moved to the Trash: %error%
 Add…	Settings		Add…
@@ -52,13 +54,17 @@ Remove from favorites	Grid		Remove from favorites
 Downloaded	Categories		Downloaded
 This video can't be played here, try another one.	Window		This video can't be played here, try another one.
 TV series	Window		TV series
+yesterday	Detail		yesterday
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# month ago} other{# months ago}}
 No subtitles available	Player		No subtitles available
 Move \"%title%\" to the Trash?	Window		Move \"%title%\" to the Trash?
+{0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# year ago} other{# years ago}}
 Show the latest videos	Grid		Show the latest videos
 Music	Categories		Music
 The key works.	Settings		The key works.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema needs yt-dlp and python3, and cinema-helper.py next to it
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# day ago} other{# days ago}}
 Even volume: films and TV as loud as music	Settings		Even volume: films and TV as loud as music
 Download	Detail		Download
 Remove	Settings		Remove
@@ -76,12 +82,13 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		The
 Science	Categories		Science
 Classic cartoons	Categories		Classic cartoons
 Play	Detail		Play
+Follow	Detail		Follow
 Free channels of:	Settings		Free channels of:
 Details	Grid		Details
 %done% of %total%	Window		%done% of %total%
 forced	Subtitles		forced
-Go on from where a video was left	Settings		Go on from where a video was left
 Already downloaded	Grid		Already downloaded
+Go on from where a video was left	Settings		Go on from where a video was left
 Search	Settings		Search
 Type what to look for at the top right	Window		Type what to look for at the top right
 Cinema	System name		Cinema
@@ -96,6 +103,7 @@ Download	Grid		Download
 Movies	Window		Movies
 Looking for the videos…	Window		Looking for the videos…
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# One tab of the top bar per line: name = what to search on YouTube
+Following	Detail		Following
 automatic	Player		automatic
 Automatic	Settings		Automatic
 No videos downloaded yet: right click a video, or press D	Window		No videos downloaded yet: right click a video, or press D

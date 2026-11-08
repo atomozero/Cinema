@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	1009050093
+1	korean	application/x-vnd.atomozero-Cinema	2165559810
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -7,9 +7,10 @@ Search first in:	Settings		먼저 검색할 곳:
 Add to favorites	Grid		즐겨찾기에 추가
 OK	Window		확인
 Add this channel to the tabs	Categories		이 채널을 탭에 추가
-Video downloaded	Window		동영상 다운로드 완료
 Play	Grid		재생
+Video downloaded	Window		동영상 다운로드 완료
 Getting the video ready	Grid		동영상 준비 중
+today	Detail		오늘
 Downloading…	Detail		다운로드 중…
 Settings…	Window		설정…
 Add to the tabs	Grid		탭에 추가
@@ -26,6 +27,7 @@ technology review	Categories		기술 리뷰
 Continue watching	Window		이어서 보기
 Move to Trash	Window		휴지통으로 이동
 Getting the video ready	Player		동영상 준비 중
+{0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#주 전}}
 %eta% left	Window		%eta% 남음
 The video could not be moved to the Trash: %error%	Window		동영상을 휴지통으로 옮길 수 없습니다: %error%
 Add…	Settings		추가…
@@ -52,13 +54,17 @@ Remove from favorites	Grid		즐겨찾기에서 제거
 Downloaded	Categories		다운로드한 동영상
 This video can't be played here, try another one.	Window		이 동영상은 여기서 재생할 수 없습니다. 다른 동영상을 시도해 보세요.
 TV series	Window		TV 시리즈
+yesterday	Detail		어제
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#개월 전}}
 No subtitles available	Player		사용 가능한 자막 없음
 Move \"%title%\" to the Trash?	Window		'%title%'을(를) 휴지통으로 이동할까요?
+{0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#년 전}}
 Show the latest videos	Grid		최신 동영상 보기
 Music	Categories		음악
 The key works.	Settings		키가 작동합니다.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube, Internet Archive, PeerTube, BitTorrent 및 내 폴더의 동영상을 보는 Haiku와 RenkuOS용 앱.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema를 사용하려면 yt-dlp와 python3, 그리고 같은 위치의 cinema-helper.py가 필요합니다
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#일 전}}
 Even volume: films and TV as loud as music	Settings		균일한 음량: 영화와 TV를 음악만큼 크게
 Download	Detail		다운로드
 Remove	Settings		제거
@@ -76,12 +82,13 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		채
 Science	Categories		과학
 Classic cartoons	Categories		고전 만화
 Play	Detail		재생
+Follow	Detail		팔로우
 Free channels of:	Settings		무료 채널 국가:
 Details	Grid		세부 정보
 %done% of %total%	Window		%total% 중 %done%
 forced	Subtitles		강제
-Go on from where a video was left	Settings		멈춘 곳부터 동영상 이어서 보기
 Already downloaded	Grid		이미 다운로드됨
+Go on from where a video was left	Settings		멈춘 곳부터 동영상 이어서 보기
 Search	Settings		검색
 Type what to look for at the top right	Window		오른쪽 위에 찾을 내용을 입력하세요
 Cinema	System name		Cinema
@@ -96,6 +103,7 @@ Download	Grid		다운로드
 Movies	Window		영화
 Looking for the videos…	Window		동영상을 찾는 중…
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 한 줄에 상단 막대의 탭 하나: 이름 = YouTube에서 검색할 내용
+Following	Detail		팔로잉
 automatic	Player		자동 생성
 Automatic	Settings		자동
 No videos downloaded yet: right click a video, or press D	Window		다운로드한 동영상이 없습니다. 동영상을 오른쪽 클릭하거나 D를 누르세요

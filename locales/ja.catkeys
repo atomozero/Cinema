@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	1009050093
+1	japanese	application/x-vnd.atomozero-Cinema	2165559810
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -7,9 +7,10 @@ Search first in:	Settings		最初に検索する場所:
 Add to favorites	Grid		お気に入りに追加
 OK	Window		OK
 Add this channel to the tabs	Categories		このチャンネルをタブに追加
-Video downloaded	Window		動画をダウンロードしました
 Play	Grid		再生
+Video downloaded	Window		動画をダウンロードしました
 Getting the video ready	Grid		動画を準備中
+today	Detail		今日
 Downloading…	Detail		ダウンロード中…
 Settings…	Window		設定…
 Add to the tabs	Grid		タブに追加
@@ -26,6 +27,7 @@ technology review	Categories		テクノロジー レビュー
 Continue watching	Window		続きを見る
 Move to Trash	Window		ゴミ箱に移動
 Getting the video ready	Player		動画を準備中
+{0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
 %eta% left	Window		残り %eta%
 The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
 Add…	Settings		追加…
@@ -52,13 +54,17 @@ Remove from favorites	Grid		お気に入りから削除
 Downloaded	Categories		ダウンロード済み
 This video can't be played here, try another one.	Window		この動画はここでは再生できません。別の動画をお試しください。
 TV series	Window		テレビシリーズ
+yesterday	Detail		昨日
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
 No subtitles available	Player		利用できる字幕がありません
 Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
+{0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
 Music	Categories		音楽
 The key works.	Settings		キーは有効です。
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#日前}}
 Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
 Download	Detail		ダウンロード
 Remove	Settings		削除
@@ -76,12 +82,13 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		チ
 Science	Categories		科学
 Classic cartoons	Categories		名作アニメ
 Play	Detail		再生
+Follow	Detail		フォロー
 Free channels of:	Settings		無料チャンネルの国:
 Details	Grid		詳細
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		強制
-Go on from where a video was left	Settings		動画を止めたところから再開
 Already downloaded	Grid		すでにダウンロード済み
+Go on from where a video was left	Settings		動画を止めたところから再開
 Search	Settings		検索
 Type what to look for at the top right	Window		右上に探したいものを入力してください
 Cinema	System name		Cinema
@@ -96,6 +103,7 @@ Download	Grid		ダウンロード
 Movies	Window		映画
 Looking for the videos…	Window		動画を検索中…
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容
+Following	Detail		フォロー中
 automatic	Player		自動生成
 Automatic	Settings		自動
 No videos downloaded yet: right click a video, or press D	Window		ダウンロードした動画はまだありません: 動画を右クリックするか、D を押してください

@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	1009050093
+1	chinese	application/x-vnd.atomozero-Cinema	2165559810
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -7,9 +7,10 @@ Search first in:	Settings		优先搜索：
 Add to favorites	Grid		添加到收藏
 OK	Window		确定
 Add this channel to the tabs	Categories		将此频道添加到标签页
-Video downloaded	Window		视频已下载
 Play	Grid		播放
+Video downloaded	Window		视频已下载
 Getting the video ready	Grid		正在准备视频
+today	Detail		今天
 Downloading…	Detail		正在下载…
 Settings…	Window		设置…
 Add to the tabs	Grid		添加到标签页
@@ -26,6 +27,7 @@ technology review	Categories		科技评测
 Continue watching	Window		继续观看
 Move to Trash	Window		移到废纸篓
 Getting the video ready	Player		正在准备视频
+{0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#周前}}
 %eta% left	Window		剩余 %eta%
 The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
 Add…	Settings		添加…
@@ -52,13 +54,17 @@ Remove from favorites	Grid		从收藏中移除
 Downloaded	Categories		已下载
 This video can't be played here, try another one.	Window		此视频无法在这里播放，请换一个试试。
 TV series	Window		电视剧
+yesterday	Detail		昨天
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
 No subtitles available	Player		没有可用的字幕
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
+{0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		显示最新视频
 Music	Categories		音乐
 The key works.	Settings		密钥有效。
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema：适用于 Haiku 和 RenkuOS 的视频应用，来自 YouTube、Internet Archive、PeerTube、BitTorrent 以及你自己的文件夹。
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema 需要 yt-dlp 和 python3，并且 cinema-helper.py 需在同一位置
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#天前}}
 Even volume: films and TV as loud as music	Settings		音量均衡：电影和电视与音乐一样响亮
 Download	Detail		下载
 Remove	Settings		移除
@@ -76,12 +82,13 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		频
 Science	Categories		科学
 Classic cartoons	Categories		经典动画
 Play	Detail		播放
+Follow	Detail		关注
 Free channels of:	Settings		免费频道所在国家：
 Details	Grid		详细信息
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		强制
-Go on from where a video was left	Settings		从上次停下的地方继续播放视频
 Already downloaded	Grid		已经下载
+Go on from where a video was left	Settings		从上次停下的地方继续播放视频
 Search	Settings		搜索
 Type what to look for at the top right	Window		在右上角输入要搜索的内容
 Cinema	System name		Cinema
@@ -96,6 +103,7 @@ Download	Grid		下载
 Movies	Window		电影
 Looking for the videos…	Window		正在查找视频…
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 每行一个顶部栏标签：名称 = 要在 YouTube 上搜索的内容
+Following	Detail		已关注
 automatic	Player		自动生成
 Automatic	Settings		自动
 No videos downloaded yet: right click a video, or press D	Window		还没有下载的视频：右键点击视频，或按 D

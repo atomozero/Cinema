@@ -19,6 +19,7 @@
 #include <Region.h>
 #include <Url.h>
 
+#include "Format.h"
 #include "Messages.h"
 #include "Provider.h"
 #include "Style.h"
@@ -115,24 +116,6 @@ duration_text(int32 seconds)
 }
 
 
-static BString
-views_text(int64 views)
-{
-	BString number;
-	if (views >= 1000000000)
-		number.SetToFormat("%.1fB", views / 1000000000.0);
-	else if (views >= 1000000)
-		number.SetToFormat("%.1fM", views / 1000000.0);
-	else if (views >= 1000)
-		number.SetToFormat("%.1fK", views / 1000.0);
-	else
-		number.SetToFormat("%lld", (long long)views);
-	BString text(B_TRANSLATE("%views% views"));
-	text.ReplaceFirst("%views%", number.String());
-	return text;
-}
-
-
 DetailView::DetailView(BMessenger target)
 	:
 	BView("details", B_WILL_DRAW | B_FRAME_EVENTS | B_NAVIGABLE),
@@ -174,6 +157,9 @@ void
 DetailView::SetItem(const MediaItem& item)
 {
 	bool same = fItem.id == item.id;
+	// another channel: whether it is followed, the window says
+	if (fItem.channelId != item.channelId)
+		fFollowed = -1;
 	if (!same) {
 		delete fPicture;
 		fPicture = NULL;
@@ -259,6 +245,7 @@ DetailView::_Update()
 	fStarFrame = BRect();
 	fTrashFrame = BRect();
 	fChannelFrame = BRect();
+	fFollowFrame = BRect();
 
 	if (bounds.Width() < S(80) || bounds.Height() < S(80))
 		return;
@@ -313,12 +300,35 @@ DetailView::_Update()
 	if (!fItem.channel.IsEmpty()) {
 		float channelWidth = std::min(width,
 			channelFont.StringWidth(fItem.channel.String()));
-		fChannelFrame = BRect(fTextFrame.left, y + titleHeight + S(6),
+		// with the button to follow it at its right, when there is room
+		float followWidth = 0;
+		if (!fItem.channelId.IsEmpty() && fFollowed >= 0) {
+			BFont buttonFont = Font(14, true);
+			followWidth = std::max(buttonFont.StringWidth(
+				B_TRANSLATE("Follow")), buttonFont.StringWidth(
+				B_TRANSLATE("Following"))) + S(28);
+			if (followWidth + S(12) > width / 2)
+				followWidth = 0;
+		}
+		channelWidth = std::min(channelWidth,
+			width - (followWidth > 0 ? followWidth + S(12) : 0));
+		float lineTop = y + titleHeight + S(6);
+		float rowHeight = std::max(line_height(channelFont),
+			followWidth > 0 ? S(30) : 0.0f);
+		float textTop = lineTop + (rowHeight - line_height(channelFont)) / 2;
+		fChannelFrame = BRect(fTextFrame.left, textTop,
 			fTextFrame.left + channelWidth,
-			y + titleHeight + S(6) + line_height(channelFont));
+			textTop + line_height(channelFont));
+		if (followWidth > 0) {
+			fFollowFrame = BRect(fChannelFrame.right + S(12), lineTop,
+				fChannelFrame.right + S(12) + followWidth,
+				lineTop + rowHeight);
+		}
 	}
 	float metaTop = fChannelFrame.IsValid()
-		? fChannelFrame.bottom + S(2) : y + titleHeight + S(6);
+		? std::max(fChannelFrame.bottom, fFollowFrame.IsValid()
+			? fFollowFrame.bottom : 0.0f) + S(2)
+		: y + titleHeight + S(6);
 	if (!fMeta.IsEmpty()) {
 		fMetaFrame = BRect(fTextFrame.left, metaTop,
 			fTextFrame.right, metaTop + line_height(metaFont));
@@ -400,6 +410,9 @@ BString
 DetailView::_Meta() const
 {
 	BString text = fItem.date;
+	BString age = age_text(fItem.date);
+	if (!age.IsEmpty())
+		text << " (" << age << ")";
 	if (text.IsEmpty() && fItem.year > 0)
 		text.SetToFormat("%" B_PRId32, fItem.year);
 	if (fItem.duration > 0) {
@@ -779,6 +792,10 @@ DetailView::Draw(BRect updateRect)
 		_DrawButton(fDownloadFrame, _DownloadLabel().String(), false,
 			_CanDownload(), fHover == 3);
 	}
+	if (fFollowFrame.IsValid()) {
+		_DrawButton(fFollowFrame, fFollowed > 0 ? B_TRANSLATE("Following")
+			: B_TRANSLATE("Follow"), fFollowed <= 0, true, fHover == 7);
+	}
 	if (fTrashFrame.IsValid()) {
 		_DrawButton(fTrashFrame, B_TRANSLATE("Move to Trash"), false, true,
 			fHover == 6);
@@ -812,6 +829,8 @@ DetailView::_ButtonAt(BPoint where) const
 		return 5;
 	if (fTrashFrame.Contains(where))
 		return 6;
+	if (fFollowFrame.Contains(where))
+		return 7;
 	return 0;
 }
 
@@ -837,6 +856,9 @@ DetailView::_InvalidateButton(int32 which)
 			break;
 		case 6:
 			Invalidate(fTrashFrame);
+			break;
+		case 7:
+			Invalidate(fFollowFrame);
 			break;
 	}
 }
@@ -893,6 +915,9 @@ DetailView::MouseDown(BPoint where)
 			break;
 		case 6:
 			_Trash();
+			break;
+		case 7:
+			_ToggleFollow();
 			break;
 	}
 }
@@ -998,6 +1023,38 @@ DetailView::_Download()
 	download.AddString("channel id", fItem.channelId);
 	download.AddInt32("duration", fItem.duration);
 	fTarget.SendMessage(&download);
+}
+
+
+void
+DetailView::SetFollowed(const char* channelId, int32 followed)
+{
+	if (fItem.channelId != channelId || fFollowed == followed)
+		return;
+	bool layout = (fFollowed < 0) != (followed < 0);
+	fFollowed = followed;
+	if (layout) {
+		_Update();
+		Invalidate();
+	} else
+		Invalidate(fFollowFrame);
+}
+
+
+/*!	Its channel kept among the tabs, its latest videos on the home, or taken
+	away from them.
+*/
+void
+DetailView::_ToggleFollow()
+{
+	if (fItem.channelId.IsEmpty() || fFollowed < 0)
+		return;
+	BMessage follow(kMsgFollowChannel);
+	follow.AddString("channel", fItem.channel);
+	follow.AddString("channel id", fItem.channelId);
+	follow.AddString("provider", fItem.provider);
+	follow.AddBool("follow", fFollowed == 0);
+	fTarget.SendMessage(&follow);
 }
 
 

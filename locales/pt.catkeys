@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	1009050093
+1	portuguese	application/x-vnd.atomozero-Cinema	2165559810
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -7,9 +7,10 @@ Search first in:	Settings		Pesquisar primeiro em:
 Add to favorites	Grid		Adicionar aos favoritos
 OK	Window		OK
 Add this channel to the tabs	Categories		Adicionar este canal às abas
-Video downloaded	Window		Vídeo baixado
 Play	Grid		Reproduzir
+Video downloaded	Window		Vídeo baixado
 Getting the video ready	Grid		Preparando o vídeo
+today	Detail		hoje
 Downloading…	Detail		Baixando…
 Settings…	Window		Configurações…
 Add to the tabs	Grid		Adicionar às abas
@@ -26,6 +27,7 @@ technology review	Categories		análise tecnologia
 Continue watching	Window		Continuar assistindo
 Move to Trash	Window		Mover para a lixeira
 Getting the video ready	Player		Preparando o vídeo
+{0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{há # semana} other{há # semanas}}
 %eta% left	Window		faltam %eta%
 The video could not be moved to the Trash: %error%	Window		Não foi possível mover o vídeo para a lixeira: %error%
 Add…	Settings		Adicionar…
@@ -52,13 +54,17 @@ Remove from favorites	Grid		Remover dos favoritos
 Downloaded	Categories		Baixados
 This video can't be played here, try another one.	Window		Este vídeo não pode ser reproduzido aqui, tente outro.
 TV series	Window		Séries
+yesterday	Detail		ontem
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{há # mês} other{há # meses}}
 No subtitles available	Player		Nenhuma legenda disponível
 Move \"%title%\" to the Trash?	Window		Mover "%title%" para a lixeira?
+{0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{há # ano} other{há # anos}}
 Show the latest videos	Grid		Mostrar os vídeos mais recentes
 Music	Categories		Música
 The key works.	Settings		A chave funciona.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: vídeos para Haiku e RenkuOS, do YouTube, do Internet Archive, do PeerTube, do BitTorrent e das suas próprias pastas.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		O Cinema precisa do yt-dlp e do python3, e do cinema-helper.py ao lado
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{há # dia} other{há # dias}}
 Even volume: films and TV as loud as music	Settings		Volume uniforme: filmes e TV tão altos quanto a música
 Download	Detail		Baixar
 Remove	Settings		Remover
@@ -76,12 +82,13 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		O e
 Science	Categories		Ciência
 Classic cartoons	Categories		Desenhos clássicos
 Play	Detail		Reproduzir
+Follow	Detail		Seguir
 Free channels of:	Settings		Canais gratuitos de:
 Details	Grid		Detalhes
 %done% of %total%	Window		%done% de %total%
 forced	Subtitles		forçadas
-Go on from where a video was left	Settings		Continuar os vídeos de onde pararam
 Already downloaded	Grid		Já baixado
+Go on from where a video was left	Settings		Continuar os vídeos de onde pararam
 Search	Settings		Pesquisa
 Type what to look for at the top right	Window		Digite no canto superior direito o que procurar
 Cinema	System name		Cinema
@@ -96,6 +103,7 @@ Download	Grid		Baixar
 Movies	Window		Filmes
 Looking for the videos…	Window		Procurando os vídeos…
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Uma aba da barra superior por linha: nome = o que pesquisar no YouTube
+Following	Detail		Seguindo
 automatic	Player		automáticas
 Automatic	Settings		Automática
 No videos downloaded yet: right click a video, or press D	Window		Nenhum vídeo baixado ainda: clique com o botão direito em um vídeo, ou pressione D

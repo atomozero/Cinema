@@ -568,14 +568,30 @@ class YouTubeProvider(Provider):
 			"channel_id": entry.get("channel_id") or channel_id,
 			"duration": int(duration),
 			"year": 0,
-			"date": "",
-			"views": 0,
+			# the day it came out, from "3 days ago" (approximate_date), and
+			# its views: given by the list itself, at no cost
+			"date": self.day_of(entry),
+			"views": as_int(entry.get("view_count"), 0),
 			"rating": 0.0,
 			"poster": "",
 			"thumbnail": "https://i.ytimg.com/vi/%s/mqdefault.jpg" % entry["id"],
 			"season": 0,
 			"episode": 0,
 		}
+
+	@staticmethod
+	def day_of(entry):
+		"""YYYY-MM-DD of an entry of yt-dlp, or empty."""
+		day = entry.get("upload_date") or ""
+		if len(day) == 8 and day.isdigit():
+			return "%s-%s-%s" % (day[:4], day[4:6], day[6:])
+		stamp = entry.get("timestamp") or entry.get("release_timestamp")
+		if stamp:
+			try:
+				return time.strftime("%Y-%m-%d", time.gmtime(int(stamp)))
+			except (TypeError, ValueError, OverflowError):
+				pass
+		return ""
 
 	def picture(self, info):
 		"""The address of the biggest picture of a video yt-dlp described.
@@ -715,8 +731,12 @@ class YouTubeProvider(Provider):
 		return self.full_item(info) if info else None
 
 	def videos_of(self, url, count, channel_name="", channel_id=""):
+		# approximate_date: the day of each video from "3 days ago" in the
+		# list, without opening its page
 		options = dict(self.OPTIONS, extract_flat="in_playlist",
-			playlistend=count)
+			playlistend=count, extractor_args={
+				"youtubetab": {"approximate_date": [""]},
+				"youtube": {"approximate_date": [""]}})
 		with self.borrowed(self, ("list", count), options) as ydl:
 			info = ydl.extract_info(url, download=False)
 		videos = []

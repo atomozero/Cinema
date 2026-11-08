@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	1009050093
+1	ukrainian	application/x-vnd.atomozero-Cinema	2165559810
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -7,9 +7,10 @@ Search first in:	Settings		Спершу шукати в:
 Add to favorites	Grid		Додати до обраного
 OK	Window		Гаразд
 Add this channel to the tabs	Categories		Додати цей канал до вкладок
-Video downloaded	Window		Відео завантажено
 Play	Grid		Відтворити
+Video downloaded	Window		Відео завантажено
 Getting the video ready	Grid		Підготовка відео
+today	Detail		сьогодні
 Downloading…	Detail		Завантаження…
 Settings…	Window		Налаштування…
 Add to the tabs	Grid		Додати до вкладок
@@ -26,6 +27,7 @@ technology review	Categories		огляд технологій
 Continue watching	Window		Продовжити перегляд
 Move to Trash	Window		Перемістити до смітника
 Getting the video ready	Player		Підготовка відео
+{0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# тиждень тому} few{# тижні тому} many{# тижнів тому} other{# тижня тому}}
 %eta% left	Window		лишилось %eta%
 The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
 Add…	Settings		Додати…
@@ -52,13 +54,17 @@ Remove from favorites	Grid		Прибрати з обраного
 Downloaded	Categories		Завантажені
 This video can't be played here, try another one.	Window		Це відео не можна відтворити тут, спробуйте інше.
 TV series	Window		Серіали
+yesterday	Detail		учора
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
 No subtitles available	Player		Немає доступних субтитрів
 Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
+{0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
 Show the latest videos	Grid		Показати останні відео
 Music	Categories		Музика
 The key works.	Settings		Ключ працює.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
 Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
 Download	Detail		Завантажити
 Remove	Settings		Вилучити
@@ -76,12 +82,13 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		А�
 Science	Categories		Наука
 Classic cartoons	Categories		Класичні мультфільми
 Play	Detail		Відтворити
+Follow	Detail		Стежити
 Free channels of:	Settings		Безкоштовні канали країни:
 Details	Grid		Подробиці
 %done% of %total%	Window		%done% з %total%
 forced	Subtitles		примусові
-Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
 Already downloaded	Grid		Вже завантажено
+Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
 Search	Settings		Пошук
 Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
 Cinema	System name		Cinema
@@ -96,6 +103,7 @@ Download	Grid		Завантажити
 Movies	Window		Фільми
 Looking for the videos…	Window		Пошук відео…
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube
+Following	Detail		Ви стежите
 automatic	Player		автоматичні
 Automatic	Settings		Автоматично
 No videos downloaded yet: right click a video, or press D	Window		Ще немає завантажених відео: клацніть правою кнопкою на відео або натисніть D

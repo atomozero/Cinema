@@ -476,9 +476,31 @@ CinemaWindow::_AddChannel(const char* name, const char* id)
 /*!	The tabs changed: the shelves of the home, which know them by their
 	place, are made again, now or when the page of a video over them closes.
 */
+/*!	1 when the channel of the item is one of the tabs, 0 when it is not, -1
+	when it has none that can be one (a file of the library, TV).
+*/
+int32
+CinemaWindow::_Followed(const MediaItem& item) const
+{
+	if (item.channelId.IsEmpty() || item.provider == "library"
+		|| item.provider == "local" || item.kind == "live")
+		return -1;
+	for (const Category& category : fCategories) {
+		if (category.channel == item.channelId)
+			return 1;
+	}
+	return 0;
+}
+
+
 void
 CinemaWindow::_HomeChanged()
 {
+	// the button of the page shown follows the tabs
+	if (fDetailsShown) {
+		MediaItem shown = fDetail->Item();
+		fDetail->SetFollowed(shown.channelId.String(), _Followed(shown));
+	}
 	fHomeLoaded = false;
 	fHomeRequests.clear();
 	fHomeQueue.clear();
@@ -527,6 +549,8 @@ CinemaWindow::_Videos(BMessage* message)
 		video.channel = message->GetString("channel", i, "");
 		video.channelId = message->GetString("channel id", i, "");
 		video.year = message->GetInt32("year", i, 0);
+		video.date = message->GetString("date", i, "");
+		video.views = message->GetInt64("views", i, 0);
 		video.rating = message->GetDouble("rating", i, 0);
 		video.poster = message->GetString("poster", i, "");
 		video.thumbnail = message->GetString("thumbnail", i, "");
@@ -799,6 +823,7 @@ CinemaWindow::_ShowDetails(BMessage* message)
 	fDetailsId = item.id;
 	fDetailsShown = true;
 	fDetail->SetItem(item);
+	fDetail->SetFollowed(item.channelId.String(), _Followed(item));
 	fDetail->SetLoading(true);
 
 	// the small picture at once, while the big one is on its way
@@ -843,6 +868,7 @@ CinemaWindow::_Details(BMessage* message)
 	item.poster = message->GetString("poster", item.poster);
 	item.thumbnail = message->GetString("thumbnail", item.thumbnail);
 	fDetail->SetItem(item);
+	fDetail->SetFollowed(item.channelId.String(), _Followed(item));
 	fDetail->SetLoading(false);
 
 	if (!item.poster.IsEmpty()) {
@@ -993,6 +1019,24 @@ CinemaWindow::MessageReceived(BMessage* message)
 			_ShowChannel(message->GetString("channel", ""),
 				message->GetString("channel id", ""));
 			break;
+		case kMsgFollowChannel:
+		{
+			BString id = message->GetString("channel id", "");
+			if (message->GetBool("follow", true)) {
+				const char* provider = message->GetString("provider", "");
+				if (provider[0] != '\0')
+					fChannelProviders[id] = provider;
+				_AddChannel(message->GetString("channel", ""), id.String());
+			} else {
+				for (size_t i = 0; i < fCategories.size(); i++) {
+					if (fCategories[i].channel == id) {
+						_RemoveCategory(i);
+						break;
+					}
+				}
+			}
+			break;
+		}
 		case kMsgAddChannel:
 			// the one given, or the one shown
 			_AddChannel(message->GetString("channel", fChannelName),
