@@ -33,6 +33,12 @@ using namespace Style;
 static const float kBaseMinTileWidth = 260;
 static const float kBaseGap = 20;
 static const float kBaseTitleHeight = 92;
+// above and below the pictures of a shelf: its title and the next shelf are
+// close enough already
+static const float kBaseShelfPad = 8;
+
+
+static float line_height(const BFont& font);
 	// two lines of title, one with the channel, one with the views and how
 	// long ago it came out
 static const float kTitleSize = 15;
@@ -109,17 +115,71 @@ VideoGrid::SetShelfMode(float tileWidth)
 
 
 float
-VideoGrid::ShelfHeightFor(float tileWidth)
+VideoGrid::ShelfHeightFor(float tileWidth, bool compact)
 {
 	float pictureHeight = roundf(tileWidth * 9 / 16);
-	return 2 * S(kBaseGap) + pictureHeight + S(kBaseTitleHeight);
+	return 2 * S(kBaseShelfPad) + pictureHeight + _TitleHeightFor(compact);
+}
+
+
+/*!	Below the picture: two lines of title, the channel, and the views and
+	how long ago, unless compact (videos that have neither).
+*/
+float
+VideoGrid::_TitleHeightFor(bool compact)
+{
+	float height = S(kBaseTitleHeight);
+	if (compact)
+		height -= line_height(Font(kChannelSize)) + S(2);
+	return height;
+}
+
+
+float
+VideoGrid::_TitleHeight() const
+{
+	return _TitleHeightFor(fCompact);
+}
+
+
+void
+VideoGrid::SetCompact(bool compact)
+{
+	fCompact = compact;
+	_UpdateScrollBar();
+	Invalidate();
+}
+
+
+/*!	How many lines its title takes, one or two: what is below it follows it,
+	without the hole of a second line it does not have.
+*/
+int32
+VideoGrid::_TitleLines(const MediaItem& video, float width) const
+{
+	BFont font = Font(kTitleSize);
+	if (font.StringWidth(video.title.String()) <= width)
+		return 1;
+	return 2;
+}
+
+
+/*!	Where the lines below the title start: the channel, or how far a
+	download is.
+*/
+float
+VideoGrid::_BelowTitle(int32 index, BRect frame) const
+{
+	return frame.bottom - _TitleHeight() + S(8)
+		+ _TitleLines(fVideos[index], frame.Width())
+			* line_height(Font(kTitleSize)) + S(4);
 }
 
 
 float
 VideoGrid::ShelfHeight() const
 {
-	return ShelfHeightFor(fShelfTileWidth);
+	return ShelfHeightFor(fShelfTileWidth, fCompact);
 }
 
 
@@ -305,15 +365,15 @@ VideoGrid::_TileFrame(int32 index) const
 {
 	if (fShelf) {
 		float pictureHeight = roundf(fShelfTileWidth * 9 / 16);
-		float tileHeight = pictureHeight + S(kBaseTitleHeight);
+		float tileHeight = pictureHeight + _TitleHeight();
 		float left = S(kBaseGap) + (index % _Columns()) * (fShelfTileWidth + S(kBaseGap));
-		return BRect(left, S(kBaseGap), left + fShelfTileWidth,
-			S(kBaseGap) + tileHeight);
+		return BRect(left, S(kBaseShelfPad), left + fShelfTileWidth,
+			S(kBaseShelfPad) + tileHeight);
 	}
 	int32 columns = _Columns();
 	float tileWidth = (Bounds().Width() + 1 - S(kBaseGap)) / columns - S(kBaseGap);
 	float pictureHeight = roundf(tileWidth * 9 / 16);
-	float tileHeight = pictureHeight + S(kBaseTitleHeight);
+	float tileHeight = pictureHeight + _TitleHeight();
 	float left = S(kBaseGap) + (index % columns) * (tileWidth + S(kBaseGap));
 	float top = _HeaderHeight() + S(kBaseGap)
 		+ (index / columns) * (tileHeight + S(kBaseGap));
@@ -353,8 +413,7 @@ VideoGrid::_ChannelFrame(int32 index) const
 		return BRect();
 	BRect frame = _TileFrame(index);
 	BFont font = Font(kChannelSize);
-	float top = frame.bottom - S(kBaseTitleHeight) + S(8)
-		+ 2 * line_height(Font(kTitleSize)) + S(4);
+	float top = _BelowTitle(index, frame);
 	float width = std::min(frame.Width(),
 		font.StringWidth(video.channel.String()));
 	return BRect(frame.left, top, frame.left + width,
@@ -465,7 +524,7 @@ VideoGrid::_DrawTile(int32 index, BRect frame)
 	}
 
 	BRect picture(frame.left, frame.top, frame.right,
-		frame.bottom - S(kBaseTitleHeight));
+		frame.bottom - _TitleHeight());
 	FillRound(this, picture, S(kBaseRadius), kCard);
 	if (video.picture != NULL) {
 		SetDrawingMode(B_OP_COPY);
@@ -619,8 +678,7 @@ VideoGrid::_DrawTile(int32 index, BRect frame)
 		small.GetHeight(&smallHeight);
 		BString status(video.status);
 		small.TruncateString(&status, B_TRUNCATE_END, frame.Width());
-		float baseline = frame.bottom - S(kBaseTitleHeight) + S(8)
-			+ 2 * line_height(Font(kTitleSize)) + S(4) + smallHeight.ascent;
+		float baseline = _BelowTitle(index, frame) + smallHeight.ascent;
 		DrawText(this, status.String(), BPoint(frame.left, baseline), small,
 			kAccent);
 		return;
@@ -651,8 +709,7 @@ VideoGrid::_DrawTile(int32 index, BRect frame)
 		font_height smallHeight;
 		small.GetHeight(&smallHeight);
 		small.TruncateString(&info, B_TRUNCATE_END, frame.Width());
-		float baseline = frame.bottom - S(kBaseTitleHeight) + S(8)
-			+ 2 * line_height(Font(kTitleSize)) + S(4) + line_height(small)
+		float baseline = _BelowTitle(index, frame) + line_height(small)
 			+ S(2) + smallHeight.ascent;
 		DrawText(this, info.String(), BPoint(frame.left, baseline), small,
 			kTextDim);
@@ -1296,7 +1353,7 @@ VideoGrid::_DrawChannelTile(int32 index, BRect frame, bool selected,
 {
 	const MediaItem& video = fVideos[index];
 	BRect picture(frame.left, frame.top, frame.right,
-		frame.bottom - S(kBaseTitleHeight));
+		frame.bottom - _TitleHeight());
 	rgb_color back = kCard;
 	if (hover) {
 		back.red = std::min(255, back.red + 14);
@@ -1362,7 +1419,7 @@ VideoGrid::_DrawChannelTile(int32 index, BRect frame, bool selected,
 	font.GetHeight(&height);
 	BString name(video.title);
 	font.TruncateString(&name, B_TRUNCATE_END, frame.Width());
-	float top = frame.bottom - S(kBaseTitleHeight) + S(8);
+	float top = frame.bottom - _TitleHeight() + S(8);
 	DrawText(this, name.String(), BPoint(frame.left, top + height.ascent),
 		font, kText);
 	BFont small = Font(kChannelSize);

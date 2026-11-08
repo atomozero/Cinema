@@ -57,7 +57,10 @@ public:
 			void				SetVideos(const std::vector<MediaItem>& videos);
 			void				SetShelfMode(float tileWidth);
 			float				ShelfHeight() const;
-			static float			ShelfHeightFor(float tileWidth);
+			static float			ShelfHeightFor(float tileWidth,
+									bool compact = false);
+			void				SetCompact(bool compact);
+									// no line for views and dates
 			bool				HasVideo(const char* id) const;
 			bool				IsEmpty() const { return fVideos.empty(); }
 			void				SetPicture(const char* id, BBitmap* picture);
@@ -103,6 +106,11 @@ private:
 			void				_ShowMenu(int32 index, BPoint where);
 			void				_DrawTile(int32 index, BRect frame);
 			void				_DrawBusy();
+	static	float				_TitleHeightFor(bool compact);
+			float				_TitleHeight() const;
+			int32				_TitleLines(const MediaItem& video,
+									float width) const;
+			float				_BelowTitle(int32 index, BRect frame) const;
 			void				_DrawChannelTile(int32 index, BRect frame,
 									bool selected, bool hover);
 			float				_HeaderHeight() const;
@@ -125,6 +133,7 @@ private:
 			BMessageRunner*		fAnimation;
 			ChannelHeader		fHeader;
 			bool				fHasHeader = false;
+			bool				fCompact = false;
 			BBitmap*			fAvatar = NULL;
 			int32				fHeaderHover = 0;	// 1 star, 2 follow
 };

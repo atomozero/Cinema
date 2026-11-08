@@ -33,7 +33,7 @@ static const float kBaseTileWidth = 210;
 static const float kBaseHeaderHeight = 36;
 static const float kBaseTop = 10;
 static const float kBaseGap = 4;
-static const float kBaseBottom = 14;
+static const float kBaseBottom = 8;
 static const float kSeeAllSize = 14;
 
 
@@ -188,6 +188,14 @@ HomeView::SetShelves(const std::vector<ShelfSpec>& shelves)
 		ShelfHeader* header = new ShelfHeader(spec.title, spec.seeAll);
 		VideoGrid* row = new VideoGrid;
 		row->SetShelfMode(S(kBaseTileWidth));
+		// what was watched or downloaded has no views nor date: no line
+		// kept empty for them
+		bool compact = !spec.videos.empty();
+		for (const MediaItem& video : spec.videos) {
+			if (video.views > 0 || !video.date.IsEmpty())
+				compact = false;
+		}
+		row->SetCompact(compact);
 		float rowHeight = row->ShelfHeight();
 		row->SetExplicitMinSize(BSize(B_SIZE_UNSET, rowHeight));
 		row->SetExplicitMaxSize(BSize(B_SIZE_UNSET, rowHeight));
