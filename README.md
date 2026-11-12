@@ -87,7 +87,8 @@ shares is downloaded with `aria2c` into the same tab, where you can follow and
 stop it. It plays while it downloads: its pieces come in order, and Cinema
 starts it as soon as the first ones are there (a link with `xs=`, the address
 of its `.torrent`, starts in a few seconds); over a video already playing it
-asks first. A stopped or interrupted download picks up where it was. Without
+asks first, and the bar of the player shows, lighter, what of it is already
+downloaded. A stopped or interrupted download picks up where it was. Without
 `aria2c`, Cinema offers to install it on x86. Use it for
 what you may share, such as the films of the Blender Foundation or the torrents
 of the Internet Archive. **S** or a right click gives a video or a channel a
