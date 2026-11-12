@@ -56,6 +56,18 @@ public:
 				_Window()->PostMessage(&torrent);
 				continue;
 			}
+			// the feed of a podcast: a tab of its episodes
+			BString lower(address);
+			lower.ToLower();
+			if (lower.StartsWith("feed:") || (lower.StartsWith("http")
+					&& (lower.EndsWith(".xml") || lower.EndsWith(".rss")
+						|| lower.FindFirst("/feed") >= 0
+						|| lower.FindFirst("/rss") >= 0))) {
+				BMessage podcast(kMsgAddPodcast);
+				podcast.AddString("address", address);
+				_Window()->PostMessage(&podcast);
+				continue;
+			}
 			// a live address too, which plays with FFmpeg: a file such as
 			// cinema-live:?url=%2Fboot%2Fhome%2Fvideo.mp4 as well
 			if (address.IStartsWith("http://")

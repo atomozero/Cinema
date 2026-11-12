@@ -1789,6 +1789,12 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgAddTorrent:
 			_AddTorrent(message->GetString("source", ""));
 			break;
+		case kMsgAddPodcast:
+			if (IsMinimized())
+				Minimize(false);
+			Activate();
+			_AddPodcast(message->GetString("address", ""));
+			break;
 		case kMsgWatchTorrent:
 			if (message->GetInt32("which", 1) == 0) {
 				BMessage play(*message);

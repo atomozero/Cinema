@@ -78,6 +78,7 @@ enum {
 	kMsgPlayerSave		= 'plsv',	// where it is, to go on later
 	kMsgPlayerClose		= 'plcl',
 	kMsgAddTorrent		= 'tadd',	// "source": a magnet link or a .torrent
+	kMsgAddPodcast		= 'padd',	// "address": the feed of a podcast
 	kMsgToggleOverlay	= 'plov',	// the O key: the overlay off or on
 	kMsgChangeQuality	= 'plqu',	// + and -: "up", a size more or less
 	kMsgInstallHelper	= 'hins',	// pkgman for what the helper needs:
