@@ -1,4 +1,4 @@
-1	french	application/x-vnd.atomozero-Cinema	2969662857
+1	french	application/x-vnd.atomozero-Cinema	3398382628
 YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
@@ -19,9 +19,9 @@ Downloading…	Detail		Téléchargement…
 Settings…	Window		Réglages…
 Decoding without the deblocking filter	Player		Décodage sans filtre de déblocage
 Add to the tabs	Grid		Ajouter aux onglets
+No subtitles	Player		Aucun sous-titre
 Not now	Window		Pas maintenant
 Processor: Cinema %cinema%%, all %all%%	Player		Processeur : Cinema %cinema%%, total %all%%
-No subtitles	Player		Aucun sous-titre
 Decoding the key frames only	Player		Décodage des images clés seulement
 Yes	Player		Oui
 Library	Settings		Bibliothèque
@@ -92,6 +92,7 @@ Remove	Settings		Retirer
 Download	Detail		Télécharger
 Downloaded	Window		Téléchargées
 Add	Settings		Ajouter
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		L'installer maintenant ? pkgman demande avant de modifier quoi que ce soit, dans une fenêtre Terminal.
 Always	Settings		Toujours
 Remove from the tabs	Categories		Retirer des onglets
 Choose…	Settings		Choisir…

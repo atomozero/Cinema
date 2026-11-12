@@ -126,7 +126,7 @@ private:
 			void				_ChangeQuality(bool up);
 			void				_FindAtHeight(int32 height);
 			void				_OfferInstall();
-			void				_Install();
+			void				_Install(const char* packages);
 			BString				_OverlayCard() const;
 			int32				_OverlayDecision() const;
 			void				_RememberOverlay(bool works);
@@ -201,6 +201,7 @@ private:
 			BMessageRunner*		fOverlayAsker = NULL;	// made again when the details close
 			int32				fHelperRestarts = 0;
 			bool				fInstallOffered = false;
+			BString				fPendingTorrent;	// once aria2c is there
 			bigtime_t			fHelperRestarted = 0;
 			BString				fWanted;		// chosen: worth finding
 			BMessageRunner*		fPrefetchRunner;

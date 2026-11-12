@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	2969662857
+1	korean	application/x-vnd.atomozero-Cinema	3398382628
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -19,9 +19,9 @@ Downloading…	Detail		다운로드 중…
 Settings…	Window		설정…
 Decoding without the deblocking filter	Player		디블로킹 필터 없이 디코딩
 Add to the tabs	Grid		탭에 추가
+No subtitles	Player		자막 없음
 Not now	Window		나중에
 Processor: Cinema %cinema%%, all %all%%	Player		프로세서: Cinema %cinema%%, 전체 %all%%
-No subtitles	Player		자막 없음
 Decoding the key frames only	Player		키 프레임만 디코딩
 Yes	Player		예
 Library	Settings		라이브러리
@@ -92,6 +92,7 @@ Remove	Settings		제거
 Download	Detail		다운로드
 Downloaded	Window		다운로드한 동영상
 Add	Settings		추가
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		지금 설치할까요? pkgman이 터미널 창에서 변경하기 전에 묻습니다.
 Always	Settings		항상
 Remove from the tabs	Categories		탭에서 제거
 Choose…	Settings		선택…

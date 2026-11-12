@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2969662857
+1	japanese	application/x-vnd.atomozero-Cinema	3398382628
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -19,9 +19,9 @@ Downloading…	Detail		ダウンロード中…
 Settings…	Window		設定…
 Decoding without the deblocking filter	Player		デブロッキングフィルターなしでデコード
 Add to the tabs	Grid		タブに追加
+No subtitles	Player		字幕なし
 Not now	Window		後で
 Processor: Cinema %cinema%%, all %all%%	Player		プロセッサ: Cinema %cinema%%、全体 %all%%
-No subtitles	Player		字幕なし
 Decoding the key frames only	Player		キーフレームのみデコード
 Yes	Player		はい
 Library	Settings		ライブラリ
@@ -92,6 +92,7 @@ Remove	Settings		削除
 Download	Detail		ダウンロード
 Downloaded	Window		ダウンロード済み
 Add	Settings		追加
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
 Always	Settings		常に
 Remove from the tabs	Categories		タブから削除
 Choose…	Settings		選択…

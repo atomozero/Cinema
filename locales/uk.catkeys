@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2969662857
+1	ukrainian	application/x-vnd.atomozero-Cinema	3398382628
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -19,9 +19,9 @@ Downloading…	Detail		Завантаження…
 Settings…	Window		Налаштування…
 Decoding without the deblocking filter	Player		Декодування без фільтра деблокінгу
 Add to the tabs	Grid		Додати до вкладок
+No subtitles	Player		Без субтитрів
 Not now	Window		Не зараз
 Processor: Cinema %cinema%%, all %all%%	Player		Процесор: Cinema %cinema%%, усього %all%%
-No subtitles	Player		Без субтитрів
 Decoding the key frames only	Player		Декодування лише ключових кадрів
 Yes	Player		Так
 Library	Settings		Бібліотека
@@ -92,6 +92,7 @@ Remove	Settings		Вилучити
 Download	Detail		Завантажити
 Downloaded	Window		Завантажені
 Add	Settings		Додати
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
 Always	Settings		Завжди
 Remove from the tabs	Categories		Вилучити з вкладок
 Choose…	Settings		Вибрати…

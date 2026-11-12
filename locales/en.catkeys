@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	2969662857
+1	english	application/x-vnd.atomozero-Cinema	3398382628
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -19,9 +19,9 @@ Downloading…	Detail		Downloading…
 Settings…	Window		Settings…
 Decoding without the deblocking filter	Player		Decoding without the deblocking filter
 Add to the tabs	Grid		Add to the tabs
+No subtitles	Player		No subtitles
 Not now	Window		Not now
 Processor: Cinema %cinema%%, all %all%%	Player		Processor: Cinema %cinema%%, all %all%%
-No subtitles	Player		No subtitles
 Decoding the key frames only	Player		Decoding the key frames only
 Yes	Player		Yes
 Library	Settings		Library
@@ -92,6 +92,7 @@ Remove	Settings		Remove
 Download	Detail		Download
 Downloaded	Window		Downloaded
 Add	Settings		Add
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Install it now? pkgman asks before it changes anything, in a Terminal window.
 Always	Settings		Always
 Remove from the tabs	Categories		Remove from the tabs
 Choose…	Settings		Choose…

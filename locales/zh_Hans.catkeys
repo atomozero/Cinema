@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	2969662857
+1	chinese	application/x-vnd.atomozero-Cinema	3398382628
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -19,9 +19,9 @@ Downloading…	Detail		正在下载…
 Settings…	Window		设置…
 Decoding without the deblocking filter	Player		解码时不使用去块滤波
 Add to the tabs	Grid		添加到标签页
+No subtitles	Player		无字幕
 Not now	Window		以后再说
 Processor: Cinema %cinema%%, all %all%%	Player		处理器：Cinema %cinema%%，总计 %all%%
-No subtitles	Player		无字幕
 Decoding the key frames only	Player		仅解码关键帧
 Yes	Player		是
 Library	Settings		媒体库
@@ -92,6 +92,7 @@ Remove	Settings		移除
 Download	Detail		下载
 Downloaded	Window		已下载
 Add	Settings		添加
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		现在安装吗？pkgman 会在终端窗口中先询问再做任何更改。
 Always	Settings		始终
 Remove from the tabs	Categories		从标签页中移除
 Choose…	Settings		选择…

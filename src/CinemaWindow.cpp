@@ -348,6 +348,19 @@ void
 CinemaWindow::_SetProviders(BMessage* message)
 {
 	fProviders = ProvidersFromMessage(*message);
+	// a torrent that waited for aria2c to be installed
+	if (!fPendingTorrent.IsEmpty()) {
+		for (const Provider& provider : fProviders) {
+			if (provider.id == "torrent") {
+				BString source = fPendingTorrent;
+				fPendingTorrent = "";
+				_AddTorrent(source.String());
+				break;
+			}
+		}
+		// not installed after all: not later either
+		fPendingTorrent = "";
+	}
 
 	BString chosen;
 	for (const Provider& provider : fProviders)
@@ -575,7 +588,9 @@ CinemaWindow::_OfferInstall()
 		text.String(), install, notNow);
 	// only if asked: Enter and Esc leave things as they are
 	alert->SetShortcut(1, B_ESCAPE);
-	alert->Go(new BInvoker(new BMessage(kMsgInstallHelper), this));
+	BMessage* chosen = new BMessage(kMsgInstallHelper);
+	chosen->AddString("packages", "cmd:python3 cmd:yt_dlp cmd:ffmpeg");
+	alert->Go(new BInvoker(chosen, this));
 #endif
 }
 
@@ -584,11 +599,11 @@ CinemaWindow::_OfferInstall()
 	closed, the helper starts again.
 */
 void
-CinemaWindow::_Install()
+CinemaWindow::_Install(const char* packages)
 {
-	const char* arguments[] = { "/bin/sh", "-c",
-		"pkgman install cmd:python3 cmd:yt_dlp cmd:ffmpeg; echo; "
-		"echo 'Enter: back to Cinema'; read line", NULL };
+	BString command("pkgman install ");
+	command << packages << "; echo; echo 'Enter: back to Cinema'; read line";
+	const char* arguments[] = { "/bin/sh", "-c", command.String(), NULL };
 	team_id team = -1;
 	if (be_roster->Launch("application/x-vnd.Haiku-Terminal", 3,
 			arguments, &team) != B_OK || team < 0)
@@ -2073,7 +2088,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgInstallHelper:
 			// "Install", not the default button
 			if (message->GetInt32("which", 1) == 0)
-				_Install();
+				_Install(message->GetString("packages", ""));
+			else
+				fPendingTorrent = "";
 			break;
 		case kMsgHelperInstalled:
 			// installed or not: the helper tries again, and says again if
@@ -2082,6 +2099,12 @@ CinemaWindow::MessageReceived(BMessage* message)
 			fHelperRestarts = 0;
 			if (fHelper->Restart() == B_OK) {
 				fHelper->SetHeight(fSettings.videoHeight);
+				// the downloads go on from where they were
+				BString folder = Downloads::Folder();
+				for (const auto& entry : fDownloading)
+					fHelper->Download(entry.first.String(), folder.String(),
+						entry.second.GetString("provider",
+							_ProviderOf(entry.first).String()));
 				fHomeLoaded = false;
 				if (fCard == 2)
 					_LoadHome();
@@ -2696,8 +2719,29 @@ CinemaWindow::_AddTorrent(const char* source)
 		if (provider.id == "torrent")
 			supported = true;
 	if (!supported) {
-		(new BAlert("Cinema", B_TRANSLATE("BitTorrent downloads need aria2c, "
-			"which is not installed."), B_TRANSLATE("OK")))->Go(NULL);
+		BString text(B_TRANSLATE("BitTorrent downloads need aria2c, which is "
+			"not installed."));
+		const char* question = B_TRANSLATE("Install it now? pkgman asks "
+			"before it changes anything, in a Terminal window.");
+		const char* install = B_TRANSLATE("Install");
+		const char* notNow = B_TRANSLATE("Not now");
+#if defined(__arm__) || defined(__aarch64__)
+		// no package of it for ARM
+		(void)question;
+		(void)install;
+		(void)notNow;
+		(new BAlert("Cinema", text.String(), B_TRANSLATE("OK")))->Go(NULL);
+#else
+		text << "\n\n" << question;
+		BAlert* alert = new BAlert("Cinema", text.String(), install, notNow);
+		// only if asked: Enter and Esc leave things as they are
+		alert->SetShortcut(1, B_ESCAPE);
+		BMessage* chosen = new BMessage(kMsgInstallHelper);
+		chosen->AddString("packages", "cmd:aria2c");
+		// opened once the helper, started again, has it
+		fPendingTorrent = source;
+		alert->Go(new BInvoker(chosen, this));
+#endif
 		return;
 	}
 
