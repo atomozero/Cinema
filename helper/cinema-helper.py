@@ -495,8 +495,11 @@ def http_json(url, query=None):
 
 
 def file_name(title):
-	"""A title that can be the name of a file."""
-	return re.sub(r'[/\\:*?"<>|]', " ", str(title)).strip()[:150] or "video"
+	"""A title that can be the name of a file: "Name: Subtitle" as
+	"Name - Subtitle", the spaces left once."""
+	text = re.sub(r"\s*:\s+", " - ", str(title))
+	text = re.sub(r'[/\\:*?"<>|]', " ", text)
+	return re.sub(r"\s+", " ", text).strip()[:150] or "video"
 
 
 def size_text(size):
@@ -2619,6 +2622,9 @@ class LibraryProvider(Provider):
 		self.local = None
 		self.lock = threading.Lock()
 
+	def cache_salt(self):
+		return hashlib.sha1(self.key().encode()).hexdigest()[:8]
+
 	# the files
 
 	@staticmethod
@@ -2973,6 +2979,11 @@ def job_search(provider, tag, count, query):
 def job_channel(provider, tag, count, channel_id):
 	try:
 		name = "%s channel %d %s" % (provider.id, count, channel_id)
+		# what the list depends on besides (the key of TMDB for the library):
+		# another key, another list
+		salt = getattr(provider, "cache_salt", None)
+		if salt is not None:
+			name += " " + salt()
 		if getattr(provider, "cache_channels", True):
 			items = cached(name, lambda: (wait_for_play(),
 				provider.channel(channel_id, count))[1])
@@ -3275,6 +3286,17 @@ def organize(request):
 			os.rename(path, target)
 		except OSError:
 			shutil.move(path, target)
+		# the folders it leaves empty go, up to root
+		folder = os.path.dirname(path)
+		top = os.path.abspath(root)
+		while os.path.abspath(folder).startswith(top + os.sep):
+			try:
+				if os.listdir(folder):
+					break
+				os.rmdir(folder)
+			except OSError:
+				break
+			folder = os.path.dirname(folder)
 
 	picture = ""
 	if need_picture and cache:

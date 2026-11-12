@@ -1636,6 +1636,9 @@ CinemaWindow::_Scripting(BMessage* message)
 			_Upload(&upload);
 			result = "{\"started\": true}";
 		}
+	} else if (message->what == B_EXECUTE_PROPERTY && name == "Organize") {
+		PostMessage(kMsgOrganizeAll);
+		result = "{\"started\": true}";
 	} else if (message->what == B_EXECUTE_PROPERTY && name == "Rescan") {
 		fHomeLoaded = false;
 		if (_ShowingDownloads())

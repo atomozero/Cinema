@@ -171,7 +171,7 @@ hey Cinema get Downloads             # JSON: path, id, kind, title, channel...
 hey Cinema set Move to '{"path": "/boot/home/Cinema/x.mp4", "to": "Film/"}'
 hey Cinema set Upload to '{"path": "/boot/home/Cinema/Film/x.mp4", "move": true}'
 hey Cinema get NetworkFolder
-hey Cinema execute Rescan
+hey Cinema do Rescan
 ```
 
 A relative `to` is in `~/Cinema`; a folder ends with `/`. Errors come back as

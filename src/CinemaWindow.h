@@ -52,6 +52,10 @@ public:
 	virtual	void				MessageReceived(BMessage* message);
 	virtual	void				DirectConnected(direct_buffer_info* info);
 	virtual	bool				QuitRequested();
+			bool				Scripting(BMessage* message)
+									{ return _Scripting(message); }
+									// the properties of Cinema
+									// (Scripting.h), the window locked
 	virtual	BHandler*			ResolveSpecifier(BMessage* message,
 									int32 index, BMessage* specifier,
 									int32 what, const char* property);

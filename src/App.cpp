@@ -99,11 +99,28 @@ public:
 	virtual BHandler* ResolveSpecifier(BMessage* message, int32 index,
 		BMessage* specifier, int32 what, const char* property)
 	{
-		// the properties of Cinema: its window knows the downloads
+		// the properties of Cinema: answered here, by its window locked
+		// (forwarded to it, they lost their specifier on the way)
 		if (what == B_DIRECT_SPECIFIER && is_cinema_property(property))
-			return _Window();
+			return this;
 		return BApplication::ResolveSpecifier(message, index, specifier,
 			what, property);
+	}
+
+	virtual void MessageReceived(BMessage* message)
+	{
+		if (message->what == B_GET_PROPERTY || message->what == B_SET_PROPERTY
+			|| message->what == B_EXECUTE_PROPERTY) {
+			CinemaWindow* window = _Window();
+			bool handled = false;
+			if (window != NULL && window->Lock()) {
+				handled = window->Scripting(message);
+				window->Unlock();
+			}
+			if (handled)
+				return;
+		}
+		BApplication::MessageReceived(message);
 	}
 
 	virtual status_t GetSupportedSuites(BMessage* data)

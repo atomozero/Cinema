@@ -27,7 +27,10 @@
 						a download copied (or moved) to the network folder;
 						it goes on behind, "uploading" in Downloads says how
 						far, a notification when it is done
-	execute Rescan		the Downloads tab read again
+	do Rescan			the Downloads tab read again
+	do Organize		all the downloads put in Films, Series and Videos,
+						as when one is done (behind: Downloads shows them
+						in place a moment later)
 
 	An error is answered with "error" (B_ERROR) and "message".
 */
@@ -46,6 +49,8 @@ static const property_info kCinemaProperties[] = {
 		"JSON.", 0, { B_STRING_TYPE } },
 	{ "Rescan", { B_EXECUTE_PROPERTY, 0 }, { B_DIRECT_SPECIFIER, 0 },
 		"Reads the downloads again.", 0, {} },
+	{ "Organize", { B_EXECUTE_PROPERTY, 0 }, { B_DIRECT_SPECIFIER, 0 },
+		"Puts all the downloads in Films, Series and Videos.", 0, {} },
 	{ 0 }
 };
 
