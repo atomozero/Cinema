@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	1446654558
+1	korean	application/x-vnd.atomozero-Cinema	2008134928
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -110,6 +110,7 @@ Classic cartoons	Categories		고전 만화
 Play	Detail		재생
 Free channels of:	Settings		무료 채널 국가:
 Follow	Detail		팔로우
+Home network	Window		홈 네트워크
 No statistics for this video	Player		이 동영상의 통계가 없습니다
 Details	Grid		세부 정보
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema의 README에 설명된 대로 단일 파일 yt-dlp를 ~/config/non-packaged/bin에 넣고 Cinema를 다시 시작하세요.

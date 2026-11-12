@@ -29,6 +29,9 @@ struct Settings {
 	BString		searchSource;	// the provider searched first, or empty
 	int32		videoHeight;	// the highest picture wanted, 0 for what
 								// suits the machine
+	bool		homeNetworkOffered = false;
+								// the tab of the servers of the home
+								// network was added once
 	bool		tvOffered;		// the free channels of the country were
 								// given a tab once
 	float		volume;			// of the player, 0 to 1, kept between runs

@@ -126,6 +126,7 @@ private:
 			void				_ChangeQuality(bool up);
 			void				_FindAtHeight(int32 height);
 			void				_HidePlayer();
+			void				_OfferHomeNetwork();
 			void				_ShowHiddenPlayer();
 			void				_PlayerOpened();
 			void				_OfferInstall();

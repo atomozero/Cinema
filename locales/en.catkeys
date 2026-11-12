@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	1446654558
+1	english	application/x-vnd.atomozero-Cinema	2008134928
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -110,6 +110,7 @@ Classic cartoons	Categories		Classic cartoons
 Play	Detail		Play
 Free channels of:	Settings		Free channels of:
 Follow	Detail		Follow
+Home network	Window		Home network
 No statistics for this video	Player		No statistics for this video
 Details	Grid		Details
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.

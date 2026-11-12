@@ -66,6 +66,8 @@ Settings::Load()
 	settings.searchSource = archive.GetString("search source", "");
 	settings.videoHeight = archive.GetInt32("video height", 0);
 	settings.tvOffered = archive.GetBool("tv offered", false);
+	settings.homeNetworkOffered = archive.GetBool("home network offered",
+		false);
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
 	settings.evenVolume = archive.GetBool("even volume", true);
@@ -94,6 +96,7 @@ Settings::Save() const
 	archive.AddString("search source", searchSource);
 	archive.AddInt32("video height", videoHeight);
 	archive.AddBool("tv offered", tvOffered);
+	archive.AddBool("home network offered", homeNetworkOffered);
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);
 	archive.AddBool("even volume", evenVolume);

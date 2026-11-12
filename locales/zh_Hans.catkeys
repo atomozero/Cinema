@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	1446654558
+1	chinese	application/x-vnd.atomozero-Cinema	2008134928
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -110,6 +110,7 @@ Classic cartoons	Categories		经典动画
 Play	Detail		播放
 Free channels of:	Settings		免费频道所在国家：
 Follow	Detail		关注
+Home network	Window		家庭网络
 No statistics for this video	Player		此视频没有统计信息
 Details	Grid		详细信息
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		按照 Cinema 的 README 所述，把单文件版 yt-dlp 放到 ~/config/non-packaged/bin，然后重新启动 Cinema。

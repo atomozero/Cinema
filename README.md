@@ -93,7 +93,10 @@ asks first, and the bar of the player shows, lighter, what of it is already
 downloaded. A stopped or interrupted download picks up where it was. Without
 `aria2c`, Cinema offers to install it on x86. Use it for
 what you may share, such as the films of the Blender Foundation or the torrents
-of the Internet Archive. **S** or a right click gives a video or a channel a
+of the Internet Archive. The video servers of the home network (DLNA, as a
+FRITZ!Box, a NAS, or Jellyfin and Plex with DLNA on) are found by themselves:
+a **Home network** tab, added the first time one answers, shows them, and their
+folders and videos, played from the server as they are. **S** or a right click gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.
 
 The settings, in the **≡** menu or with Alt+,, hold the TMDB key, the folders

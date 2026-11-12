@@ -367,6 +367,14 @@ CinemaWindow::_SetProviders(BMessage* message)
 		fPendingTorrent = "";
 	}
 
+	// servers found in the home network: a tab of them, once
+	for (const Provider& provider : fProviders) {
+		if (provider.id == "dlna") {
+			_OfferHomeNetwork();
+			break;
+		}
+	}
+
 	BString chosen;
 	for (const Provider& provider : fProviders)
 		if (provider.id == "youtube")
@@ -3059,6 +3067,31 @@ CinemaWindow::_OfferTv()
 	category.name = B_TRANSLATE("TV");
 	category.provider = "iptv";
 	category.channel = address;
+	fCategories.push_back(category);
+	SaveCategories(fCategories);
+	fCategoryBar->SetCategories(fCategories);
+}
+
+
+/*!	The video servers of the home network (DLNA), found by the helper: a
+	tab of them, added once; taken away, it stays away.
+*/
+void
+CinemaWindow::_OfferHomeNetwork()
+{
+	if (fSettings.homeNetworkOffered)
+		return;
+	fSettings = Settings::Load();
+	fSettings.homeNetworkOffered = true;
+	fSettings.Save();
+	for (const Category& existing : fCategories) {
+		if (existing.provider == "dlna")
+			return;
+	}
+	Category category;
+	category.name = B_TRANSLATE("Home network");
+	category.provider = "dlna";
+	category.channel = "servers";
 	fCategories.push_back(category);
 	SaveCategories(fCategories);
 	fCategoryBar->SetCategories(fCategories);

@@ -1,4 +1,4 @@
-1	french	application/x-vnd.atomozero-Cinema	1446654558
+1	french	application/x-vnd.atomozero-Cinema	2008134928
 YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
@@ -110,6 +110,7 @@ Classic cartoons	Categories		Dessins animés classiques
 Play	Detail		Lire
 Free channels of:	Settings		Chaînes gratuites de :
 Follow	Detail		Suivre
+Home network	Window		Réseau local
 No statistics for this video	Player		Pas de statistiques pour cette vidéo
 Details	Grid		Détails
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Placez yt-dlp en un seul fichier dans ~/config/non-packaged/bin, comme l'explique le README de Cinema, puis relancez Cinema.

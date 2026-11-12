@@ -2281,6 +2281,235 @@ class LocalProvider(Provider):
 		return media_id if os.path.isfile(media_id) else None
 
 
+class DlnaProvider(Provider):
+	"""The video servers of the home network: DLNA (UPnP AV), as a
+	FRITZ!Box, a NAS, Jellyfin or Plex with DLNA on give. The channel
+	"servers" is the servers found; a server or one of its folders is a
+	"series", which Cinema opens as a channel; a video plays from the
+	address the server gives for it, by HTTP. An id is "dlna|<address of
+	its ContentDirectory>|<object id>".
+
+	Found with SSDP: once at the start, in the background, and again each
+	time the list of the servers is opened.
+	"""
+
+	id = "dlna"
+	name = "Home network"
+	kinds = ("channel", "find")
+	cache_channels = False
+
+	SEARCH = "urn:schemas-upnp-org:device:MediaServer:1"
+	DIRECTORY = "urn:schemas-upnp-org:service:ContentDirectory:1"
+	NAMES = {"didl": "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/",
+		"dc": "http://purl.org/dc/elements/1.1/",
+		"upnp": "urn:schemas-upnp-org:metadata-1-0/upnp/"}
+	PAGE = 200
+	LIMIT = 2000
+
+	def __init__(self):
+		self.lock = threading.Lock()
+		self.servers = {}	# the address of its ContentDirectory: its name
+		self.urls = {}		# id: the address of the video
+
+	def discover(self, wait=3.0):
+		"""The servers that answer in wait seconds, added to those known."""
+		import socket as sockets
+		locations = set()
+		try:
+			sock = sockets.socket(sockets.AF_INET, sockets.SOCK_DGRAM,
+				sockets.IPPROTO_UDP)
+			sock.setsockopt(sockets.IPPROTO_IP, sockets.IP_MULTICAST_TTL, 2)
+			sock.settimeout(0.5)
+			message = ("M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\n"
+				"MAN: \"ssdp:discover\"\r\nMX: 2\r\nST: %s\r\n\r\n"
+				% self.SEARCH).encode()
+			for _ in range(2):
+				sock.sendto(message, ("239.255.255.250", 1900))
+			end = time.time() + wait
+			while time.time() < end:
+				try:
+					data, _ = sock.recvfrom(8192)
+				except sockets.timeout:
+					continue
+				found = re.search(rb"(?im)^LOCATION:\s*(\S+)", data)
+				if found:
+					locations.add(found.group(1).decode("latin-1"))
+			sock.close()
+		except OSError:
+			pass
+		for location in locations:
+			try:
+				self.describe_server(location)
+			except Exception:
+				pass
+		with self.lock:
+			return dict(self.servers)
+
+	def describe_server(self, location):
+		import xml.etree.ElementTree as tree
+		request = urllib.request.Request(location,
+			headers={"User-Agent": USER_AGENT})
+		with urllib.request.urlopen(request, timeout=5) as response:
+			root = tree.fromstring(response.read(1024 * 1024))
+		def local(element):
+			return element.tag.rsplit("}", 1)[-1]
+		name = ""
+		base = location
+		for element in root.iter():
+			if local(element) == "friendlyName" and not name:
+				name = (element.text or "").strip()
+			elif local(element) == "URLBase" and (element.text or "").strip():
+				base = element.text.strip()
+		for service in root.iter():
+			if local(service) != "service":
+				continue
+			fields = {local(child): (child.text or "").strip()
+				for child in service}
+			if fields.get("serviceType", "").startswith(
+					"urn:schemas-upnp-org:service:ContentDirectory:"):
+				control = urllib.parse.urljoin(base,
+					fields.get("controlURL", ""))
+				with self.lock:
+					self.servers[control] = name or location
+				return
+
+	def browse(self, control, object_id, start, count, flag="BrowseDirectChildren"):
+		"""The DIDL-Lite of the children of an object (or of the object
+		itself with BrowseMetadata), and how many there are in all."""
+		body = ('<?xml version="1.0" encoding="utf-8"?>'
+			'<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
+			's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
+			'<s:Body><u:Browse xmlns:u="%s"><ObjectID>%s</ObjectID>'
+			'<BrowseFlag>%s</BrowseFlag><Filter>*</Filter>'
+			'<StartingIndex>%d</StartingIndex>'
+			'<RequestedCount>%d</RequestedCount><SortCriteria></SortCriteria>'
+			'</u:Browse></s:Body></s:Envelope>') % (self.DIRECTORY,
+			html.escape(object_id), flag, start, count)
+		request = urllib.request.Request(control, data=body.encode("utf-8"),
+			headers={"Content-Type": 'text/xml; charset="utf-8"',
+				"SOAPACTION": '"%s#Browse"' % self.DIRECTORY,
+				"User-Agent": USER_AGENT})
+		with urllib.request.urlopen(request, timeout=15) as response:
+			text = response.read(16 * 1024 * 1024).decode("utf-8", "replace")
+		result = re.search(r"<Result[^>]*>(.*?)</Result>", text, re.S)
+		total = re.search(r"<TotalMatches>(\d+)</TotalMatches>", text)
+		return (html.unescape(result.group(1)) if result else "",
+			int(total.group(1)) if total else 0)
+
+	@staticmethod
+	def seconds(duration):
+		"""'1:23:45.678' in seconds."""
+		try:
+			parts = [float(part) for part in duration.split(":")]
+		except ValueError:
+			return 0
+		total = 0
+		for part in parts:
+			total = total * 60 + part
+		return int(total)
+
+	def items(self, control, didl, server, folder):
+		import xml.etree.ElementTree as tree
+		try:
+			root = tree.fromstring(didl)
+		except tree.ParseError:
+			return []
+		found = []
+		names = self.NAMES
+		for element in root:
+			tag = element.tag.rsplit("}", 1)[-1]
+			object_id = element.get("id") or ""
+			title = clean(element.findtext("dc:title", "", names) or "")
+			kind = element.findtext("upnp:class", "", names) or ""
+			media_id = "dlna|%s|%s" % (control, object_id)
+			item = {"provider": self.id, "id": media_id, "title": title,
+				"description": "", "channel": folder or server,
+				"channel_id": "", "duration": 0, "year": 0, "views": 0,
+				"rating": 0.0, "poster": "", "thumbnail": "", "season": 0,
+				"episode": 0}
+			art = element.findtext("upnp:albumArtURI", "", names) or ""
+			if tag == "container":
+				item["kind"] = "series"
+				item["description"] = server
+			elif tag == "item" and kind.startswith("object.item.videoItem"):
+				url = ""
+				for res in element.findall("didl:res", names):
+					protocol = res.get("protocolInfo") or ""
+					if protocol.startswith("http-get:") and ":video/" in protocol:
+						url = (res.text or "").strip()
+						item["duration"] = self.seconds(res.get("duration") or "")
+						break
+				if not url:
+					continue
+				with self.lock:
+					self.urls[media_id] = url
+				item["kind"] = "video"
+				date = element.findtext("dc:date", "", names) or ""
+				if date[:4].isdigit():
+					item["year"] = int(date[:4])
+					item["date"] = date[:10]
+			else:
+				continue
+			if art.startswith("http"):
+				item["thumbnail"] = item["poster"] = art
+			found.append(item)
+		return found
+
+	def channel(self, channel_id, count):
+		if channel_id in ("", "servers"):
+			servers = self.discover()
+			return [{"provider": self.id, "kind": "series",
+				"id": "dlna|%s|0" % control, "title": clean(name),
+				"description": urllib.parse.urlparse(control).hostname or "",
+				"channel": "", "channel_id": "", "duration": 0, "year": 0,
+				"views": 0, "rating": 0.0, "poster": "", "thumbnail": "",
+				"season": 0, "episode": 0}
+				for control, name in sorted(servers.items(),
+					key=lambda entry: entry[1].lower())]
+		parts = channel_id.split("|", 2)
+		if len(parts) != 3 or parts[0] != "dlna":
+			return []
+		control, object_id = parts[1], parts[2]
+		with self.lock:
+			server = self.servers.get(control, "")
+		found = []
+		start = 0
+		while start < self.LIMIT:
+			didl, total = self.browse(control, object_id, start, self.PAGE)
+			page = self.items(control, didl, server, "")
+			found += page
+			start += self.PAGE
+			if not didl or start >= total:
+				break
+		return found
+
+	def find(self, media_id, kind="video"):
+		with self.lock:
+			url = self.urls.get(media_id)
+		if url:
+			return url
+		parts = media_id.split("|", 2)
+		if len(parts) != 3:
+			return None
+		try:
+			didl, _ = self.browse(parts[1], parts[2], 0, 1, "BrowseMetadata")
+			self.items(parts[1], didl, "", "")
+		except Exception:
+			return None
+		with self.lock:
+			return self.urls.get(media_id)
+
+
+def look_for_servers():
+	"""At the start: the servers of the home network, and if there are any
+	the source that shows them, told to Cinema."""
+	dlna = DlnaProvider()
+	if dlna.discover():
+		PROVIDERS[dlna.id] = dlna
+		answer({"type": "providers", "providers":
+			[provider.describe() for provider in PROVIDERS.values()]})
+
+
 if yt_dlp is not None:
 	register(YouTubeProvider)
 	DEFAULT_PROVIDER = "youtube"
@@ -2921,6 +3150,8 @@ def serve():
 		threading.Thread(target=lambda: ignore_errors(youtube.warm_up),
 			daemon=True).start()
 	threading.Thread(target=lambda: ignore_errors(prune_cache),
+		daemon=True).start()
+	threading.Thread(target=lambda: ignore_errors(look_for_servers),
 		daemon=True).start()
 	for raw in sys.stdin.buffer:
 		line = raw.decode("utf-8", "surrogateescape").strip()

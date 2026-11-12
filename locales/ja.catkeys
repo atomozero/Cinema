@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	1446654558
+1	japanese	application/x-vnd.atomozero-Cinema	2008134928
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -110,6 +110,7 @@ Classic cartoons	Categories		名作アニメ
 Play	Detail		再生
 Free channels of:	Settings		無料チャンネルの国:
 Follow	Detail		フォロー
+Home network	Window		ホームネットワーク
 No statistics for this video	Player		この動画の統計はありません
 Details	Grid		詳細
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。

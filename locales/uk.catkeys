@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	1446654558
+1	ukrainian	application/x-vnd.atomozero-Cinema	2008134928
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -110,6 +110,7 @@ Classic cartoons	Categories		Класичні мультфільми
 Play	Detail		Відтворити
 Free channels of:	Settings		Безкоштовні канали країни:
 Follow	Detail		Стежити
+Home network	Window		Домашня мережа
 No statistics for this video	Player		Немає статистики для цього відео
 Details	Grid		Подробиці
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
