@@ -71,6 +71,7 @@ Settings::Load()
 	settings.homeNetworkOffered = archive.GetBool("home network offered",
 		false);
 	settings.networkFolder = archive.GetString("network folder", "");
+	settings.organizeDownloads = archive.GetBool("organize downloads", true);
 	settings.networkUser = archive.GetString("network user", "");
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
@@ -102,6 +103,7 @@ Settings::Save() const
 	archive.AddBool("tv offered", tvOffered);
 	archive.AddBool("home network offered", homeNetworkOffered);
 	archive.AddString("network folder", networkFolder);
+	archive.AddBool("organize downloads", organizeDownloads);
 	archive.AddString("network user", networkUser);
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);

@@ -66,6 +66,7 @@ private:
 			BCheckBox*			fPlayInCinema;
 			BCheckBox*			fResume;
 			BCheckBox*			fEvenVolume;
+			BCheckBox*			fOrganize;
 			BMenuField*			fOverlay;
 			BMenuField*			fQuality;
 			BMenuField*			fSource;

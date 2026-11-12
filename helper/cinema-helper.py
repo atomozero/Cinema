@@ -17,6 +17,10 @@
 #   {"type": "subtitle", "id": "...", "provider": "youtube", "language": "it",
 #    "automatic": false}
 #   {"type": "download", "id": "...", "provider": "youtube", "folder": "/..."}
+#   {"type": "organize", "id", "path", "root", "provider", "kind", "title",
+#    "channel", "names": {"movies", "series", "videos", "season"}}: a
+#   download put in order (organize), answered {"type": "organized", "id",
+#   "from", "path", "picture"}
 #   {"type": "upload", "id": "...", "path": "/...", "target": "ftp://...",
 #    "user": "...", "password": "..."}, and "upload check" without id and
 #   path: a downloaded video copied to a network folder
@@ -2539,23 +2543,15 @@ class DlnaProvider(Provider):
 					speed = done / max(0.001, time.time() - began)
 					left = (total - done) / speed if total and speed else 0
 					progress(int(done * 100 / total) if total else 0,
-						done=human_size(done), total=human_size(total)
+						done=size_text(done), total=size_text(total)
 							if total else "",
-						speed=human_size(speed) + "/s",
+						speed=size_text(speed) + "/s",
 						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
 		if total and os.path.getsize(temporary) != total:
 			os.remove(temporary)
 			return None
 		os.replace(temporary, path)
 		return path
-
-
-def human_size(size):
-	"""12.3MiB, as aria2c says it."""
-	for unit in ("B", "KiB", "MiB", "GiB"):
-		if size < 1024 or unit == "GiB":
-			return ("%d%s" if unit == "B" else "%.1f%s") % (size, unit)
-		size /= 1024.0
 
 
 def look_for_servers():
@@ -2677,10 +2673,14 @@ class LibraryProvider(Provider):
 						folders.append(found.group(1).strip())
 		except OSError:
 			pass
-		# the films and series downloaded with BitTorrent
+		# the films and series downloaded with BitTorrent, and the downloads
+		# put in order
 		torrents = os.path.join(home, "Cinema", "Torrent")
 		if os.path.isdir(torrents) and torrents not in folders:
 			folders.append(torrents)
+		for folder in organized_folders():
+			if folder not in folders:
+				folders.append(folder)
 		return folders
 
 	def files(self):
@@ -3168,6 +3168,151 @@ def job_upload(media_id, path, target, user, password):
 	answer({"type": "uploaded", "id": media_id, "ok": ok, "error": error})
 
 
+ORGANIZE_FILE = "organize.json"
+
+
+def organized_folders():
+	"""The folders of films and series that downloads were put in order
+	into (organize), for the library to read: from the cache."""
+	if not cache:
+		return []
+	try:
+		with open(os.path.join(cache, ORGANIZE_FILE), encoding="utf-8") as file:
+			known = json.load(file)
+	except (OSError, ValueError):
+		return []
+	return [path for path in (known.get("movies"), known.get("series"))
+		if isinstance(path, str) and os.path.isdir(path)]
+
+
+def organize(request):
+	"""A download put where it belongs, under root (~/Cinema): a film in
+	<movies>/Title (Year), an episode in <series>/Series/<season N>/Series
+	SxxEyy, a video in <videos>/Channel/Title; named as TMDB names it when
+	there is a key. Its new path, and a picture for it ("" if it has one):
+	the poster from TMDB, or a frame of it."""
+	path = request.get("path", "")
+	root = request.get("root") or os.path.dirname(path)
+	names = request.get("names") or {}
+	movies = os.path.join(root, file_name(names.get("movies") or "Films"))
+	series_root = os.path.join(root, file_name(names.get("series") or "Series"))
+	videos = os.path.join(root, file_name(names.get("videos") or "Videos"))
+	season_name = names.get("season") or "Season %d"
+	if "%d" not in season_name:
+		season_name = "Season %d"
+	if cache:
+		try:
+			with open(os.path.join(cache, ORGANIZE_FILE), "w",
+					encoding="utf-8") as file:
+				json.dump({"movies": movies, "series": series_root}, file)
+		except OSError:
+			pass
+
+	provider = request.get("provider") or ""
+	kind = request.get("kind") or "video"
+	title = request.get("title") or ""
+	channel = request.get("channel") or ""
+	extension = os.path.splitext(path)[1]
+	library = PROVIDERS.get("library") or LibraryProvider()
+	if library.local is None:
+		library.local = PROVIDERS.get("local") or LocalProvider()
+	poster = ""
+
+	stem = os.path.splitext(os.path.basename(path))[0]
+	# what a telephone or a camera names what it records: not a film
+	camera = re.match(r"^(IMG|VID|PXL|MVI|DSC|MOV|DJI|GOPR|GH\d)?[_-]?"
+		r"(19|20)\d{6}[_-]?\d{6}", stem, re.IGNORECASE) is not None
+	if provider in ("youtube", "peertube") or camera or (kind == "video"
+			and provider not in ("torrent", "dlna", "local", "archive")):
+		# a video of a channel, or a clip: by the channel; the videos of a
+		# channel have their picture already, a clip gets a frame of it
+		folder = os.path.join(videos, file_name(clean(channel) or provider
+			or "Cinema"))
+		target = os.path.join(folder, file_name(clean(title) or stem)
+			+ extension)
+		need_picture = provider not in ("youtube", "peertube")
+	else:
+		# a film or an episode: by its name; a title given (archive, a
+		# server of the home network) says more than the name of a file
+		name = os.path.splitext(os.path.basename(path))[0]
+		if title and provider in ("archive", "dlna") \
+				and not re.match(r"^\d{8}_\d{6}", title):
+			name = title
+		parsed = library.parse(os.path.join(os.path.dirname(path),
+			name + extension))
+		if parsed["kind"] == "episode":
+			info = library.series_info(parsed["series"]) \
+				if library.key() else None
+			series = clean((info or {}).get("name") or parsed["series"]) \
+				or "Series"
+			poster = (info or {}).get("poster_path") or ""
+			folder = os.path.join(series_root, file_name(series),
+				file_name(season_name % parsed["season"]))
+			target = os.path.join(folder, "%s S%02dE%02d%s" % (
+				file_name(series), parsed["season"], parsed["episode"],
+				extension))
+		else:
+			info = library.movie_info(parsed["title"], parsed.get("year")) \
+				if library.key() else None
+			found = clean((info or {}).get("title") or parsed["title"]) \
+				or name
+			year = as_int(str((info or {}).get("release_date") or "")[:4],
+				parsed.get("year") or 0)
+			poster = (info or {}).get("poster_path") or ""
+			target = os.path.join(movies, file_name(
+				"%s (%d)" % (found, year) if year else found) + extension)
+		need_picture = True
+
+	# not over another file
+	if os.path.abspath(target) != os.path.abspath(path):
+		stem, ending = os.path.splitext(target)
+		number = 2
+		while os.path.exists(target):
+			target = "%s (%d)%s" % (stem, number, ending)
+			number += 1
+		os.makedirs(os.path.dirname(target), exist_ok=True)
+		try:
+			os.rename(path, target)
+		except OSError:
+			shutil.move(path, target)
+
+	picture = ""
+	if need_picture and cache:
+		if poster:
+			picture = os.path.join(cache, "organize-%s.jpg"
+				% hashlib.sha1(poster.encode()).hexdigest()[:16])
+			if not os.path.exists(picture):
+				try:
+					request_ = urllib.request.Request(library.image(poster),
+						headers={"User-Agent": USER_AGENT})
+					with urllib.request.urlopen(request_, timeout=30) as response:
+						data = response.read(5 * 1024 * 1024)
+					with open(picture, "wb") as file:
+						file.write(data)
+				except Exception:
+					picture = ""
+		if not picture:
+			# a frame of it
+			found = library.local.item(target, True) or {}
+			picture = (found.get("thumbnail") or "").replace("file://", "")
+	return target, picture
+
+
+def job_organize(request):
+	media_id = request.get("id", "")
+	path = request.get("path", "")
+	try:
+		target, picture = organize(request)
+	except Exception:
+		target, picture = path, ""
+	# a torrent played as it came goes on from where it is now
+	with TORRENTS_LOCK:
+		if media_id in TORRENTS and target != path:
+			TORRENTS[media_id]["final"] = target
+	answer({"type": "organized", "id": media_id, "from": path,
+		"path": target, "picture": picture})
+
+
 def job_check():
 	library = PROVIDERS.get("library")
 	ok = bool(library and library.check())
@@ -3182,6 +3327,10 @@ def work(request):
 		return
 	if request.get("type") == "check":
 		threading.Thread(target=job_check, daemon=True).start()
+		return
+	if request.get("type") == "organize":
+		threading.Thread(target=job_organize, args=(request,),
+			daemon=True).start()
 		return
 	if request.get("type") in ("upload", "upload check"):
 		arguments = (request.get("target", ""), request.get("user", ""),

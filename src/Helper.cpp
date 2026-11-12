@@ -314,6 +314,25 @@ Helper::CheckUpload(const char* target, const char* user,
 
 
 void
+Helper::Organize(const char* id, const char* path, const char* root,
+	const BMessage& video, const BMessage& names)
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "organize");
+	request.Set("id", id);
+	request.Set("path", path);
+	request.Set("root", root);
+	for (const char* field : { "provider", "kind", "title", "channel" })
+		request.Set(field, video.GetString(field, ""));
+	Json folders = Json::MakeObject();
+	for (const char* field : { "movies", "series", "videos", "season" })
+		folders.Set(field, names.GetString(field, ""));
+	request.Set("names", folders);
+	_Send(request);
+}
+
+
+void
 Helper::CheckTmdb()
 {
 	Json request = Json::MakeObject();
@@ -556,6 +575,13 @@ Helper::_Handle(const BString& line)
 		return;
 	}
 
+	if (type == "organized") {
+		BMessage organized(kMsgOrganized);
+		for (const char* field : { "id", "from", "path", "picture" })
+			organized.AddString(field, answer.GetString(field, "").c_str());
+		Deliver(fTarget, &organized, &fStopping);
+		return;
+	}
 	if (type == "uploading") {
 		BMessage progress(kMsgUploadProgress);
 		progress.AddString("id", answer.GetString("id", "").c_str());

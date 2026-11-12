@@ -1,7 +1,8 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	991436070
+1	ukrainian	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
+Put new downloads in Films, Series and Videos, with a picture	Settings		Класти нові завантаження у Фільми, Серіали й Відео, з обкладинкою
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube та іншим джерелам потрібен yt-dlp, якого Python не знаходить у цій системі.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
 Search first in:	Settings		Спершу шукати в:
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		Декодування лише ключо�
 Yes	Player		Так
 Library	Settings		Бібліотека
 Cinema settings	Settings		Налаштування Cinema
-BitTorrent downloads need aria2c, which is not installed.	Window		Для завантажень BitTorrent потрібен aria2c, який не встановлено.
 From YouTube, through the helper	Player		З YouTube, через помічника
+BitTorrent downloads need aria2c, which is not installed.	Window		Для завантажень BitTorrent потрібен aria2c, який не встановлено.
 Cancel	Window		Скасувати
+Put them all in order now	Settings		Упорядкувати все зараз
 Back	Detail		Назад
 Live stream	Player		Пряма трансляція
 Documentaries	Categories		Документальні фільми
@@ -47,9 +49,11 @@ Watch now	Window		Дивитися зараз
 %eta% left	Window		лишилось %eta%
 Add…	Settings		Додати…
 The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
+Films	Window	the folder of the films downloaded	Фільми
 News	Categories		Новини
 TV	Window		ТБ
 Decoding the reference pictures only	Player		Декодування лише опорних кадрів
+Videos	Window	the folder of the other videos downloaded, by channel	Відео
 TV %country%	Settings		ТБ %country%
 TV channels	Settings		Телеканали
 Technology	Categories		Технології
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		Не вдалося завантажи
 Classic films	Categories		Класичні фільми
 video overlay	Player		відеооверлей
 Downloaded videos can be copied or moved there, with a right click.	Settings		Завантажені відео можна скопіювати або перемістити туди правим клацанням.
-# or name = channel:<id> for the latest videos of a channel	Categories		# або назва = channel:<id> для останніх відео каналу
 From the web	Player		З інтернету
+# or name = channel:<id> for the latest videos of a channel	Categories		# або назва = channel:<id> для останніх відео каналу
 MediaPlayer could not be started: %error%	Window		Не вдалося запустити MediaPlayer: %error%
 Move to Trash	Grid		Перемістити до смітника
 Remove from favorites	Grid		Прибрати з обраного
 Downloaded	Categories		Завантажені
 This video can't be played here, try another one.	Window		Це відео не можна відтворити тут, спробуйте інше.
+Series	Window	the folder of the series downloaded	Серіали
 TV series	Window		Серіали
 yesterday	Detail		учора
 Following	Grid		Ви стежите
@@ -153,6 +158,7 @@ science explained	Categories		наука простими словами
 Download	Grid		Завантажити
 Channel	Grid		Канал
 Movies	Window		Фільми
+Season %d	Window	the folder of a season of a series downloaded	Сезон %d
 Later	Window		Пізніше
 Looking for the videos…	Window		Пошук відео…
 %count% subscribers	Detail		%count% підписників
@@ -174,5 +180,5 @@ Home	Categories		Головна
 Checking…	Settings		Перевірка…
 Changing to %height%p…	Window		Перехід на %height%p…
 Subtitles	Player		Субтитри
-About Cinema	Window		Про Cinema
 From a torrent, as it downloads	Player		З торента, поки завантажується
+About Cinema	Window		Про Cinema

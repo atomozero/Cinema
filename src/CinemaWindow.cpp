@@ -2212,6 +2212,28 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgUpload:
 			_Upload(message);
 			break;
+		case kMsgOrganized:
+			_Organized(message);
+			break;
+		case kMsgOrganizeAll:
+		{
+			// the downloads there are, but not those still on their way or
+			// being copied
+			std::map<BString, BString> files;
+			std::vector<MediaItem> saved = Downloads::Load(&files, 0);
+			for (const MediaItem& item : saved) {
+				if (fDownloading.find(item.id) != fDownloading.end()
+					|| fUploads.find(item.path) != fUploads.end())
+					continue;
+				BMessage video;
+				video.AddString("provider", item.provider);
+				video.AddString("kind", item.kind);
+				video.AddString("title", item.title);
+				video.AddString("channel", item.channel);
+				_Organize(item.id.String(), item.path.String(), video);
+			}
+			break;
+		}
 		case kMsgUploadProgress:
 		{
 			BString path = message->GetString("id", "");
@@ -2967,6 +2989,10 @@ CinemaWindow::_Downloaded(BMessage* message)
 		fPlayerView->SetAvailable(BString().SetTo('9', 160).String());
 
 	Downloads::Describe(message->GetString("path", ""), video);
+	// put in Films, Series or Videos, with a picture of its own
+	fSettings = Settings::Load();
+	if (fSettings.organizeDownloads)
+		_Organize(id.String(), message->GetString("path", ""), video);
 	if (strcmp(video.GetString("provider", ""), "torrent") == 0) {
 		size_t before = fCategories.size();
 		_AddLibraryTabs();
@@ -3056,6 +3082,65 @@ CinemaWindow::_Trash(BMessage* message)
 		return;
 	}
 	_Trashed(id);
+}
+
+
+/*!	A download put in order by the helper (organize): in a folder of
+	Films, Series or Videos of ~/Cinema, named as TMDB names it when there
+	is a key, its picture a poster or a frame; the library reads those
+	folders.
+*/
+void
+CinemaWindow::_Organize(const char* id, const char* path,
+	const BMessage& video)
+{
+	BMessage names;
+	names.AddString("movies", B_TRANSLATE_COMMENT("Films",
+		"the folder of the films downloaded"));
+	names.AddString("series", B_TRANSLATE_COMMENT("Series",
+		"the folder of the series downloaded"));
+	names.AddString("videos", B_TRANSLATE_COMMENT("Videos",
+		"the folder of the other videos downloaded, by channel"));
+	names.AddString("season", B_TRANSLATE_COMMENT("Season %d",
+		"the folder of a season of a series downloaded"));
+	fHelper->Organize(id, path, Downloads::Folder().String(), video, names);
+}
+
+
+void
+CinemaWindow::_Organized(BMessage* message)
+{
+	BString id = message->GetString("id", "");
+	BString from = message->GetString("from", "");
+	BString path = message->GetString("path", "");
+	BString picture = message->GetString("picture", "");
+	if (path.IsEmpty())
+		return;
+	if (!picture.IsEmpty())
+		Downloads::SetPicture(id.String(), picture.String());
+	if (path != from) {
+		fDownloaded[id] = path;
+		if (fPlayerShown && fPlayingAddress == from)
+			fPlayingAddress = path;
+	}
+	// a film or an episode: the tabs of the library, once
+	BString movies(Downloads::Folder());
+	movies << "/" << B_TRANSLATE_COMMENT("Films",
+		"the folder of the films downloaded") << "/";
+	BString series(Downloads::Folder());
+	series << "/" << B_TRANSLATE_COMMENT("Series",
+		"the folder of the series downloaded") << "/";
+	if (path.StartsWith(movies) || path.StartsWith(series)) {
+		size_t before = fCategories.size();
+		_AddLibraryTabs();
+		if (fCategories.size() != before) {
+			SaveCategories(fCategories);
+			fCategoryBar->SetCategories(fCategories);
+		}
+	}
+	fHomeLoaded = false;
+	if (_ShowingDownloads())
+		_ShowDownloads();
 }
 
 

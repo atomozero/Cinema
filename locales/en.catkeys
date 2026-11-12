@@ -1,7 +1,8 @@
-1	english	application/x-vnd.atomozero-Cinema	991436070
+1	english	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
+Put new downloads in Films, Series and Videos, with a picture	Settings		Put new downloads in Films, Series and Videos, with a picture
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube and the other sources need yt-dlp, which Python cannot find on this system.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.
 Search first in:	Settings		Search first in:
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		Decoding the key frames only
 Yes	Player		Yes
 Library	Settings		Library
 Cinema settings	Settings		Cinema settings
-BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent downloads need aria2c, which is not installed.
 From YouTube, through the helper	Player		From YouTube, through the helper
+BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent downloads need aria2c, which is not installed.
 Cancel	Window		Cancel
+Put them all in order now	Settings		Put them all in order now
 Back	Detail		Back
 Live stream	Player		Live stream
 Documentaries	Categories		Documentaries
@@ -47,9 +49,11 @@ Watch now	Window		Watch now
 %eta% left	Window		%eta% left
 Add…	Settings		Add…
 The video could not be moved to the Trash: %error%	Window		The video could not be moved to the Trash: %error%
+Films	Window	the folder of the films downloaded	Films
 News	Categories		News
 TV	Window		TV
 Decoding the reference pictures only	Player		Decoding the reference pictures only
+Videos	Window	the folder of the other videos downloaded, by channel	Videos
 TV %country%	Settings		TV %country%
 TV channels	Settings		TV channels
 Technology	Categories		Technology
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		The video could not be downloaded
 Classic films	Categories		Classic films
 video overlay	Player		video overlay
 Downloaded videos can be copied or moved there, with a right click.	Settings		Downloaded videos can be copied or moved there, with a right click.
-# or name = channel:<id> for the latest videos of a channel	Categories		# or name = channel:<id> for the latest videos of a channel
 From the web	Player		From the web
+# or name = channel:<id> for the latest videos of a channel	Categories		# or name = channel:<id> for the latest videos of a channel
 MediaPlayer could not be started: %error%	Window		MediaPlayer could not be started: %error%
 Move to Trash	Grid		Move to Trash
 Remove from favorites	Grid		Remove from favorites
 Downloaded	Categories		Downloaded
 This video can't be played here, try another one.	Window		This video can't be played here, try another one.
+Series	Window	the folder of the series downloaded	Series
 TV series	Window		TV series
 yesterday	Detail		yesterday
 Following	Grid		Following
@@ -153,6 +158,7 @@ science explained	Categories		science explained
 Download	Grid		Download
 Channel	Grid		Channel
 Movies	Window		Movies
+Season %d	Window	the folder of a season of a series downloaded	Season %d
 Later	Window		Later
 Looking for the videos…	Window		Looking for the videos…
 %count% subscribers	Detail		%count% subscribers
@@ -174,5 +180,5 @@ Home	Categories		Home
 Checking…	Settings		Checking…
 Changing to %height%p…	Window		Changing to %height%p…
 Subtitles	Player		Subtitles
-About Cinema	Window		About Cinema
 From a torrent, as it downloads	Player		From a torrent, as it downloads
+About Cinema	Window		About Cinema

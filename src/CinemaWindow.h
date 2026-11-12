@@ -133,6 +133,9 @@ private:
 			void				_Upload(BMessage* message);
 			void				_Uploaded(BMessage* message);
 			void				_Trashed(const BString& id);
+			void				_Organize(const char* id, const char* path,
+									const BMessage& video);
+			void				_Organized(BMessage* message);
 			bool				_Scripting(BMessage* message);
 			BString				_DownloadsJson();
 			status_t			_MoveDownload(const char* from,

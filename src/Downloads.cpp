@@ -131,6 +131,26 @@ Load(std::map<BString, BString>* files, int32 pictures)
 
 
 void
+SetPicture(const char* id, const char* file)
+{
+	BString to = picture_path(id);
+	BString pictures(Folder());
+	pictures << "/.pictures";
+	create_directory(pictures.String(), 0755);
+	BFile source(file, B_READ_ONLY);
+	off_t size;
+	if (source.InitCheck() != B_OK || source.GetSize(&size) != B_OK
+		|| size <= 0 || size > 5 * 1024 * 1024)
+		return;
+	char* data = new char[size];
+	BFile target(to.String(), B_WRITE_ONLY | B_CREATE_FILE | B_ERASE_FILE);
+	if (source.Read(data, size) == size)
+		target.Write(data, size);
+	delete[] data;
+}
+
+
+void
 KeepPicture(const char* cache, const char* id)
 {
 	BString to = picture_path(id);

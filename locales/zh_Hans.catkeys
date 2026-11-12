@@ -1,7 +1,8 @@
-1	chinese	application/x-vnd.atomozero-Cinema	991436070
+1	chinese	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
+Put new downloads in Films, Series and Videos, with a picture	Settings		将新下载放入电影、剧集和视频，并配上图片
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube 和其他来源需要 yt-dlp，但此系统上的 Python 找不到它。
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自动模式会在不认识的显卡上询问一次是否能看到视频。播放时可按 O 切换。
 Search first in:	Settings		优先搜索：
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		仅解码关键帧
 Yes	Player		是
 Library	Settings		媒体库
 Cinema settings	Settings		Cinema 设置
-BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 下载需要 aria2c，但尚未安装。
 From YouTube, through the helper	Player		来自 YouTube，经由助手
+BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 下载需要 aria2c，但尚未安装。
 Cancel	Window		取消
+Put them all in order now	Settings		立即全部整理
 Back	Detail		返回
 Live stream	Player		直播
 Documentaries	Categories		纪录片
@@ -47,9 +49,11 @@ Watch now	Window		立即观看
 %eta% left	Window		剩余 %eta%
 Add…	Settings		添加…
 The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
+Films	Window	the folder of the films downloaded	电影
 News	Categories		新闻
 TV	Window		电视
 Decoding the reference pictures only	Player		仅解码参考帧
+Videos	Window	the folder of the other videos downloaded, by channel	视频
 TV %country%	Settings		%country%电视
 TV channels	Settings		电视频道
 Technology	Categories		科技
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		无法下载该视频
 Classic films	Categories		经典电影
 video overlay	Player		视频叠加层
 Downloaded videos can be copied or moved there, with a right click.	Settings		下载的视频可以右键复制或移动到那里。
-# or name = channel:<id> for the latest videos of a channel	Categories		# 或 名称 = channel:<id> 显示某个频道的最新视频
 From the web	Player		来自网络
+# or name = channel:<id> for the latest videos of a channel	Categories		# 或 名称 = channel:<id> 显示某个频道的最新视频
 MediaPlayer could not be started: %error%	Window		无法启动 MediaPlayer：%error%
 Move to Trash	Grid		移到废纸篓
 Remove from favorites	Grid		从收藏中移除
 Downloaded	Categories		已下载
 This video can't be played here, try another one.	Window		此视频无法在这里播放，请换一个试试。
+Series	Window	the folder of the series downloaded	剧集
 TV series	Window		电视剧
 yesterday	Detail		昨天
 Following	Grid		已关注
@@ -153,6 +158,7 @@ science explained	Categories		科学解说
 Download	Grid		下载
 Channel	Grid		频道
 Movies	Window		电影
+Season %d	Window	the folder of a season of a series downloaded	第 %d 季
 Later	Window		稍后
 Looking for the videos…	Window		正在查找视频…
 %count% subscribers	Detail		%count% 位订阅者
@@ -174,5 +180,5 @@ Home	Categories		主页
 Checking…	Settings		正在检查…
 Changing to %height%p…	Window		正在切换到 %height%p…
 Subtitles	Player		字幕
-About Cinema	Window		关于 Cinema
 From a torrent, as it downloads	Player		来自种子，边下载边播放
+About Cinema	Window		关于 Cinema

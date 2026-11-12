@@ -1,7 +1,8 @@
-1	korean	application/x-vnd.atomozero-Cinema	991436070
+1	korean	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
+Put new downloads in Films, Series and Videos, with a picture	Settings		새 다운로드를 영화, 시리즈, 동영상으로 정리하고 표지 넣기
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube와 다른 소스에는 yt-dlp가 필요한데, 이 시스템의 Python이 찾지 못합니다.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
 Search first in:	Settings		먼저 검색할 곳:
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		키 프레임만 디코딩
 Yes	Player		예
 Library	Settings		라이브러리
 Cinema settings	Settings		Cinema 설정
-BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 다운로드에는 aria2c가 필요하지만 설치되어 있지 않습니다.
 From YouTube, through the helper	Player		YouTube에서, 도우미를 통해
+BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 다운로드에는 aria2c가 필요하지만 설치되어 있지 않습니다.
 Cancel	Window		취소
+Put them all in order now	Settings		지금 모두 정리
 Back	Detail		뒤로
 Live stream	Player		라이브 스트림
 Documentaries	Categories		다큐멘터리
@@ -47,9 +49,11 @@ Watch now	Window		지금 보기
 %eta% left	Window		%eta% 남음
 Add…	Settings		추가…
 The video could not be moved to the Trash: %error%	Window		동영상을 휴지통으로 옮길 수 없습니다: %error%
+Films	Window	the folder of the films downloaded	영화
 News	Categories		뉴스
 TV	Window		TV
 Decoding the reference pictures only	Player		참조 프레임만 디코딩
+Videos	Window	the folder of the other videos downloaded, by channel	동영상
 TV %country%	Settings		%country% TV
 TV channels	Settings		TV 채널
 Technology	Categories		기술
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		동영상을 다운로드할 수 없�
 Classic films	Categories		고전 영화
 video overlay	Player		비디오 오버레이
 Downloaded videos can be copied or moved there, with a right click.	Settings		다운로드한 동영상을 오른쪽 클릭으로 그곳에 복사하거나 옮길 수 있습니다.
-# or name = channel:<id> for the latest videos of a channel	Categories		# 또는 이름 = channel:<id> 로 채널의 최신 동영상
 From the web	Player		웹에서
+# or name = channel:<id> for the latest videos of a channel	Categories		# 또는 이름 = channel:<id> 로 채널의 최신 동영상
 MediaPlayer could not be started: %error%	Window		MediaPlayer를 시작할 수 없습니다: %error%
 Move to Trash	Grid		휴지통으로 이동
 Remove from favorites	Grid		즐겨찾기에서 제거
 Downloaded	Categories		다운로드한 동영상
 This video can't be played here, try another one.	Window		이 동영상은 여기서 재생할 수 없습니다. 다른 동영상을 시도해 보세요.
+Series	Window	the folder of the series downloaded	시리즈
 TV series	Window		TV 시리즈
 yesterday	Detail		어제
 Following	Grid		팔로잉
@@ -153,6 +158,7 @@ science explained	Categories		과학 설명
 Download	Grid		다운로드
 Channel	Grid		채널
 Movies	Window		영화
+Season %d	Window	the folder of a season of a series downloaded	시즌 %d
 Later	Window		나중에
 Looking for the videos…	Window		동영상을 찾는 중…
 %count% subscribers	Detail		구독자 %count%명
@@ -174,5 +180,5 @@ Home	Categories		홈
 Checking…	Settings		확인 중…
 Changing to %height%p…	Window		%height%p로 바꾸는 중…
 Subtitles	Player		자막
-About Cinema	Window		Cinema 정보
 From a torrent, as it downloads	Player		토렌트에서, 다운로드하면서
+About Cinema	Window		Cinema 정보

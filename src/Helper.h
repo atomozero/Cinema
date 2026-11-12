@@ -65,6 +65,13 @@ public:
 			void				CheckUpload(const char* target,
 									const char* user, const char* password);
 									// answered with kMsgUploadChecked
+			void				Organize(const char* id, const char* path,
+									const char* root, const BMessage& video,
+									const BMessage& names);
+									// "provider", "kind", "title",
+									// "channel"; names: "movies", "series",
+									// "videos", "season" (with %d);
+									// answered with kMsgOrganized
 			void				CheckTmdb();
 									// answered with kMsgTmdbChecked
 									// NULL or empty: the default provider

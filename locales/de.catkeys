@@ -1,7 +1,8 @@
-1	german	application/x-vnd.atomozero-Cinema	991436070
+1	german	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		YouTube ist nicht erreichbar: Ist das Netzwerk an?
 Video quality:	Settings		Videoqualität:
 Downloaded	Detail		Heruntergeladen
+Put new downloads in Films, Series and Videos, with a picture	Settings		Neue Downloads in Filme, Serien und Videos ablegen, mit Bild
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube und die anderen Quellen brauchen yt-dlp, das Python auf diesem System nicht findet.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatisch fragt einmal, bei einer unbekannten Grafikkarte, ob du das Video siehst. O schaltet es während eines Videos um.
 Search first in:	Settings		Zuerst suchen in:
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		Nur Schlüsselbilder werden dekodiert
 Yes	Player		Ja
 Library	Settings		Bibliothek
 Cinema settings	Settings		Cinema-Einstellungen
-BitTorrent downloads need aria2c, which is not installed.	Window		Für BitTorrent-Downloads wird aria2c benötigt, das nicht installiert ist.
 From YouTube, through the helper	Player		Von YouTube, über den Helfer
+BitTorrent downloads need aria2c, which is not installed.	Window		Für BitTorrent-Downloads wird aria2c benötigt, das nicht installiert ist.
 Cancel	Window		Abbrechen
+Put them all in order now	Settings		Jetzt alle ordnen
 Back	Detail		Zurück
 Live stream	Player		Livestream
 Documentaries	Categories		Dokumentationen
@@ -47,9 +49,11 @@ Watch now	Window		Jetzt ansehen
 %eta% left	Window		noch %eta%
 Add…	Settings		Hinzufügen…
 The video could not be moved to the Trash: %error%	Window		Das Video konnte nicht in den Papierkorb verschoben werden: %error%
+Films	Window	the folder of the films downloaded	Filme
 News	Categories		Nachrichten
 TV	Window		TV
 Decoding the reference pictures only	Player		Nur Referenzbilder werden dekodiert
+Videos	Window	the folder of the other videos downloaded, by channel	Videos
 TV %country%	Settings		TV %country%
 TV channels	Settings		TV-Sender
 Technology	Categories		Technik
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		Das Video konnte nicht heruntergeladen
 Classic films	Categories		Filmklassiker
 video overlay	Player		Video-Overlay
 Downloaded videos can be copied or moved there, with a right click.	Settings		Heruntergeladene Videos lassen sich dorthin kopieren oder verschieben, mit einem Rechtsklick.
-# or name = channel:<id> for the latest videos of a channel	Categories		# oder Name = channel:<ID> für die neuesten Videos eines Kanals
 From the web	Player		Aus dem Web
+# or name = channel:<id> for the latest videos of a channel	Categories		# oder Name = channel:<ID> für die neuesten Videos eines Kanals
 MediaPlayer could not be started: %error%	Window		MediaPlayer konnte nicht gestartet werden: %error%
 Move to Trash	Grid		In den Papierkorb verschieben
 Remove from favorites	Grid		Aus Favoriten entfernen
 Downloaded	Categories		Heruntergeladen
 This video can't be played here, try another one.	Window		Dieses Video kann hier nicht abgespielt werden, versuche ein anderes.
+Series	Window	the folder of the series downloaded	Serien
 TV series	Window		Serien
 yesterday	Detail		gestern
 Following	Grid		Gefolgt
@@ -153,6 +158,7 @@ science explained	Categories		Wissenschaft erklärt
 Download	Grid		Herunterladen
 Channel	Grid		Kanal
 Movies	Window		Filme
+Season %d	Window	the folder of a season of a series downloaded	Staffel %d
 Later	Window		Später
 Looking for the videos…	Window		Suche nach Videos…
 %count% subscribers	Detail		%count% Abonnenten
@@ -174,5 +180,5 @@ Home	Categories		Start
 Checking…	Settings		Wird geprüft…
 Changing to %height%p…	Window		Wechsel zu %height%p…
 Subtitles	Player		Untertitel
-About Cinema	Window		Über Cinema
 From a torrent, as it downloads	Player		Aus einem Torrent, während des Herunterladens
+About Cinema	Window		Über Cinema

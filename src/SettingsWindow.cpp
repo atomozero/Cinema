@@ -58,6 +58,8 @@ static const uint32 kMsgTvRemove = 'stv-';
 static const uint32 kMsgTvCountry = 'stvc';
 static const uint32 kMsgActivate = 'sact';
 static const uint32 kMsgNetworkChanged = 'snet';
+static const uint32 kMsgOrganize = 'sorg';
+static const uint32 kMsgOrganizeNow = 'sorn';
 static const uint32 kMsgPasswordChanged = 'snpw';
 static const uint32 kMsgNetworkTest = 'sntt';
 
@@ -284,6 +286,14 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		B_TRANSLATE("For a FRITZ!Box: ftp://192.168.178.1/ and the name of "
 			"its disk."));
 
+	// the downloads put in order once done
+	fOrganize = new BCheckBox("organize", B_TRANSLATE("Put new downloads in "
+		"Films, Series and Videos, with a picture"), new BMessage(kMsgOrganize));
+	fOrganize->SetValue(fSettings.organizeDownloads);
+	BButton* organizeNow = new BButton("organize now",
+		B_TRANSLATE("Put them all in order now"),
+		new BMessage(kMsgOrganizeNow));
+
 	// three tabs, so that the window fits a small screen such as the
 	// AC100's 1024x600: the library, the TV channels, how the videos play
 	BView* libraryTab = new BView(B_TRANSLATE("Library"), 0);
@@ -297,7 +307,11 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 			.Add(fKeyStatus, 10)
 			.Add(getKey)
 		.End()
-		.Add(foldersBox, 10);
+		.Add(foldersBox, 10)
+		.AddGroup(B_HORIZONTAL)
+			.Add(fOrganize, 10)
+			.Add(organizeNow)
+		.End();
 
 	BView* tvTab = new BView(B_TRANSLATE("TV channels"), 0);
 	BLayoutBuilder::Group<>(tvTab, B_VERTICAL, B_USE_SMALL_SPACING)
@@ -450,6 +464,17 @@ void
 SettingsWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
+		case kMsgOrganize:
+		{
+			Settings saved = Settings::Load();
+			saved.organizeDownloads = fOrganize->Value() == B_CONTROL_ON;
+			saved.Save();
+			fSettings.organizeDownloads = saved.organizeDownloads;
+			break;
+		}
+		case kMsgOrganizeNow:
+			fTarget.SendMessage(kMsgOrganizeAll);
+			break;
 		case kMsgNetworkChanged:
 			_SaveNetwork();
 			fNetworkStatus->SetText("");

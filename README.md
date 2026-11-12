@@ -100,7 +100,14 @@ folders and videos, played from the server as they are, or downloaded from
 it. The other way, a downloaded video can be copied or moved, with a right
 click, to a network folder: an FTP address set in the settings, such as the
 disk of a FRITZ!Box, whose password stays in the keyring of Haiku; moved, the
-video goes to the Trash only once the copy there is whole. A video read from
+video goes to the Trash only once the copy there is whole. Once a download is done, Cinema puts it in order in `~/Cinema`
+(a setting, on by default): a film in `Films/Title (Year)`, an episode in
+`Series/Name/Season 1/Name S01E02`, other videos and the clips of a telephone
+in `Videos/Channel`, the folder names in the language of the system, the
+titles as TMDB gives them when there is a key. Each gets a picture, the
+poster from TMDB or a frame of it, and films and series show in the tabs of
+the library; a button in the settings puts the older downloads in order too.
+A video read from
 the network starts after a few seconds of it are there, and one too heavy
 for most processors (HEVC above 1080p) starts without the deblocking filter. **S** or a right click gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.

@@ -1,7 +1,8 @@
-1	japanese	application/x-vnd.atomozero-Cinema	991436070
+1	japanese	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
+Put new downloads in Films, Series and Videos, with a picture	Settings		新しいダウンロードを映画・シリーズ・動画に分け、画像を付ける
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube などのソースには yt-dlp が必要ですが、このシステムの Python では見つかりません。
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
 Search first in:	Settings		最初に検索する場所:
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		キーフレームのみデコード
 Yes	Player		はい
 Library	Settings		ライブラリ
 Cinema settings	Settings		Cinema の設定
-BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent でのダウンロードには aria2c が必要ですが、インストールされていません。
 From YouTube, through the helper	Player		YouTubeから、ヘルパー経由
+BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent でのダウンロードには aria2c が必要ですが、インストールされていません。
 Cancel	Window		キャンセル
+Put them all in order now	Settings		今すぐすべて整理
 Back	Detail		戻る
 Live stream	Player		ライブ配信
 Documentaries	Categories		ドキュメンタリー
@@ -47,9 +49,11 @@ Watch now	Window		今すぐ見る
 %eta% left	Window		残り %eta%
 Add…	Settings		追加…
 The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
+Films	Window	the folder of the films downloaded	映画
 News	Categories		ニュース
 TV	Window		テレビ
 Decoding the reference pictures only	Player		参照フレームのみデコード
+Videos	Window	the folder of the other videos downloaded, by channel	動画
 TV %country%	Settings		%country%のテレビ
 TV channels	Settings		テレビチャンネル
 Technology	Categories		テクノロジー
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		動画をダウンロードできま�
 Classic films	Categories		名作映画
 video overlay	Player		ビデオオーバーレイ
 Downloaded videos can be copied or moved there, with a right click.	Settings		ダウンロードした動画は右クリックでそこへコピーまたは移動できます。
-# or name = channel:<id> for the latest videos of a channel	Categories		# または 名前 = channel:<id> でチャンネルの最新動画
 From the web	Player		Webから
+# or name = channel:<id> for the latest videos of a channel	Categories		# または 名前 = channel:<id> でチャンネルの最新動画
 MediaPlayer could not be started: %error%	Window		MediaPlayer を起動できません: %error%
 Move to Trash	Grid		ゴミ箱に移動
 Remove from favorites	Grid		お気に入りから削除
 Downloaded	Categories		ダウンロード済み
 This video can't be played here, try another one.	Window		この動画はここでは再生できません。別の動画をお試しください。
+Series	Window	the folder of the series downloaded	シリーズ
 TV series	Window		テレビシリーズ
 yesterday	Detail		昨日
 Following	Grid		フォロー中
@@ -153,6 +158,7 @@ science explained	Categories		科学 解説
 Download	Grid		ダウンロード
 Channel	Grid		チャンネル
 Movies	Window		映画
+Season %d	Window	the folder of a season of a series downloaded	シーズン %d
 Later	Window		後で
 Looking for the videos…	Window		動画を検索中…
 %count% subscribers	Detail		チャンネル登録者数 %count%人
@@ -174,5 +180,5 @@ Home	Categories		ホーム
 Checking…	Settings		確認中…
 Changing to %height%p…	Window		%height%p に切り替え中…
 Subtitles	Player		字幕
-About Cinema	Window		Cinema について
 From a torrent, as it downloads	Player		トレントから、ダウンロードしながら
+About Cinema	Window		Cinema について

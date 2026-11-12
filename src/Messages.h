@@ -91,6 +91,9 @@ enum {
 	kMsgCheckUpload		= 'upch',	// "target", "user", "password": the
 									// network folder of the settings tried
 	kMsgUploadChecked	= 'upck',	// "ok", "error"
+	kMsgOrganized		= 'orgd',	// "id", "from", "path", "picture": a
+									// download put in order
+	kMsgOrganizeAll		= 'orga',	// the downloads there are, in order
 	kMsgWatchTorrent	= 'twat',	// "which" 0 of the alert: the torrent
 									// added while a video played, now
 	kMsgAskOverlay		= 'plaq',	// time to ask whether the video shows

@@ -1,7 +1,8 @@
-1	spanish	application/x-vnd.atomozero-Cinema	991436070
+1	spanish	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
+Put new downloads in Films, Series and Videos, with a picture	Settings		Poner las nuevas descargas en Películas, Series y Vídeos, con una imagen
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube y las demás fuentes necesitan yt-dlp, que Python no encuentra en este sistema.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automático pregunta una sola vez, en una tarjeta gráfica que no conoce, si ves el vídeo. O lo cambia durante un vídeo.
 Search first in:	Settings		Buscar primero en:
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		Decodificando solo los fotogramas clave
 Yes	Player		Sí
 Library	Settings		Biblioteca
 Cinema settings	Settings		Ajustes de Cinema
-BitTorrent downloads need aria2c, which is not installed.	Window		Las descargas BitTorrent necesitan aria2c, que no está instalado.
 From YouTube, through the helper	Player		Desde YouTube, a través del asistente
+BitTorrent downloads need aria2c, which is not installed.	Window		Las descargas BitTorrent necesitan aria2c, que no está instalado.
 Cancel	Window		Cancelar
+Put them all in order now	Settings		Ordenarlas todas ahora
 Back	Detail		Atrás
 Live stream	Player		Directo
 Documentaries	Categories		Documentales
@@ -47,9 +49,11 @@ Watch now	Window		Ver ahora
 %eta% left	Window		quedan %eta%
 Add…	Settings		Añadir…
 The video could not be moved to the Trash: %error%	Window		No se pudo mover el vídeo a la papelera: %error%
+Films	Window	the folder of the films downloaded	Películas
 News	Categories		Noticias
 TV	Window		TV
 Decoding the reference pictures only	Player		Decodificando solo las imágenes de referencia
+Videos	Window	the folder of the other videos downloaded, by channel	Vídeos
 TV %country%	Settings		TV %country%
 TV channels	Settings		Canales de TV
 Technology	Categories		Tecnología
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		No se pudo descargar el vídeo
 Classic films	Categories		Películas clásicas
 video overlay	Player		superposición de vídeo
 Downloaded videos can be copied or moved there, with a right click.	Settings		Los vídeos descargados se pueden copiar o mover allí, con el botón derecho.
-# or name = channel:<id> for the latest videos of a channel	Categories		# o nombre = channel:<id> para los últimos vídeos de un canal
 From the web	Player		Desde la web
+# or name = channel:<id> for the latest videos of a channel	Categories		# o nombre = channel:<id> para los últimos vídeos de un canal
 MediaPlayer could not be started: %error%	Window		No se pudo abrir MediaPlayer: %error%
 Move to Trash	Grid		Mover a la papelera
 Remove from favorites	Grid		Quitar de favoritos
 Downloaded	Categories		Descargados
 This video can't be played here, try another one.	Window		Este vídeo no se puede ver aquí, prueba con otro.
+Series	Window	the folder of the series downloaded	Series
 TV series	Window		Series
 yesterday	Detail		ayer
 Following	Grid		Siguiendo
@@ -153,6 +158,7 @@ science explained	Categories		ciencia explicada
 Download	Grid		Descargar
 Channel	Grid		Canal
 Movies	Window		Películas
+Season %d	Window	the folder of a season of a series downloaded	Temporada %d
 Later	Window		Más tarde
 Looking for the videos…	Window		Buscando los vídeos…
 %count% subscribers	Detail		%count% suscriptores
@@ -174,5 +180,5 @@ Home	Categories		Inicio
 Checking…	Settings		Comprobando…
 Changing to %height%p…	Window		Cambiando a %height%p…
 Subtitles	Player		Subtítulos
-About Cinema	Window		Acerca de Cinema
 From a torrent, as it downloads	Player		Desde un torrent, mientras se descarga
+About Cinema	Window		Acerca de Cinema

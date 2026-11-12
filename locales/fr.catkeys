@@ -1,7 +1,8 @@
-1	french	application/x-vnd.atomozero-Cinema	991436070
+1	french	application/x-vnd.atomozero-Cinema	2772389700
 YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
+Put new downloads in Films, Series and Videos, with a picture	Settings		Ranger les nouveaux téléchargements dans Films, Séries et Vidéos, avec une image
 YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube et les autres sources ont besoin de yt-dlp, que Python ne trouve pas sur ce système.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatique demande une seule fois, sur une carte graphique inconnue, si vous voyez la vidéo. O le change pendant une vidéo.
 Search first in:	Settings		Chercher d'abord dans :
@@ -27,9 +28,10 @@ Decoding the key frames only	Player		Décodage des images clés seulement
 Yes	Player		Oui
 Library	Settings		Bibliothèque
 Cinema settings	Settings		Réglages de Cinema
-BitTorrent downloads need aria2c, which is not installed.	Window		Les téléchargements BitTorrent nécessitent aria2c, qui n'est pas installé.
 From YouTube, through the helper	Player		Depuis YouTube, via l'assistant
+BitTorrent downloads need aria2c, which is not installed.	Window		Les téléchargements BitTorrent nécessitent aria2c, qui n'est pas installé.
 Cancel	Window		Annuler
+Put them all in order now	Settings		Tout ranger maintenant
 Back	Detail		Retour
 Live stream	Player		Direct
 Documentaries	Categories		Documentaires
@@ -47,9 +49,11 @@ Watch now	Window		Regarder maintenant
 %eta% left	Window		%eta% restant
 Add…	Settings		Ajouter…
 The video could not be moved to the Trash: %error%	Window		Impossible de mettre la vidéo à la corbeille : %error%
+Films	Window	the folder of the films downloaded	Films
 News	Categories		Actualités
 TV	Window		TV
 Decoding the reference pictures only	Player		Décodage des images de référence seulement
+Videos	Window	the folder of the other videos downloaded, by channel	Vidéos
 TV %country%	Settings		TV %country%
 TV channels	Settings		Chaînes TV
 Technology	Categories		Technologie
@@ -74,13 +78,14 @@ The video could not be downloaded	Window		Impossible de télécharger la vidéo
 Classic films	Categories		Films classiques
 video overlay	Player		overlay vidéo
 Downloaded videos can be copied or moved there, with a right click.	Settings		Les vidéos téléchargées peuvent y être copiées ou déplacées, d'un clic droit.
-# or name = channel:<id> for the latest videos of a channel	Categories		# ou nom = channel:<id> pour les dernières vidéos d'une chaîne
 From the web	Player		Depuis le web
+# or name = channel:<id> for the latest videos of a channel	Categories		# ou nom = channel:<id> pour les dernières vidéos d'une chaîne
 MediaPlayer could not be started: %error%	Window		Impossible de lancer MediaPlayer : %error%
 Move to Trash	Grid		Mettre à la corbeille
 Remove from favorites	Grid		Retirer des favoris
 Downloaded	Categories		Téléchargées
 This video can't be played here, try another one.	Window		Cette vidéo ne peut pas être lue ici, essayez-en une autre.
+Series	Window	the folder of the series downloaded	Séries
 TV series	Window		Séries
 yesterday	Detail		hier
 Following	Grid		Suivi
@@ -153,6 +158,7 @@ science explained	Categories		science expliquée
 Download	Grid		Télécharger
 Channel	Grid		Chaîne
 Movies	Window		Films
+Season %d	Window	the folder of a season of a series downloaded	Saison %d
 Later	Window		Plus tard
 Looking for the videos…	Window		Recherche des vidéos…
 %count% subscribers	Detail		%count% abonnés
@@ -174,5 +180,5 @@ Home	Categories		Accueil
 Checking…	Settings		Vérification…
 Changing to %height%p…	Window		Passage en %height%p…
 Subtitles	Player		Sous-titres
-About Cinema	Window		À propos de Cinema
 From a torrent, as it downloads	Player		Depuis un torrent, pendant le téléchargement
+About Cinema	Window		À propos de Cinema

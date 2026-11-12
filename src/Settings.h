@@ -29,6 +29,9 @@ struct Settings {
 	BString		searchSource;	// the provider searched first, or empty
 	int32		videoHeight;	// the highest picture wanted, 0 for what
 								// suits the machine
+	bool		organizeDownloads = true;
+								// a download put in Films, Series or
+								// Videos once done
 	BString		networkFolder;	// ftp://host/folder: downloads copied there
 	BString		networkUser;
 	bool		homeNetworkOffered = false;

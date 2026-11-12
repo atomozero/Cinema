@@ -34,6 +34,9 @@ std::vector<MediaItem>	Load(std::map<BString, BString>* files,
 						// first ones only: decoding them all would hold a
 						// slow machine with many files
 void				KeepPicture(const char* cache, const char* id);
+void				SetPicture(const char* id, const char* file);
+						// a picture found for it (a poster, a frame): its
+						// own, in place of any before
 void				Describe(const char* path, const BMessage& video);
 						// "id", "title", "channel", "channel id", "duration"
 status_t			MoveToTrash(const char* path);
