@@ -6,6 +6,7 @@
 
 #include <Application.h>
 #include <Entry.h>
+#include <Mime.h>
 #include <Path.h>
 #include <String.h>
 
@@ -77,17 +78,60 @@ public:
 		for (int32 i = 0; message->FindRef("refs", i, &ref) == B_OK; i++) {
 			BEntry entry(&ref, true);
 			BPath path;
-			if (entry.IsFile() && entry.GetPath(&path) == B_OK)
+			if (!entry.IsFile() || entry.GetPath(&path) != B_OK)
+				continue;
+			if (BString(path.Leaf()).IEndsWith(".torrent")) {
+				BMessage torrent(kMsgAddTorrent);
+				torrent.AddString("source", path.Path());
+				_Window()->PostMessage(&torrent);
+			} else
 				_PlayAddress(path.Path(), path.Leaf());
 		}
 	}
 
 	virtual void ReadyToRun()
 	{
+		_RegisterTypes();
 		_Window()->Show();
 	}
 
 private:
+	/*!	Cinema opens the magnet links of the browser and the .torrent files
+		of Tracker, unless another program already does: it takes no type
+		from it.
+	*/
+	void _RegisterTypes()
+	{
+		static const struct {
+			const char* type;
+			const char* description;
+			const char* extension;
+		} kTypes[] = {
+			{ "application/x-vnd.Be.URL.magnet", "Magnet link", NULL },
+			{ "application/x-bittorrent", "BitTorrent file", "torrent" },
+		};
+		for (const auto& known : kTypes) {
+			BMimeType type(known.type);
+			if (type.InitCheck() != B_OK)
+				continue;
+			if (!type.IsInstalled()) {
+				if (type.Install() != B_OK)
+					continue;
+				type.SetShortDescription(known.description);
+				if (known.extension != NULL) {
+					BMessage extensions;
+					extensions.AddString("extensions", known.extension);
+					type.SetFileExtensions(&extensions);
+				}
+			}
+			char preferred[B_MIME_TYPE_LENGTH];
+			if (type.GetPreferredApp(preferred) != B_OK
+				|| preferred[0] == '\0'
+				|| !BMimeType(preferred).IsInstalled())
+				type.SetPreferredApp(kSignature);
+		}
+	}
+
 	void _PlayAddress(const char* address, const char* title)
 	{
 		BMessage play(kMsgPlay);

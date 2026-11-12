@@ -7,6 +7,12 @@ resource app_signature "application/x-vnd.atomozero-Cinema";
 
 resource app_flags B_SINGLE_LAUNCH;
 
+// opened from a magnet link clicked in a browser, or a .torrent in Tracker
+resource file_types message {
+	"types" = "application/x-vnd.Be.URL.magnet",
+	"types" = "application/x-bittorrent"
+};
+
 resource app_version {
 	major  = 1,
 	middle = 5,

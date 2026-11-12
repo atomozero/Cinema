@@ -350,7 +350,10 @@ Helper::_Read()
 			close(fInput);
 		fInput = -1;
 	}
-	Deliver(fTarget, kMsgHelperGone, &fStopping);
+	// stopped on purpose, to start another: not to be taken for a helper
+	// that could not start
+	if (!fStopping)
+		Deliver(fTarget, kMsgHelperGone, &fStopping);
 }
 
 

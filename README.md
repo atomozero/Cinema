@@ -79,12 +79,16 @@ episode watched to the end goes on to the next one.
 Any video can be downloaded to watch offline with **D** or a right click. The
 files go to `~/Cinema`, with their title, channel and length in attributes, and
 show in the **Downloaded** tab, which works without the network; a downloaded
-video plays from its file wherever it appears. Paste a magnet link in the
-search field, or drop a `.torrent` file on the window, and the biggest video it
+video plays from its file wherever it appears. Click a magnet link in the
+browser, open a `.torrent` file from Tracker (Cinema takes both, unless
+another program already does), paste the link in the search field or drop the
+link or the file on the window, and the biggest video it
 shares is downloaded with `aria2c` into the same tab, where you can follow and
 stop it. It plays while it downloads: its pieces come in order, and Cinema
 starts it as soon as the first ones are there (a link with `xs=`, the address
-of its `.torrent`, starts in a few seconds); a stopped or interrupted download picks up where it was. Use it for
+of its `.torrent`, starts in a few seconds); over a video already playing it
+asks first. A stopped or interrupted download picks up where it was. Without
+`aria2c`, Cinema offers to install it on x86. Use it for
 what you may share, such as the films of the Blender Foundation or the torrents
 of the Internet Archive. **S** or a right click gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.

@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	3398382628
+1	english	application/x-vnd.atomozero-Cinema	2509789191
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -40,6 +40,7 @@ Move to Trash	Window		Move to Trash
 Getting the video ready	Player		Getting the video ready
 Follow	Grid		Follow
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# week ago} other{# weeks ago}}
+Watch now	Window		Watch now
 %eta% left	Window		%eta% left
 Add…	Settings		Add…
 The video could not be moved to the Trash: %error%	Window		The video could not be moved to the Trash: %error%
@@ -111,9 +112,9 @@ Follow	Detail		Follow
 No statistics for this video	Player		No statistics for this video
 Details	Grid		Details
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.
+even volume %gain% dB	Player		even volume %gain% dB
 The lowest quality already	Window		The lowest quality already
 %count% dropped	Player		%count% dropped
-even volume %gain% dB	Player		even volume %gain% dB
 %done% of %total%	Window		%done% of %total%
 forced	Subtitles		forced
 Already downloaded	Grid		Already downloaded
@@ -122,6 +123,7 @@ Go on from where a video was left	Settings		Go on from where a video was left
 Search	Settings		Search
 Type what to look for at the top right	Window		Type what to look for at the top right
 Cinema	System name		Cinema
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?
 Folders of the library	Settings		Folders of the library
 No videos found	Window		No videos found
 See all	Home		See all
@@ -134,6 +136,7 @@ science explained	Categories		science explained
 Download	Grid		Download
 Channel	Grid		Channel
 Movies	Window		Movies
+Later	Window		Later
 Looking for the videos…	Window		Looking for the videos…
 %count% subscribers	Detail		%count% subscribers
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# One tab of the top bar per line: name = what to search on YouTube
@@ -149,6 +152,6 @@ Install	Window		Install
 Home	Categories		Home
 Checking…	Settings		Checking…
 Changing to %height%p…	Window		Changing to %height%p…
+Subtitles	Player		Subtitles
 About Cinema	Window		About Cinema
 From a torrent, as it downloads	Player		From a torrent, as it downloads
-Subtitles	Player		Subtitles

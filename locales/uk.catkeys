@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	3398382628
+1	ukrainian	application/x-vnd.atomozero-Cinema	2509789191
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -40,6 +40,7 @@ Move to Trash	Window		Перемістити до смітника
 Getting the video ready	Player		Підготовка відео
 Follow	Grid		Стежити
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# тиждень тому} few{# тижні тому} many{# тижнів тому} other{# тижня тому}}
+Watch now	Window		Дивитися зараз
 %eta% left	Window		лишилось %eta%
 Add…	Settings		Додати…
 The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
@@ -111,9 +112,9 @@ Follow	Detail		Стежити
 No statistics for this video	Player		Немає статистики для цього відео
 Details	Grid		Подробиці
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
+even volume %gain% dB	Player		рівна гучність %gain% дБ
 The lowest quality already	Window		Це вже найнижча якість
 %count% dropped	Player		пропущено: %count%
-even volume %gain% dB	Player		рівна гучність %gain% дБ
 %done% of %total%	Window		%done% з %total%
 forced	Subtitles		примусові
 Already downloaded	Grid		Вже завантажено
@@ -122,6 +123,7 @@ Go on from where a video was left	Settings		Продовжувати відео 
 Search	Settings		Пошук
 Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
 Cinema	System name		Cinema
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" завантажується. Дивитися зараз, закривши поточне відео, чи пізніше із завантажень?
 Folders of the library	Settings		Теки бібліотеки
 No videos found	Window		Відео не знайдено
 See all	Home		Переглянути всі
@@ -134,6 +136,7 @@ science explained	Categories		наука простими словами
 Download	Grid		Завантажити
 Channel	Grid		Канал
 Movies	Window		Фільми
+Later	Window		Пізніше
 Looking for the videos…	Window		Пошук відео…
 %count% subscribers	Detail		%count% підписників
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube
@@ -149,6 +152,6 @@ Install	Window		Встановити
 Home	Categories		Головна
 Checking…	Settings		Перевірка…
 Changing to %height%p…	Window		Перехід на %height%p…
+Subtitles	Player		Субтитри
 About Cinema	Window		Про Cinema
 From a torrent, as it downloads	Player		З торента, поки завантажується
-Subtitles	Player		Субтитри

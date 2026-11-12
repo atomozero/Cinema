@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	3398382628
+1	chinese	application/x-vnd.atomozero-Cinema	2509789191
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -40,6 +40,7 @@ Move to Trash	Window		移到废纸篓
 Getting the video ready	Player		正在准备视频
 Follow	Grid		关注
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#周前}}
+Watch now	Window		立即观看
 %eta% left	Window		剩余 %eta%
 Add…	Settings		添加…
 The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
@@ -111,9 +112,9 @@ Follow	Detail		关注
 No statistics for this video	Player		此视频没有统计信息
 Details	Grid		详细信息
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		按照 Cinema 的 README 所述，把单文件版 yt-dlp 放到 ~/config/non-packaged/bin，然后重新启动 Cinema。
+even volume %gain% dB	Player		均衡音量 %gain% dB
 The lowest quality already	Window		已经是最低画质
 %count% dropped	Player		丢弃 %count% 帧
-even volume %gain% dB	Player		均衡音量 %gain% dB
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		强制
 Already downloaded	Grid		已经下载
@@ -122,6 +123,7 @@ Go on from where a video was left	Settings		从上次停下的地方继续播放
 Search	Settings		搜索
 Type what to look for at the top right	Window		在右上角输入要搜索的内容
 Cinema	System name		Cinema
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" 正在下载。现在观看（关闭正在播放的视频），还是稍后从下载中观看？
 Folders of the library	Settings		媒体库文件夹
 No videos found	Window		未找到视频
 See all	Home		查看全部
@@ -134,6 +136,7 @@ science explained	Categories		科学解说
 Download	Grid		下载
 Channel	Grid		频道
 Movies	Window		电影
+Later	Window		稍后
 Looking for the videos…	Window		正在查找视频…
 %count% subscribers	Detail		%count% 位订阅者
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 每行一个顶部栏标签：名称 = 要在 YouTube 上搜索的内容
@@ -149,6 +152,6 @@ Install	Window		安装
 Home	Categories		主页
 Checking…	Settings		正在检查…
 Changing to %height%p…	Window		正在切换到 %height%p…
+Subtitles	Player		字幕
 About Cinema	Window		关于 Cinema
 From a torrent, as it downloads	Player		来自种子，边下载边播放
-Subtitles	Player		字幕

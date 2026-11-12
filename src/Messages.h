@@ -81,6 +81,8 @@ enum {
 	kMsgInstallHelper	= 'hins',	// pkgman for what the helper needs:
 									// "which" 0 of the alert, "packages"
 	kMsgHelperInstalled	= 'hind',	// its Terminal closed: try again
+	kMsgWatchTorrent	= 'twat',	// "which" 0 of the alert: the torrent
+									// added while a video played, now
 	kMsgAskOverlay		= 'plaq',	// time to ask whether the video shows
 	kMsgOverlayAnswer	= 'plan',	// "works": the answer
 	kMsgPlayInMediaPlayer = 'plmp',	// the same address, in MediaPlayer

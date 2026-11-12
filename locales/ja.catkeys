@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	3398382628
+1	japanese	application/x-vnd.atomozero-Cinema	2509789191
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -40,6 +40,7 @@ Move to Trash	Window		ゴミ箱に移動
 Getting the video ready	Player		動画を準備中
 Follow	Grid		フォロー
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
+Watch now	Window		今すぐ見る
 %eta% left	Window		残り %eta%
 Add…	Settings		追加…
 The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
@@ -111,9 +112,9 @@ Follow	Detail		フォロー
 No statistics for this video	Player		この動画の統計はありません
 Details	Grid		詳細
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。
+even volume %gain% dB	Player		音量の均一化 %gain% dB
 The lowest quality already	Window		すでに最低画質です
 %count% dropped	Player		%count% 枚破棄
-even volume %gain% dB	Player		音量の均一化 %gain% dB
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		強制
 Already downloaded	Grid		すでにダウンロード済み
@@ -122,6 +123,7 @@ Go on from where a video was left	Settings		動画を止めたところから再
 Search	Settings		検索
 Type what to look for at the top right	Window		右上に探したいものを入力してください
 Cinema	System name		Cinema
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" をダウンロード中です。再生中の動画を閉じて今すぐ見ますか、それとも後でダウンロードから見ますか？
 Folders of the library	Settings		ライブラリのフォルダー
 No videos found	Window		動画が見つかりません
 See all	Home		すべて表示
@@ -134,6 +136,7 @@ science explained	Categories		科学 解説
 Download	Grid		ダウンロード
 Channel	Grid		チャンネル
 Movies	Window		映画
+Later	Window		後で
 Looking for the videos…	Window		動画を検索中…
 %count% subscribers	Detail		チャンネル登録者数 %count%人
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容
@@ -149,6 +152,6 @@ Install	Window		インストール
 Home	Categories		ホーム
 Checking…	Settings		確認中…
 Changing to %height%p…	Window		%height%p に切り替え中…
+Subtitles	Player		字幕
 About Cinema	Window		Cinema について
 From a torrent, as it downloads	Player		トレントから、ダウンロードしながら
-Subtitles	Player		字幕

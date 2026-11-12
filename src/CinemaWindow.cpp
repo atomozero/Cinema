@@ -1412,6 +1412,14 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgAddTorrent:
 			_AddTorrent(message->GetString("source", ""));
 			break;
+		case kMsgWatchTorrent:
+			if (message->GetInt32("which", 1) == 0) {
+				BMessage play(*message);
+				play.what = kMsgPlay;
+				play.RemoveName("which");
+				PostMessage(&play);
+			}
+			break;
 		case kMsgChangeQuality:
 			_ChangeQuality(message->GetBool("up", true));
 			break;
@@ -2097,6 +2105,17 @@ CinemaWindow::MessageReceived(BMessage* message)
 			// it still cannot start (once more)
 			fInstallOffered = false;
 			fHelperRestarts = 0;
+			// a video the helper serves (a torrent, the relay of YouTube)
+			// goes with it: found again from where it is, by the next one
+			if (fPlayerShown && (fPlayingAddress.StartsWith("http://localhost:")
+					|| fPlayingAddress.StartsWith("http://127.0.0.1:"))) {
+				BString id = fPlayingId;
+				BString title = fPlayingTitle;
+				fStreams.erase(id);
+				_ClosePlayer(true);
+				fWaiting = id;
+				fWaitingTitle = title;
+			}
 			if (fHelper->Restart() == B_OK) {
 				fHelper->SetHeight(fSettings.videoHeight);
 				// the downloads go on from where they were
@@ -2108,6 +2127,8 @@ CinemaWindow::MessageReceived(BMessage* message)
 				fHomeLoaded = false;
 				if (fCard == 2)
 					_LoadHome();
+				if (!fWaiting.IsEmpty())
+					_Find(fWaiting);
 			}
 			break;
 
@@ -2713,6 +2734,11 @@ CinemaWindow::_Trash(BMessage* message)
 void
 CinemaWindow::_AddTorrent(const char* source)
 {
+	// sent from the browser or Tracker, maybe with Cinema behind them
+	if (IsMinimized())
+		Minimize(false);
+	Activate();
+
 	// until the helper tells its providers, let it try
 	bool supported = fProviders.empty();
 	for (const Provider& provider : fProviders)
@@ -2775,12 +2801,25 @@ CinemaWindow::_AddTorrent(const char* source)
 	download.AddString("channel id", "");
 	download.AddInt32("duration", 0);
 	_Download(&download);
-	// where it can be followed, and stopped
-	_ShowDownloads();
 	// and watched meanwhile: the helper plays it as its pieces come, in
-	// order, from the start
+	// order, from the start; asked first over a video playing, which it
+	// would close
 	BMessage play(download);
 	play.what = kMsgPlay;
+	if (fPlayerShown) {
+		BString text(B_TRANSLATE("\"%title%\" is downloading. Watch it now, "
+			"closing the video playing, or later from the downloads?"));
+		text.ReplaceFirst("%title%", title.String());
+		BAlert* alert = new BAlert("Cinema", text.String(),
+			B_TRANSLATE("Watch now"), B_TRANSLATE("Later"));
+		alert->SetShortcut(1, B_ESCAPE);
+		BMessage* chosen = new BMessage(play);
+		chosen->what = kMsgWatchTorrent;
+		alert->Go(new BInvoker(chosen, this));
+		return;
+	}
+	// where it can be followed, and stopped
+	_ShowDownloads();
 	PostMessage(&play);
 }
 
@@ -2980,6 +3019,21 @@ CinemaWindow::_AddTvList(const char* address, const char* name)
 void
 CinemaWindow::_Dropped(BMessage* message)
 {
+	// a link dragged from a browser or text: a magnet link, or the address
+	// of a .torrent
+	BString text;
+	const void* data;
+	ssize_t size;
+	if (message->FindString("be:url", &text) != B_OK
+		&& message->FindData("text/plain", B_MIME_TYPE, &data, &size) == B_OK)
+		text.SetTo((const char*)data, size);
+	text.Trim();
+	if (text.IStartsWith("magnet:") || (text.IStartsWith("http")
+			&& text.IEndsWith(".torrent") && text.FindFirst('\n') < 0)) {
+		_AddTorrent(text.String());
+		return;
+	}
+
 	entry_ref ref;
 	for (int32 i = 0; message->FindRef("refs", i, &ref) == B_OK; i++) {
 		BEntry entry(&ref, true);

@@ -1,4 +1,4 @@
-1	spanish	application/x-vnd.atomozero-Cinema	3398382628
+1	spanish	application/x-vnd.atomozero-Cinema	2509789191
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
@@ -40,6 +40,7 @@ Move to Trash	Window		Mover a la papelera
 Getting the video ready	Player		Preparando el vídeo
 Follow	Grid		Seguir
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{hace # semana} other{hace # semanas}}
+Watch now	Window		Ver ahora
 %eta% left	Window		quedan %eta%
 Add…	Settings		Añadir…
 The video could not be moved to the Trash: %error%	Window		No se pudo mover el vídeo a la papelera: %error%
@@ -111,9 +112,9 @@ Follow	Detail		Seguir
 No statistics for this video	Player		No hay estadísticas para este vídeo
 Details	Grid		Detalles
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Pon yt-dlp de un solo archivo en ~/config/non-packaged/bin, como explica el README de Cinema, y vuelve a abrir Cinema.
+even volume %gain% dB	Player		volumen uniforme %gain% dB
 The lowest quality already	Window		Ya es la calidad más baja
 %count% dropped	Player		%count% descartados
-even volume %gain% dB	Player		volumen uniforme %gain% dB
 %done% of %total%	Window		%done% de %total%
 forced	Subtitles		forzados
 Already downloaded	Grid		Ya descargado
@@ -122,6 +123,7 @@ Go on from where a video was left	Settings		Seguir los vídeos desde donde se de
 Search	Settings		Búsqueda
 Type what to look for at the top right	Window		Escribe arriba a la derecha qué buscar
 Cinema	System name		Cinema
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" se está descargando. ¿Verlo ahora, cerrando el vídeo en curso, o más tarde desde las descargas?
 Folders of the library	Settings		Carpetas de la biblioteca
 No videos found	Window		No se encontraron vídeos
 See all	Home		Ver todo
@@ -134,6 +136,7 @@ science explained	Categories		ciencia explicada
 Download	Grid		Descargar
 Channel	Grid		Canal
 Movies	Window		Películas
+Later	Window		Más tarde
 Looking for the videos…	Window		Buscando los vídeos…
 %count% subscribers	Detail		%count% suscriptores
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Una pestaña de la barra superior por línea: nombre = qué buscar en YouTube
@@ -149,6 +152,6 @@ Install	Window		Instalar
 Home	Categories		Inicio
 Checking…	Settings		Comprobando…
 Changing to %height%p…	Window		Cambiando a %height%p…
+Subtitles	Player		Subtítulos
 About Cinema	Window		Acerca de Cinema
 From a torrent, as it downloads	Player		Desde un torrent, mientras se descarga
-Subtitles	Player		Subtítulos
