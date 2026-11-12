@@ -157,6 +157,7 @@ PlayerView::PlayerView(Player* player)
 PlayerView::~PlayerView()
 {
 	delete fTicker;
+	delete fCover;
 }
 
 
@@ -494,7 +495,22 @@ PlayerView::Draw(BRect updateRect)
 		fPlayer->UnlockFrame();
 
 	_DrawSubtitle(this);
-	if (picture == NULL) {
+	if (picture == NULL && fOpened && !fPlayer->HasVideo()) {
+		// only sound, a podcast say: its picture, as large as it fits
+		if (fCover != NULL) {
+			BRect bounds = Bounds().InsetByCopy(S(40), S(60));
+			BRect source = fCover->Bounds();
+			float scale = std::min(bounds.Width() / (source.Width() + 1),
+				bounds.Height() / (source.Height() + 1));
+			float width = (source.Width() + 1) * scale;
+			float height = (source.Height() + 1) * scale;
+			BRect frame(0, 0, width - 1, height - 1);
+			frame.OffsetTo(floorf(bounds.left + (bounds.Width() - width) / 2),
+				floorf(bounds.top + (bounds.Height() - height) / 2));
+			SetDrawingMode(B_OP_COPY);
+			DrawBitmap(fCover, source, frame, B_FILTER_BITMAP_BILINEAR);
+		}
+	} else if (picture == NULL) {
 		DrawCentered(this, B_TRANSLATE("Getting the video ready"), Bounds(),
 			Font(18), kTextDim);
 	}
@@ -584,6 +600,16 @@ PlayerView::_DrawQuestion(BView* target)
 	FillRound(target, _NoFrame(), S(8), (rgb_color){ 60, 60, 66, 255 });
 	DrawCentered(target, B_TRANSLATE("No"), _NoFrame(), Font(14, true),
 		kText);
+}
+
+
+void
+PlayerView::SetCover(BBitmap* cover)
+{
+	delete fCover;
+	fCover = cover;
+	if (Window() != NULL)
+		Invalidate();
 }
 
 

@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	2772389700
+1	korean	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -74,6 +74,7 @@ Search	Window		검색
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# 또는 이름 = @iptv channel:<M3U 목록 주소> (TV 채널)
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		지금 설치할까요? pkgman이 터미널 창에서 변경하기 전에 묻습니다.
 official music video	Categories		공식 뮤직비디오
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	팟캐스트
 The video could not be downloaded	Window		동영상을 다운로드할 수 없습니다
 Classic films	Categories		고전 영화
 video overlay	Player		비디오 오버레이
@@ -91,8 +92,8 @@ yesterday	Detail		어제
 Following	Grid		팔로잉
 No subtitles available	Player		사용 가능한 자막 없음
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#개월 전}}
-Move \"%title%\" to the Trash?	Window		'%title%'을(를) 휴지통으로 이동할까요?
 Video ready	Window		동영상 준비됨
+Move \"%title%\" to the Trash?	Window		'%title%'을(를) 휴지통으로 이동할까요?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#년 전}}
 Show the latest videos	Grid		최신 동영상 보기
 Copy to the network folder	Grid		네트워크 폴더에 복사
@@ -107,6 +108,7 @@ Remove	Settings		제거
 Download	Detail		다운로드
 Downloaded	Window		다운로드한 동영상
 Add	Settings		추가
+Podcast	Window		팟캐스트
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		지금 설치할까요? pkgman이 터미널 창에서 변경하기 전에 묻습니다.
 Always	Settings		항상
 Remove from the tabs	Categories		탭에서 제거
@@ -124,8 +126,8 @@ Classic cartoons	Categories		고전 만화
 Play	Detail		재생
 Free channels of:	Settings		무료 채널 국가:
 Follow	Detail		팔로우
-Home network	Window		홈 네트워크
 No statistics for this video	Player		이 동영상의 통계가 없습니다
+Home network	Window		홈 네트워크
 Details	Grid		세부 정보
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema의 README에 설명된 대로 단일 파일 yt-dlp를 ~/config/non-packaged/bin에 넣고 Cinema를 다시 시작하세요.
 even volume %gain% dB	Player		고른 음량 %gain% dB

@@ -325,7 +325,8 @@ Helper::Organize(const char* id, const char* path, const char* root,
 	for (const char* field : { "provider", "kind", "title", "channel" })
 		request.Set(field, video.GetString(field, ""));
 	Json folders = Json::MakeObject();
-	for (const char* field : { "movies", "series", "videos", "season" })
+	for (const char* field : { "movies", "series", "videos", "season",
+			"podcasts" })
 		folders.Set(field, names.GetString(field, ""));
 	request.Set("names", folders);
 	_Send(request);

@@ -579,6 +579,7 @@ Player::_OpenLive()
 		}
 	}
 	fShowNext = true;
+	fHasVideo = fLiveVideo != NULL;
 	fOpened = true;
 	if (getenv("CINEMA_PLAYER_DEBUG") != NULL) {
 		fprintf(stderr, "player: ffmpeg %s, %.1f s, from %.1f s\n",

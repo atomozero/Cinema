@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2772389700
+1	ukrainian	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -74,6 +74,7 @@ Search	Window		Пошук
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# або назва = @iptv channel:<адреса списку M3U> для телеканалів
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
 official music video	Categories		офіційний кліп
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Подкасти
 The video could not be downloaded	Window		Не вдалося завантажити відео
 Classic films	Categories		Класичні фільми
 video overlay	Player		відеооверлей
@@ -91,8 +92,8 @@ yesterday	Detail		учора
 Following	Grid		Ви стежите
 No subtitles available	Player		Немає доступних субтитрів
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
-Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
 Video ready	Window		Відео готове
+Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
 Show the latest videos	Grid		Показати останні відео
 Copy to the network folder	Grid		Копіювати в мережеву теку
@@ -107,6 +108,7 @@ Remove	Settings		Вилучити
 Download	Detail		Завантажити
 Downloaded	Window		Завантажені
 Add	Settings		Додати
+Podcast	Window		Подкаст
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
 Always	Settings		Завжди
 Remove from the tabs	Categories		Вилучити з вкладок
@@ -124,8 +126,8 @@ Classic cartoons	Categories		Класичні мультфільми
 Play	Detail		Відтворити
 Free channels of:	Settings		Безкоштовні канали країни:
 Follow	Detail		Стежити
-Home network	Window		Домашня мережа
 No statistics for this video	Player		Немає статистики для цього відео
+Home network	Window		Домашня мережа
 Details	Grid		Подробиці
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
 even volume %gain% dB	Player		рівна гучність %gain% дБ

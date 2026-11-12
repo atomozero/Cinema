@@ -548,6 +548,19 @@ CinemaWindow::_LowerQuality(int32 height)
 void
 CinemaWindow::_PlayerOpened()
 {
+	// only sound, a podcast say: its picture in place of the pictures
+	if (!fPlayer->HasVideo()) {
+		BString picture(fWorker->Cache());
+		picture << "/" << PictureName(fPlayingId) << ".jpg";
+		BBitmap* cover = Pictures::Load(picture.String());
+		if (cover == NULL) {
+			picture = Downloads::Folder();
+			picture << "/.pictures/" << PictureName(fPlayingId) << ".jpg";
+			cover = Pictures::Load(picture.String());
+		}
+		fPlayerView->SetCover(cover);
+	} else
+		fPlayerView->SetCover(NULL);
 	fPlayerView->SetOpened(true);
 	fPlayerView->SetOverlay(fPlayer->Overlay());
 	if (fAskOverlay && fPlayer->Overlay() != NULL) {
@@ -606,6 +619,64 @@ CinemaWindow::_ShowHiddenPlayer()
 		_PlayerOpened();
 		fPlayer->SetPaused(false);
 	}
+}
+
+
+/*!	Whether an address is likely the feed of a podcast. */
+static bool
+is_feed(const BString& text)
+{
+	if (!text.IStartsWith("http://") && !text.IStartsWith("https://")
+		&& !text.IStartsWith("feed:"))
+		return false;
+	if (text.FindFirst(' ') >= 0 || text.FindFirst('\n') >= 0)
+		return false;
+	BString lower(text);
+	lower.ToLower();
+	int32 query = lower.FindFirst('?');
+	if (query >= 0)
+		lower.Truncate(query);
+	return lower.StartsWith("feed:") || lower.EndsWith(".xml")
+		|| lower.EndsWith(".rss") || lower.EndsWith(".atom")
+		|| lower.FindFirst("/feed") >= 0 || lower.FindFirst("/rss") >= 0
+		|| lower.FindFirst("podcast") >= 0;
+}
+
+
+/*!	A tab with the episodes of a podcast, from its feed; named after the
+	podcast once its feed is read.
+*/
+void
+CinemaWindow::_AddPodcast(const char* address)
+{
+	BString feed(address);
+	feed.Trim();
+	if (feed.IStartsWith("feed:"))
+		feed.Remove(0, 5);
+	if (feed.StartsWith("//"))
+		feed.Prepend("https:");
+	for (size_t i = 0; i < fCategories.size(); i++) {
+		if (fCategories[i].provider == "podcast"
+			&& fCategories[i].channel == feed) {
+			_ShowCategory(i);
+			return;
+		}
+	}
+	Category category;
+	// for now the name of the site: the podcast's once its feed is read
+	BUrl url(feed.String(), true);
+	category.name = url.Host();
+	if (category.name.StartsWith("www."))
+		category.name.Remove(0, 4);
+	if (category.name.IsEmpty())
+		category.name = B_TRANSLATE("Podcast");
+	category.provider = "podcast";
+	category.channel = feed;
+	fCategories.push_back(category);
+	SaveCategories(fCategories);
+	fCategoryBar->SetCategories(fCategories);
+	fHomeLoaded = false;
+	_ShowCategory(fCategories.size() - 1);
 }
 
 
@@ -1043,6 +1114,18 @@ CinemaWindow::_ShowResults(BMessage* message)
 		header.description = message->GetString("about description", "");
 		header.avatarUrl = message->GetString("about avatar", "");
 		fGrid->SetChannelHeader(header);
+		// a podcast's tab, named after the site until now: its own name
+		int32 index = fCategoryBar->Selected() - fCategoryBar->CategoryTab(0);
+		if (fChannelId.IsEmpty() && aboutName[0] != '\0' && index >= 0
+			&& index < (int32)fCategories.size()
+			&& fCategories[index].provider == "podcast"
+			&& fCategories[index].name != aboutName) {
+			fCategories[index].name = aboutName;
+			SaveCategories(fCategories);
+			fCategoryBar->SetCategories(fCategories);
+			fCategoryBar->SetSelected(fCategoryBar->CategoryTab(index));
+			fHomeLoaded = false;
+		}
 		if (!header.avatarUrl.IsEmpty()) {
 			BMessage fetch(kMsgFetchPicture);
 			fetch.AddString("id", BString("avatar:") << header.id);
@@ -1780,6 +1863,11 @@ CinemaWindow::MessageReceived(BMessage* message)
 				// the field keeps its text: changing it now could pull it from
 				// under a selection the mouse is still making
 				_AddTorrent(query.String());
+				break;
+			}
+			// the feed of a podcast: a tab of its episodes
+			if (is_feed(query)) {
+				_AddPodcast(query.String());
 				break;
 			}
 			// "@peertube words" searches another source than the menu's
@@ -2524,7 +2612,7 @@ void
 CinemaWindow::_DirectSync()
 {
 	bool wanted = fFullScreen && fPlayerShown && !fPlayerHidden
-		&& direct_enabled()
+		&& (!fPlayer->IsOpen() || fPlayer->HasVideo()) && direct_enabled()
 		&& !fDirectFailed;
 	bool live = fPlayingKind == "live" || LiveAddress::Is(fPlayingAddress);
 	bool subtitles = fPlayer->SubtitleCount() > 0;
@@ -3106,6 +3194,8 @@ CinemaWindow::_Organize(const char* id, const char* path,
 		"the folder of the other videos downloaded, by channel"));
 	names.AddString("season", B_TRANSLATE_COMMENT("Season %d",
 		"the folder of a season of a series downloaded"));
+	names.AddString("podcasts", B_TRANSLATE_COMMENT("Podcasts",
+		"the folder of the podcasts downloaded, by podcast"));
 	fHelper->Organize(id, path, Downloads::Folder().String(), video, names);
 }
 
@@ -3569,6 +3659,10 @@ CinemaWindow::_Dropped(BMessage* message)
 	if (text.IStartsWith("magnet:") || (text.IStartsWith("http")
 			&& text.IEndsWith(".torrent") && text.FindFirst('\n') < 0)) {
 		_AddTorrent(text.String());
+		return;
+	}
+	if (is_feed(text)) {
+		_AddPodcast(text.String());
 		return;
 	}
 

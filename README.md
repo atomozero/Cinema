@@ -109,7 +109,12 @@ poster from TMDB or a frame of it, and films and series show in the tabs of
 the library; a button in the settings puts the older downloads in order too.
 A video read from
 the network starts after a few seconds of it are there, and one too heavy
-for most processors (HEVC above 1080p) starts without the deblocking filter. **S** or a right click gives a video or a channel a
+for most processors (HEVC above 1080p) starts without the deblocking filter. Paste the address of
+the feed of a podcast in the search field, or drop it on the window, and a
+tab named after the podcast shows its episodes, the latest on the home too:
+they play with the picture of the episode when there is only sound, go on from
+where they were left, and download to `Podcasts/Name`. **S** or a right click
+gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.
 
 The settings, in the **≡** menu or with Alt+,, hold the TMDB key, the folders

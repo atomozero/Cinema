@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	2772389700
+1	english	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -74,6 +74,7 @@ Search	Window		Search
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# or name = @iptv channel:<address of an M3U list> for TV channels
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Install them now? pkgman asks before it changes anything, in a Terminal window.
 official music video	Categories		official music video
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Podcasts
 The video could not be downloaded	Window		The video could not be downloaded
 Classic films	Categories		Classic films
 video overlay	Player		video overlay
@@ -91,8 +92,8 @@ yesterday	Detail		yesterday
 Following	Grid		Following
 No subtitles available	Player		No subtitles available
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# month ago} other{# months ago}}
-Move \"%title%\" to the Trash?	Window		Move \"%title%\" to the Trash?
 Video ready	Window		Video ready
+Move \"%title%\" to the Trash?	Window		Move \"%title%\" to the Trash?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# year ago} other{# years ago}}
 Show the latest videos	Grid		Show the latest videos
 Copy to the network folder	Grid		Copy to the network folder
@@ -107,6 +108,7 @@ Remove	Settings		Remove
 Download	Detail		Download
 Downloaded	Window		Downloaded
 Add	Settings		Add
+Podcast	Window		Podcast
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Install it now? pkgman asks before it changes anything, in a Terminal window.
 Always	Settings		Always
 Remove from the tabs	Categories		Remove from the tabs
@@ -124,8 +126,8 @@ Classic cartoons	Categories		Classic cartoons
 Play	Detail		Play
 Free channels of:	Settings		Free channels of:
 Follow	Detail		Follow
-Home network	Window		Home network
 No statistics for this video	Player		No statistics for this video
+Home network	Window		Home network
 Details	Grid		Details
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.
 even volume %gain% dB	Player		even volume %gain% dB

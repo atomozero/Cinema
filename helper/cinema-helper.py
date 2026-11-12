@@ -2557,6 +2557,162 @@ class DlnaProvider(Provider):
 		return path
 
 
+class PodcastProvider(Provider):
+	"""Podcasts, audio or video, from their feed RSS: a channel is the
+	address of the feed, an episode the address of its file, which Cinema
+	plays with FFmpeg (an audio one with its picture) or downloads. What
+	the podcast is (its name, picture, description) comes with the list.
+	"""
+
+	id = "podcast"
+	name = "Podcasts"
+	kinds = ("channel", "find", "download")
+	# new episodes come: read again, but not more than every 15 minutes
+	cache_channels = False
+	FRESH = 15 * 60
+	ITUNES = "{http://www.itunes.com/dtds/podcast-1.0.dtd}"
+	MEDIA = "{http://search.yahoo.com/mrss/}"
+
+	def __init__(self):
+		self.lock = threading.Lock()
+		self.feeds = {}		# address: (when, its text)
+		self.titles = {}	# the address of an episode: its title
+
+	def feed(self, address):
+		with self.lock:
+			kept = self.feeds.get(address)
+		if kept and time.time() - kept[0] < self.FRESH:
+			return kept[1]
+		request = urllib.request.Request(address,
+			headers={"User-Agent": USER_AGENT})
+		with urllib.request.urlopen(request, timeout=30) as response:
+			text = response.read(20 * 1024 * 1024)
+		with self.lock:
+			self.feeds[address] = (time.time(), text)
+		return text
+
+	@staticmethod
+	def seconds(text):
+		"""'1:02:03', '62:03' or '3723' in seconds."""
+		try:
+			total = 0
+			for part in str(text or "").strip().split(":"):
+				total = total * 60 + float(part)
+			return int(total)
+		except ValueError:
+			return 0
+
+	@staticmethod
+	def plain(text):
+		"""The text of a description in HTML."""
+		text = re.sub(r"(?i)<br\s*/?>|</p>", "\n", text or "")
+		return html.unescape(re.sub(r"<[^>]+>", "", text)).strip()
+
+	def channel(self, channel_id, count):
+		import xml.etree.ElementTree as tree
+		import email.utils
+		root = tree.fromstring(self.feed(channel_id))
+		feed = root.find("channel")
+		if feed is None:
+			return []
+		name = clean(feed.findtext("title") or "")
+		picture = ""
+		image = feed.find(self.ITUNES + "image")
+		if image is not None:
+			picture = image.get("href") or ""
+		if not picture:
+			picture = feed.findtext("image/url") or ""
+		keep_about(self.id, channel_id, {"name": name, "handle": "",
+			"followers": 0, "avatar": picture,
+			"description": clean(self.plain(feed.findtext("description")))})
+		items = []
+		for entry in feed.findall("item"):
+			enclosure = entry.find("enclosure")
+			url = enclosure.get("url") if enclosure is not None else ""
+			kind = (enclosure.get("type") or "") if enclosure is not None else ""
+			if not url:
+				content = entry.find(self.MEDIA + "content")
+				if content is not None:
+					url = content.get("url") or ""
+					kind = content.get("type") or ""
+			if not url or not (kind.startswith(("audio/", "video/"))
+					or url.lower().split("?")[0].endswith(
+						(".mp3", ".m4a", ".aac", ".ogg", ".opus", ".mp4",
+						".m4v", ".mov", ".webm"))):
+				continue
+			title = clean(entry.findtext("title") or "")
+			with self.lock:
+				self.titles[url] = title
+			date = ""
+			year = 0
+			try:
+				when = email.utils.parsedate_to_datetime(
+					entry.findtext("pubDate") or "")
+				date = when.strftime("%Y-%m-%d")
+				year = when.year
+			except (TypeError, ValueError):
+				pass
+			art = entry.find(self.ITUNES + "image")
+			thumbnail = (art.get("href") if art is not None else "") or picture
+			description = entry.findtext(self.ITUNES + "summary") \
+				or entry.findtext("description") or ""
+			items.append({"provider": self.id, "kind": "video", "id": url,
+				"title": title, "description": clean(self.plain(description)),
+				"channel": name, "channel_id": channel_id,
+				"duration": self.seconds(
+					entry.findtext(self.ITUNES + "duration")),
+				"year": year, "date": date, "views": 0, "rating": 0.0,
+				"poster": thumbnail, "thumbnail": thumbnail, "season": 0,
+				"episode": 0})
+			if len(items) >= max(count, 200):
+				break
+		return items
+
+	def find(self, media_id, kind="video"):
+		return media_id if media_id.startswith(("http://", "https://")) \
+			else None
+
+	def download(self, media_id, folder, progress=None):
+		"""The file of an episode, as the server gives it."""
+		with self.lock:
+			title = self.titles.get(media_id) or ""
+		extension = os.path.splitext(
+			urllib.parse.urlparse(media_id).path)[1]
+		if not re.fullmatch(r"\.[A-Za-z0-9]{1,5}", extension or ""):
+			extension = ".mp3"
+		name = file_name(title or os.path.basename(
+			urllib.parse.urlparse(media_id).path) or "podcast")
+		os.makedirs(folder, exist_ok=True)
+		path = os.path.join(folder, name + extension)
+		temporary = path + ".part"
+		request = urllib.request.Request(media_id,
+			headers={"User-Agent": USER_AGENT})
+		with urllib.request.urlopen(request, timeout=30) as response, \
+				open(temporary, "wb") as file:
+			total = as_int(response.headers.get("Content-Length"), 0)
+			done = 0
+			began = time.time()
+			while True:
+				data = response.read(1024 * 1024)
+				if not data:
+					break
+				file.write(data)
+				done += len(data)
+				if progress is not None:
+					speed = done / max(0.001, time.time() - began)
+					left = (total - done) / speed if total and speed else 0
+					progress(int(done * 100 / total) if total else 0,
+						done=size_text(done), total=size_text(total)
+							if total else "",
+						speed=size_text(speed) + "/s",
+						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
+		if total and os.path.getsize(temporary) != total:
+			os.remove(temporary)
+			return None
+		os.replace(temporary, path)
+		return path
+
+
 def look_for_servers():
 	"""At the start: the servers of the home network, and if there are any
 	the source that shows them, told to Cinema."""
@@ -2578,6 +2734,7 @@ if shutil.which("aria2c"):
 	register(TorrentProvider)
 register(LocalProvider)
 register(IptvProvider)
+register(PodcastProvider)
 register(FavoritesProvider)
 
 
@@ -3229,11 +3386,19 @@ def organize(request):
 		library.local = PROVIDERS.get("local") or LocalProvider()
 	poster = ""
 
+	podcasts = os.path.join(root, file_name(names.get("podcasts")
+		or "Podcasts"))
 	stem = os.path.splitext(os.path.basename(path))[0]
 	# what a telephone or a camera names what it records: not a film
 	camera = re.match(r"^(IMG|VID|PXL|MVI|DSC|MOV|DJI|GOPR|GH\d)?[_-]?"
 		r"(19|20)\d{6}[_-]?\d{6}", stem, re.IGNORECASE) is not None
-	if provider in ("youtube", "peertube") or camera or (kind == "video"
+	if provider == "podcast":
+		# by the podcast, its picture kept already
+		folder = os.path.join(podcasts, file_name(clean(channel) or "Podcast"))
+		target = os.path.join(folder, file_name(clean(title) or stem)
+			+ extension)
+		need_picture = False
+	elif provider in ("youtube", "peertube") or camera or (kind == "video"
 			and provider not in ("torrent", "dlna", "local", "archive")):
 		# a video of a channel, or a clip: by the channel; the videos of a
 		# channel have their picture already, a clip gets a frame of it

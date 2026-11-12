@@ -1,4 +1,4 @@
-1	italian	application/x-vnd.atomozero-Cinema	2772389700
+1	italian	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		Non riesco a raggiungere YouTube: la rete è accesa?
 Video quality:	Settings		Qualità video:
 Downloaded	Detail		Scaricato
@@ -74,6 +74,7 @@ Search	Window		Cerca
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# oppure nome = @iptv channel:<indirizzo di una lista M3U> per i canali TV
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Vuoi installarli adesso? pkgman chiede conferma prima di cambiare qualcosa, in una finestra del Terminale.
 official music video	Categories		video musicale ufficiale
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Podcast
 The video could not be downloaded	Window		Non è stato possibile scaricare il video
 Classic films	Categories		Film classici
 video overlay	Player		overlay video
@@ -91,8 +92,8 @@ yesterday	Detail		ieri
 Following	Grid		Segui già
 No subtitles available	Player		Nessun sottotitolo disponibile
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# mese fa} other{# mesi fa}}
-Move \"%title%\" to the Trash?	Window		Spostare «%title%» nel Cestino?
 Video ready	Window		Video pronto
+Move \"%title%\" to the Trash?	Window		Spostare «%title%» nel Cestino?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# anno fa} other{# anni fa}}
 Show the latest videos	Grid		Mostra gli ultimi video
 Copy to the network folder	Grid		Copia nella cartella di rete
@@ -107,6 +108,7 @@ Remove	Settings		Rimuovi
 Download	Detail		Scarica
 Downloaded	Window		Scaricati
 Add	Settings		Aggiungi
+Podcast	Window		Podcast
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Vuoi installarlo adesso? pkgman chiede conferma prima di cambiare qualcosa, in una finestra del Terminale.
 Always	Settings		Sempre
 Remove from the tabs	Categories		Rimuovi dalle schede
@@ -124,8 +126,8 @@ Classic cartoons	Categories		Cartoni classici
 Play	Detail		Riproduci
 Free channels of:	Settings		Canali gratuiti di:
 Follow	Detail		Segui
-Home network	Window		Rete di casa
 No statistics for this video	Player		Nessuna statistica per questo video
+Home network	Window		Rete di casa
 Details	Grid		Dettagli
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Metti yt-dlp in un solo file in ~/config/non-packaged/bin, come spiega il README di Cinema, poi riavvia Cinema.
 even volume %gain% dB	Player		volume uniforme %gain% dB

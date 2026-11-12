@@ -1,4 +1,4 @@
-1	spanish	application/x-vnd.atomozero-Cinema	2772389700
+1	spanish	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
@@ -74,6 +74,7 @@ Search	Window		Buscar
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# o nombre = @iptv channel:<dirección de una lista M3U> para canales de TV
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		¿Instalarlos ahora? pkgman pregunta antes de cambiar nada, en una ventana de Terminal.
 official music video	Categories		videoclip oficial
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Pódcasts
 The video could not be downloaded	Window		No se pudo descargar el vídeo
 Classic films	Categories		Películas clásicas
 video overlay	Player		superposición de vídeo
@@ -91,8 +92,8 @@ yesterday	Detail		ayer
 Following	Grid		Siguiendo
 No subtitles available	Player		No hay subtítulos disponibles
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{hace # mes} other{hace # meses}}
-Move \"%title%\" to the Trash?	Window		¿Mover «%title%» a la papelera?
 Video ready	Window		Vídeo listo
+Move \"%title%\" to the Trash?	Window		¿Mover «%title%» a la papelera?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{hace # año} other{hace # años}}
 Show the latest videos	Grid		Mostrar los últimos vídeos
 Copy to the network folder	Grid		Copiar a la carpeta de red
@@ -107,6 +108,7 @@ Remove	Settings		Quitar
 Download	Detail		Descargar
 Downloaded	Window		Descargados
 Add	Settings		Añadir
+Podcast	Window		Pódcast
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		¿Instalarlo ahora? pkgman pregunta antes de cambiar nada, en una ventana de Terminal.
 Always	Settings		Siempre
 Remove from the tabs	Categories		Quitar de las pestañas
@@ -124,8 +126,8 @@ Classic cartoons	Categories		Dibujos animados clásicos
 Play	Detail		Reproducir
 Free channels of:	Settings		Canales gratuitos de:
 Follow	Detail		Seguir
-Home network	Window		Red de casa
 No statistics for this video	Player		No hay estadísticas para este vídeo
+Home network	Window		Red de casa
 Details	Grid		Detalles
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Pon yt-dlp de un solo archivo en ~/config/non-packaged/bin, como explica el README de Cinema, y vuelve a abrir Cinema.
 even volume %gain% dB	Player		volumen uniforme %gain% dB

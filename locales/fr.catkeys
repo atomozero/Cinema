@@ -1,4 +1,4 @@
-1	french	application/x-vnd.atomozero-Cinema	2772389700
+1	french	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
@@ -74,6 +74,7 @@ Search	Window		Rechercher
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# ou nom = @iptv channel:<adresse d'une liste M3U> pour les chaînes TV
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Les installer maintenant ? pkgman demande avant de modifier quoi que ce soit, dans une fenêtre Terminal.
 official music video	Categories		clip officiel
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Podcasts
 The video could not be downloaded	Window		Impossible de télécharger la vidéo
 Classic films	Categories		Films classiques
 video overlay	Player		overlay vidéo
@@ -91,8 +92,8 @@ yesterday	Detail		hier
 Following	Grid		Suivi
 No subtitles available	Player		Aucun sous-titre disponible
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{il y a # mois} other{il y a # mois}}
-Move \"%title%\" to the Trash?	Window		Mettre « %title% » à la corbeille ?
 Video ready	Window		Vidéo prête
+Move \"%title%\" to the Trash?	Window		Mettre « %title% » à la corbeille ?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{il y a # an} other{il y a # ans}}
 Show the latest videos	Grid		Afficher les dernières vidéos
 Copy to the network folder	Grid		Copier dans le dossier réseau
@@ -107,6 +108,7 @@ Remove	Settings		Retirer
 Download	Detail		Télécharger
 Downloaded	Window		Téléchargées
 Add	Settings		Ajouter
+Podcast	Window		Podcast
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		L'installer maintenant ? pkgman demande avant de modifier quoi que ce soit, dans une fenêtre Terminal.
 Always	Settings		Toujours
 Remove from the tabs	Categories		Retirer des onglets
@@ -124,8 +126,8 @@ Classic cartoons	Categories		Dessins animés classiques
 Play	Detail		Lire
 Free channels of:	Settings		Chaînes gratuites de :
 Follow	Detail		Suivre
-Home network	Window		Réseau local
 No statistics for this video	Player		Pas de statistiques pour cette vidéo
+Home network	Window		Réseau local
 Details	Grid		Détails
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Placez yt-dlp en un seul fichier dans ~/config/non-packaged/bin, comme l'explique le README de Cinema, puis relancez Cinema.
 even volume %gain% dB	Player		volume égalisé %gain% dB

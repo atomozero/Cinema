@@ -57,6 +57,9 @@ public:
 			void				SetDirect(bool direct);
 			void				SetFavorite(int32 favorite);
 			void				SetOverlayQuestion(const char* card);
+			void				SetCover(BBitmap* cover);
+									// shown when there is only sound (a
+									// podcast); the view's to delete
 			void				SetAvailable(const char* map);
 									// of a torrent playing as it comes:
 									// what is there, on the bar ("" none)
@@ -128,6 +131,7 @@ private:
 			std::vector<BString> fStatsLines;
 			BRect				fStatsRect;
 			BString				fAvailable;
+			BBitmap*			fCover = NULL;
 			BString				fNotice;
 			bigtime_t			fNoticeUntil = 0;	// 0 for ever
 			BRect				fNoticeRect;

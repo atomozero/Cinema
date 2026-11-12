@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	2772389700
+1	portuguese	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -74,6 +74,7 @@ Search	Window		Pesquisar
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# ou nome = @iptv channel:<endereço de uma lista M3U> para canais de TV
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Instalar agora? O pkgman pergunta antes de mudar qualquer coisa, numa janela do Terminal.
 official music video	Categories		videoclipe oficial
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Podcasts
 The video could not be downloaded	Window		Não foi possível baixar o vídeo
 Classic films	Categories		Filmes clássicos
 video overlay	Player		sobreposição de vídeo
@@ -91,8 +92,8 @@ yesterday	Detail		ontem
 Following	Grid		Seguindo
 No subtitles available	Player		Nenhuma legenda disponível
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{há # mês} other{há # meses}}
-Move \"%title%\" to the Trash?	Window		Mover "%title%" para a lixeira?
 Video ready	Window		Vídeo pronto
+Move \"%title%\" to the Trash?	Window		Mover "%title%" para a lixeira?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{há # ano} other{há # anos}}
 Show the latest videos	Grid		Mostrar os vídeos mais recentes
 Copy to the network folder	Grid		Copiar para a pasta de rede
@@ -107,6 +108,7 @@ Remove	Settings		Remover
 Download	Detail		Baixar
 Downloaded	Window		Baixados
 Add	Settings		Adicionar
+Podcast	Window		Podcast
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Instalar agora? O pkgman pergunta antes de mudar qualquer coisa, numa janela do Terminal.
 Always	Settings		Sempre
 Remove from the tabs	Categories		Remover das abas
@@ -124,8 +126,8 @@ Classic cartoons	Categories		Desenhos clássicos
 Play	Detail		Reproduzir
 Free channels of:	Settings		Canais gratuitos de:
 Follow	Detail		Seguir
-Home network	Window		Rede de casa
 No statistics for this video	Player		Sem estatísticas para este vídeo
+Home network	Window		Rede de casa
 Details	Grid		Detalhes
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Coloque o yt-dlp de arquivo único em ~/config/non-packaged/bin, como explica o README do Cinema, e abra o Cinema de novo.
 even volume %gain% dB	Player		volume uniforme %gain% dB

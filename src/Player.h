@@ -98,6 +98,9 @@ public:
 			bigtime_t			Position() const;
 			bigtime_t			Duration() const { return fDuration; }
 			bool				IsOpen() const { return fOpened; }
+			bool				HasVideo() const { return fHasVideo; }
+									// open, with pictures (not a podcast
+									// or a song)
 			bool				Statistics(PlayerStatistics& stats) const;
 									// false when there are none (yet)
 
@@ -314,6 +317,7 @@ private:
 			std::atomic<bool>	fQuit;
 			std::atomic<int32>	fSession;	// one more each time it opens
 			std::atomic<bool>	fOpened;
+			std::atomic<bool>	fHasVideo{false};
 			std::atomic<bool>	fShowNext;		// even when paused: after a seek
 			std::atomic<int32>	fGeneration;	// changes with a seek
 			std::atomic<bool>	fVideoEnded;

@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2772389700
+1	japanese	application/x-vnd.atomozero-Cinema	3501182019
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -74,6 +74,7 @@ Search	Window		検索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# または 名前 = @iptv channel:<M3U リストのアドレス> でテレビチャンネル
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
 official music video	Categories		公式ミュージックビデオ
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	ポッドキャスト
 The video could not be downloaded	Window		動画をダウンロードできませんでした
 Classic films	Categories		名作映画
 video overlay	Player		ビデオオーバーレイ
@@ -91,8 +92,8 @@ yesterday	Detail		昨日
 Following	Grid		フォロー中
 No subtitles available	Player		利用できる字幕がありません
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
-Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
 Video ready	Window		動画の準備ができました
+Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
 Copy to the network folder	Grid		ネットワークフォルダーにコピー
@@ -107,6 +108,7 @@ Remove	Settings		削除
 Download	Detail		ダウンロード
 Downloaded	Window		ダウンロード済み
 Add	Settings		追加
+Podcast	Window		ポッドキャスト
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
 Always	Settings		常に
 Remove from the tabs	Categories		タブから削除
@@ -124,8 +126,8 @@ Classic cartoons	Categories		名作アニメ
 Play	Detail		再生
 Free channels of:	Settings		無料チャンネルの国:
 Follow	Detail		フォロー
-Home network	Window		ホームネットワーク
 No statistics for this video	Player		この動画の統計はありません
+Home network	Window		ホームネットワーク
 Details	Grid		詳細
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。
 even volume %gain% dB	Player		音量の均一化 %gain% dB

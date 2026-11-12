@@ -394,6 +394,7 @@ Player::_Open()
 	} else if (fStartAt > 0)
 		_SeekTracks(fStartAt);
 	fShowNext = true;
+	fHasVideo = fVideoTrack != NULL;
 	fOpened = true;
 
 	if (fAddress.ByteAt(0) == '/' && !fSameVideo) {

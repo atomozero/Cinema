@@ -134,6 +134,7 @@ private:
 			void				_FindAtHeight(int32 height);
 			void				_HidePlayer();
 			void				_OfferHomeNetwork();
+			void				_AddPodcast(const char* address);
 			void				_Upload(BMessage* message);
 			void				_Uploaded(BMessage* message);
 			void				_Trashed(const BString& id);
