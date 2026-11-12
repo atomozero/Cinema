@@ -117,7 +117,7 @@ x86_64, for 32-bit x86 (`x86_gcc2`, built for the gcc 13 side of the hybrid)
 and for 32-bit ARM (ARMv7 with VFPv3-D16, such as the AC100):
 
 ```sh
-pkgman install cinema-1.4.3-1-x86_64.hpkg
+pkgman install cinema-1.5.0-1-x86_64.hpkg
 ```
 
 On x86_64 and 32-bit x86, pkgman brings Python, the yt-dlp module and FFmpeg
