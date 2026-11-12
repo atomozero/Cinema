@@ -77,6 +77,9 @@ enum {
 	kMsgPlayerClose		= 'plcl',
 	kMsgAddTorrent		= 'tadd',	// "source": a magnet link or a .torrent
 	kMsgToggleOverlay	= 'plov',	// the O key: the overlay off or on
+	kMsgChangeQuality	= 'plqu',	// + and -: "up", a size more or less
+	kMsgInstallHelper	= 'hins',	// pkgman for what the helper needs
+	kMsgHelperInstalled	= 'hind',	// its Terminal closed: try again
 	kMsgAskOverlay		= 'plaq',	// time to ask whether the video shows
 	kMsgOverlayAnswer	= 'plan',	// "works": the answer
 	kMsgPlayInMediaPlayer = 'plmp',	// the same address, in MediaPlayer

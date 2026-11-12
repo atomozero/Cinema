@@ -1,7 +1,8 @@
-1	english	application/x-vnd.atomozero-Cinema	2128437264
+1	english	application/x-vnd.atomozero-Cinema	2969662857
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube and the other sources need yt-dlp, which Python cannot find on this system.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.
 Search first in:	Settings		Search first in:
 full documentary	Categories		full documentary
@@ -18,6 +19,7 @@ Downloading…	Detail		Downloading…
 Settings…	Window		Settings…
 Decoding without the deblocking filter	Player		Decoding without the deblocking filter
 Add to the tabs	Grid		Add to the tabs
+Not now	Window		Not now
 Processor: Cinema %cinema%%, all %all%%	Player		Processor: Cinema %cinema%%, all %all%%
 No subtitles	Player		No subtitles
 Decoding the key frames only	Player		Decoding the key frames only
@@ -39,8 +41,8 @@ Getting the video ready	Player		Getting the video ready
 Follow	Grid		Follow
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# week ago} other{# weeks ago}}
 %eta% left	Window		%eta% left
-The video could not be moved to the Trash: %error%	Window		The video could not be moved to the Trash: %error%
 Add…	Settings		Add…
+The video could not be moved to the Trash: %error%	Window		The video could not be moved to the Trash: %error%
 News	Categories		News
 TV	Window		TV
 Decoding the reference pictures only	Player		Decoding the reference pictures only
@@ -54,10 +56,13 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		Wit
 Downloading…	Grid		Downloading…
 Stop the download	Grid		Stop the download
 No	Player		No
+The highest quality already	Window		The highest quality already
 drawn by Cinema	Player		drawn by Cinema
 Decoding every picture	Player		Decoding every picture
+That quality could not be had	Window		That quality could not be had
 Search	Window		Search
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# or name = @iptv channel:<address of an M3U list> for TV channels
+Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Install them now? pkgman asks before it changes anything, in a Terminal window.
 official music video	Categories		official music video
 The video could not be downloaded	Window		The video could not be downloaded
 Classic films	Categories		Classic films
@@ -72,8 +77,8 @@ This video can't be played here, try another one.	Window		This video can't be pl
 TV series	Window		TV series
 yesterday	Detail		yesterday
 Following	Grid		Following
-{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# month ago} other{# months ago}}
 No subtitles available	Player		No subtitles available
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# month ago} other{# months ago}}
 Move \"%title%\" to the Trash?	Window		Move \"%title%\" to the Trash?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# year ago} other{# years ago}}
 Show the latest videos	Grid		Show the latest videos
@@ -83,16 +88,16 @@ Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTu
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema needs yt-dlp and python3, and cinema-helper.py next to it
 Even volume: films and TV as loud as music	Settings		Even volume: films and TV as loud as music
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# day ago} other{# days ago}}
-Download	Detail		Download
 Remove	Settings		Remove
+Download	Detail		Download
 Downloaded	Window		Downloaded
 Add	Settings		Add
 Always	Settings		Always
 Remove from the tabs	Categories		Remove from the tabs
 Choose…	Settings		Choose…
 news today	Categories		news today
-Move to Trash	Detail		Move to Trash
 Get a key…	Settings		Get a key…
+Move to Trash	Detail		Move to Trash
 %peers% sources	Window		%peers% sources
 M3U list:	Settings		M3U list:
 %views% views	Detail		%views% views
@@ -104,6 +109,8 @@ Free channels of:	Settings		Free channels of:
 Follow	Detail		Follow
 No statistics for this video	Player		No statistics for this video
 Details	Grid		Details
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.
+The lowest quality already	Window		The lowest quality already
 %count% dropped	Player		%count% dropped
 even volume %gain% dB	Player		even volume %gain% dB
 %done% of %total%	Window		%done% of %total%
@@ -121,6 +128,7 @@ Open the channel	Grid		Open the channel
 Check	Settings		Check
 Playback	Settings		Playback
 Subtitles	Subtitles		Subtitles
+This video comes in one quality only	Window		This video comes in one quality only
 science explained	Categories		science explained
 Download	Grid		Download
 Channel	Grid		Channel
@@ -129,14 +137,17 @@ Looking for the videos…	Window		Looking for the videos…
 %count% subscribers	Detail		%count% subscribers
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# One tab of the top bar per line: name = what to search on YouTube
 Following	Detail		Following
+YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.
 Automatic	Settings		Automatic
 automatic	Player		automatic
 No videos downloaded yet: right click a video, or press D	Window		No videos downloaded yet: right click a video, or press D
 From a file	Player		From a file
 Favorites	Window		Favorites
 Can you see the video?	Player		Can you see the video?
+Install	Window		Install
 Home	Categories		Home
 Checking…	Settings		Checking…
+Changing to %height%p…	Window		Changing to %height%p…
 About Cinema	Window		About Cinema
 From a torrent, as it downloads	Player		From a torrent, as it downloads
 Subtitles	Player		Subtitles

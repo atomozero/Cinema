@@ -24,7 +24,8 @@ class Player;
 	Space or Enter pauses, the arrows go back and on by 10 seconds (a minute
 	with Shift) and change the volume (shown upright at the right, as the
 	keys; the wheel and a click on it change it too), M plays it in
-	MediaPlayer instead, I shows what the player does (small, at the top), V
+	MediaPlayer instead, I shows what the player does (small, at the top),
+	+ and - ask for a video of YouTube a size larger or smaller, V
 	chooses the subtitles, S gives the video a star; a click on the bar goes
 	there, on CC chooses the subtitles, on the star next to it gives or
 	takes the star, a click elsewhere pauses. The window closes it, with Esc.
@@ -56,6 +57,10 @@ public:
 			void				SetDirect(bool direct);
 			void				SetFavorite(int32 favorite);
 			void				SetOverlayQuestion(const char* card);
+			void				SetNotice(const char* text,
+									bigtime_t duration = 0);
+									// at the top, for that long (0 until
+									// another one, NULL takes it away)
 									// 1 with a star, 0 without, -1 none
 									// to give (live TV, an address)
 
@@ -77,6 +82,8 @@ private:
 			void				_DrawQuestion(BView* target);
 			void				_UpdateStatistics();
 			void				_DrawStatistics(BView* target);
+			BRect				_NoticeFrame() const;
+			void				_DrawNotice(BView* target);
 			BRect				_FavoriteButtonFrame(const BRect& bounds) const;
 			void				_ShowControls();
 			void				_TogglePause();
@@ -117,6 +124,9 @@ private:
 			bool				fShowStats = false;	// the I key
 			std::vector<BString> fStatsLines;
 			BRect				fStatsRect;
+			BString				fNotice;
+			bigtime_t			fNoticeUntil = 0;	// 0 for ever
+			BRect				fNoticeRect;
 };
 
 

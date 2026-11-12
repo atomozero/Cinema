@@ -26,10 +26,12 @@
 #include <Url.h>
 
 #include <algorithm>
+#include <thread>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <Path.h>
 #include <Roster.h>
 #include <Screen.h>
@@ -507,11 +509,157 @@ CinemaWindow::_LowerQuality(int32 height)
 	}
 	if (smaller == 0)
 		return;
+	_FindAtHeight(smaller);
+}
+
+
+/*!	Whether a command is in the PATH and can be run: a link left dangling
+	by a package not activated is not.
+*/
+static bool
+command_works(const char* name)
+{
+	const char* path = getenv("PATH");
+	if (path == NULL)
+		return false;
+	BString paths(path);
+	int32 start = 0;
+	while (start <= paths.Length()) {
+		int32 end = paths.FindFirst(':', start);
+		if (end < 0)
+			end = paths.Length();
+		BString file(paths.String() + start, end - start);
+		if (file.IsEmpty())
+			file = ".";
+		file << "/" << name;
+		if (access(file.String(), X_OK) == 0)
+			return true;
+		start = end + 1;
+	}
+	return false;
+}
+
+
+/*!	The helper could not start: Python or yt-dlp missing, or broken. On
+	Haiku pkgman installs them (cmd: names, whatever the version of Python
+	is); on ARM there is no package of them, and the README says how.
+*/
+void
+CinemaWindow::_OfferInstall()
+{
+	BString text(command_works("python3")
+		? B_TRANSLATE("YouTube and the other sources need yt-dlp, which "
+			"Python cannot find on this system.")
+		: B_TRANSLATE("YouTube and the other sources need Python 3 and "
+			"yt-dlp, which are missing or not working on this system."));
+	// all of them collected for the catalogs, whatever the processor
+	const char* armHow = B_TRANSLATE("Put the single-file yt-dlp in "
+		"~/config/non-packaged/bin, as the README of Cinema says, then start "
+		"Cinema again.");
+	const char* question = B_TRANSLATE("Install them now? pkgman asks before "
+		"it changes anything, in a Terminal window.");
+	const char* install = B_TRANSLATE("Install");
+	const char* notNow = B_TRANSLATE("Not now");
+#if defined(__arm__) || defined(__aarch64__)
+	(void)question;
+	(void)install;
+	(void)notNow;
+	text << "\n\n" << armHow;
+	(new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), text.String(),
+		B_TRANSLATE("OK")))->Go(NULL);
+#else
+	(void)armHow;
+	text << "\n\n" << question;
+	BAlert* alert = new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"),
+		text.String(), install, notNow);
+	// only if asked: Enter and Esc leave things as they are
+	alert->SetShortcut(1, B_ESCAPE);
+	alert->Go(new BInvoker(new BMessage(kMsgInstallHelper), this));
+#endif
+}
+
+
+/*!	pkgman in a Terminal, which stays open on what it says; once it is
+	closed, the helper starts again.
+*/
+void
+CinemaWindow::_Install()
+{
+	const char* arguments[] = { "/bin/sh", "-c",
+		"pkgman install cmd:python3 cmd:yt_dlp cmd:ffmpeg; echo; "
+		"echo 'Enter: back to Cinema'; read line", NULL };
+	team_id team = -1;
+	if (be_roster->Launch("application/x-vnd.Haiku-Terminal", 3,
+			arguments, &team) != B_OK || team < 0)
+		return;
+	BMessenger window(this);
+	std::thread([team, window]() {
+		team_info info;
+		while (get_team_info(team, &info) == B_OK)
+			snooze(500000);
+		window.SendMessage(kMsgHelperInstalled);
+	}).detach();
+}
+
+
+/*!	The + and - keys: the video of YouTube playing, a size more or less. */
+void
+CinemaWindow::_ChangeQuality(bool up)
+{
+	if (!fPlayerShown || fPlayingId.IsEmpty())
+		return;
+	if (fPlayingKind == "live" || _ProviderOf(fPlayingId) != "youtube"
+		|| fPlayingAddress.ByteAt(0) == '/') {
+		fPlayerView->SetNotice(
+			B_TRANSLATE("This video comes in one quality only"), 3000000);
+		return;
+	}
+	// being found again already
+	if (fFinding.count(fPlayingId) > 0)
+		return;
+	PlayerStatistics stats;
+	int32 current = fPlayer->Statistics(stats) && stats.height > 0
+		? stats.height : 360;
+	static const int32 kSizes[] = { 360, 480, 720, 1080 };
+	int32 wanted = 0;
+	if (up) {
+		for (int32 size : kSizes) {
+			if (size > current + 8) {
+				wanted = size;
+				break;
+			}
+		}
+	} else {
+		for (int32 size : kSizes) {
+			if (size < current - 8)
+				wanted = size;
+		}
+	}
+	if (wanted == 0) {
+		fPlayerView->SetNotice(up ? B_TRANSLATE("The highest quality already")
+			: B_TRANSLATE("The lowest quality already"), 3000000);
+		return;
+	}
+	_FindAtHeight(wanted);
+}
+
+
+/*!	The video playing found again at that height, going on from where it is
+	once found; it plays on meanwhile.
+*/
+void
+CinemaWindow::_FindAtHeight(int32 height)
+{
+	BString notice(B_TRANSLATE("Changing to %height%p\xE2\x80\xA6"));
+	BString number;
+	number << height;
+	notice.ReplaceFirst("%height%", number.String());
+	fPlayerView->SetNotice(notice.String(), 0);
 	_SavePosition();
 	fOpenAt = fPlayer->Position();
 	fLowered = fPlayingId;
 	fStreams.erase(fPlayingId);
-	fHelper->SetHeight(smaller);
+	fHelper->SetHeight(height);
 	fWaiting = fPlayingId;
 	fWaitingTitle = fPlayingTitle;
 	_Find(fPlayingId);
@@ -1245,6 +1393,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgAddTorrent:
 			_AddTorrent(message->GetString("source", ""));
 			break;
+		case kMsgChangeQuality:
+			_ChangeQuality(message->GetBool("up", true));
+			break;
 		case kMsgToggleOverlay:
 		{
 			// the O key: the overlay used shows nothing, or the one not used
@@ -1817,8 +1968,10 @@ CinemaWindow::MessageReceived(BMessage* message)
 			BString id = message->GetString("id", "");
 			fFinding.erase(id);
 			// the next videos at the size of the settings again
-			if (id == fLowered)
+			if (id == fLowered) {
 				fHelper->SetHeight(fSettings.videoHeight);
+				fPlayerView->SetNotice(NULL);
+			}
 			Stream stream = { message->GetString("url", ""), system_time() };
 			fStreams[id] = stream;
 			if (id == fWaiting) {
@@ -1835,11 +1988,19 @@ CinemaWindow::MessageReceived(BMessage* message)
 		{
 			BString id = message->GetString("id", "");
 			fFinding.erase(id);
-			if (id == fLowered)
+			if (id == fLowered) {
 				fHelper->SetHeight(fSettings.videoHeight);
+				fPlayerView->SetNotice(NULL);
+			}
 			if (id == fWanted)
 				fWanted = "";
-			if (id == fWaiting) {
+			if (id == fWaiting && id == fLowered && fPlayerShown
+				&& fPlayingId == id) {
+				// another size of the video playing: it plays on as it was
+				fWaiting = "";
+				fPlayerView->SetNotice(
+					B_TRANSLATE("That quality could not be had"), 3000000);
+			} else if (id == fWaiting) {
 				fWaiting = "";
 				fGrid->SetBusy(NULL);
 				fHome->ClearBusy();
@@ -1898,8 +2059,30 @@ CinemaWindow::MessageReceived(BMessage* message)
 				"python3, and cinema-helper.py next to it"));
 			fGrid->SetMessage(B_TRANSLATE("Cinema needs yt-dlp and python3, "
 				"and cinema-helper.py next to it"));
+			// once a run: what is missing, and how to have it
+			if (!fHelper->WasReady() && !fInstallOffered) {
+				fInstallOffered = true;
+				_OfferInstall();
+			}
 			break;
 		}
+		case kMsgInstallHelper:
+			// "Install", not the default button
+			if (message->GetInt32("which", 1) == 0)
+				_Install();
+			break;
+		case kMsgHelperInstalled:
+			// installed or not: the helper tries again, and says again if
+			// it still cannot start (once more)
+			fInstallOffered = false;
+			fHelperRestarts = 0;
+			if (fHelper->Restart() == B_OK) {
+				fHelper->SetHeight(fSettings.videoHeight);
+				fHomeLoaded = false;
+				if (fCard == 2)
+					_LoadHome();
+			}
+			break;
 
 		default:
 			BDirectWindow::MessageReceived(message);

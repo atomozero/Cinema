@@ -1,7 +1,8 @@
-1	spanish	application/x-vnd.atomozero-Cinema	2128437264
+1	spanish	application/x-vnd.atomozero-Cinema	2969662857
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube y las demás fuentes necesitan yt-dlp, que Python no encuentra en este sistema.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automático pregunta una sola vez, en una tarjeta gráfica que no conoce, si ves el vídeo. O lo cambia durante un vídeo.
 Search first in:	Settings		Buscar primero en:
 full documentary	Categories		documental completo
@@ -18,6 +19,7 @@ Downloading…	Detail		Descargando…
 Settings…	Window		Ajustes…
 Decoding without the deblocking filter	Player		Decodificando sin filtro de desbloqueo
 Add to the tabs	Grid		Añadir a las pestañas
+Not now	Window		Ahora no
 Processor: Cinema %cinema%%, all %all%%	Player		Procesador: Cinema %cinema%%, total %all%%
 No subtitles	Player		Sin subtítulos
 Decoding the key frames only	Player		Decodificando solo los fotogramas clave
@@ -39,8 +41,8 @@ Getting the video ready	Player		Preparando el vídeo
 Follow	Grid		Seguir
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{hace # semana} other{hace # semanas}}
 %eta% left	Window		quedan %eta%
-The video could not be moved to the Trash: %error%	Window		No se pudo mover el vídeo a la papelera: %error%
 Add…	Settings		Añadir…
+The video could not be moved to the Trash: %error%	Window		No se pudo mover el vídeo a la papelera: %error%
 News	Categories		Noticias
 TV	Window		TV
 Decoding the reference pictures only	Player		Decodificando solo las imágenes de referencia
@@ -54,10 +56,13 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		Con
 Downloading…	Grid		Descargando…
 Stop the download	Grid		Detener la descarga
 No	Player		No
+The highest quality already	Window		Ya es la calidad más alta
 drawn by Cinema	Player		dibujado por Cinema
 Decoding every picture	Player		Decodificando cada imagen
+That quality could not be had	Window		No se pudo obtener esa calidad
 Search	Window		Buscar
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# o nombre = @iptv channel:<dirección de una lista M3U> para canales de TV
+Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		¿Instalarlos ahora? pkgman pregunta antes de cambiar nada, en una ventana de Terminal.
 official music video	Categories		videoclip oficial
 The video could not be downloaded	Window		No se pudo descargar el vídeo
 Classic films	Categories		Películas clásicas
@@ -72,8 +77,8 @@ This video can't be played here, try another one.	Window		Este vídeo no se pued
 TV series	Window		Series
 yesterday	Detail		ayer
 Following	Grid		Siguiendo
-{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{hace # mes} other{hace # meses}}
 No subtitles available	Player		No hay subtítulos disponibles
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{hace # mes} other{hace # meses}}
 Move \"%title%\" to the Trash?	Window		¿Mover «%title%» a la papelera?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{hace # año} other{hace # años}}
 Show the latest videos	Grid		Mostrar los últimos vídeos
@@ -83,16 +88,16 @@ Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTu
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema necesita yt-dlp y python3, y cinema-helper.py a su lado
 Even volume: films and TV as loud as music	Settings		Volumen uniforme: películas y TV tan altas como la música
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{hace # día} other{hace # días}}
-Download	Detail		Descargar
 Remove	Settings		Quitar
+Download	Detail		Descargar
 Downloaded	Window		Descargados
 Add	Settings		Añadir
 Always	Settings		Siempre
 Remove from the tabs	Categories		Quitar de las pestañas
 Choose…	Settings		Elegir…
 news today	Categories		noticias de hoy
-Move to Trash	Detail		Mover a la papelera
 Get a key…	Settings		Obtener una clave…
+Move to Trash	Detail		Mover a la papelera
 %peers% sources	Window		%peers% fuentes
 M3U list:	Settings		Lista M3U:
 %views% views	Detail		%views% visualizaciones
@@ -104,6 +109,8 @@ Free channels of:	Settings		Canales gratuitos de:
 Follow	Detail		Seguir
 No statistics for this video	Player		No hay estadísticas para este vídeo
 Details	Grid		Detalles
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Pon yt-dlp de un solo archivo en ~/config/non-packaged/bin, como explica el README de Cinema, y vuelve a abrir Cinema.
+The lowest quality already	Window		Ya es la calidad más baja
 %count% dropped	Player		%count% descartados
 even volume %gain% dB	Player		volumen uniforme %gain% dB
 %done% of %total%	Window		%done% de %total%
@@ -121,6 +128,7 @@ Open the channel	Grid		Abrir el canal
 Check	Settings		Comprobar
 Playback	Settings		Reproducción
 Subtitles	Subtitles		Subtítulos
+This video comes in one quality only	Window		Este vídeo solo tiene una calidad
 science explained	Categories		ciencia explicada
 Download	Grid		Descargar
 Channel	Grid		Canal
@@ -129,14 +137,17 @@ Looking for the videos…	Window		Buscando los vídeos…
 %count% subscribers	Detail		%count% suscriptores
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Una pestaña de la barra superior por línea: nombre = qué buscar en YouTube
 Following	Detail		Siguiendo
+YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube y las demás fuentes necesitan Python 3 y yt-dlp, que faltan o no funcionan en este sistema.
 Automatic	Settings		Automática
 automatic	Player		automáticos
 No videos downloaded yet: right click a video, or press D	Window		Aún no hay vídeos descargados: clic derecho en un vídeo, o pulsa D
 From a file	Player		Desde un archivo
 Favorites	Window		Favoritos
 Can you see the video?	Player		¿Ves el vídeo?
+Install	Window		Instalar
 Home	Categories		Inicio
 Checking…	Settings		Comprobando…
+Changing to %height%p…	Window		Cambiando a %height%p…
 About Cinema	Window		Acerca de Cinema
 From a torrent, as it downloads	Player		Desde un torrent, mientras se descarga
 Subtitles	Player		Subtítulos

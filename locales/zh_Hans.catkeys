@@ -1,7 +1,8 @@
-1	chinese	application/x-vnd.atomozero-Cinema	2128437264
+1	chinese	application/x-vnd.atomozero-Cinema	2969662857
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube 和其他来源需要 yt-dlp，但此系统上的 Python 找不到它。
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自动模式会在不认识的显卡上询问一次是否能看到视频。播放时可按 O 切换。
 Search first in:	Settings		优先搜索：
 full documentary	Categories		完整纪录片
@@ -18,6 +19,7 @@ Downloading…	Detail		正在下载…
 Settings…	Window		设置…
 Decoding without the deblocking filter	Player		解码时不使用去块滤波
 Add to the tabs	Grid		添加到标签页
+Not now	Window		以后再说
 Processor: Cinema %cinema%%, all %all%%	Player		处理器：Cinema %cinema%%，总计 %all%%
 No subtitles	Player		无字幕
 Decoding the key frames only	Player		仅解码关键帧
@@ -39,8 +41,8 @@ Getting the video ready	Player		正在准备视频
 Follow	Grid		关注
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#周前}}
 %eta% left	Window		剩余 %eta%
-The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
 Add…	Settings		添加…
+The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
 News	Categories		新闻
 TV	Window		电视
 Decoding the reference pictures only	Player		仅解码参考帧
@@ -54,10 +56,13 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		有
 Downloading…	Grid		正在下载…
 Stop the download	Grid		停止下载
 No	Player		否
+The highest quality already	Window		已经是最高画质
 drawn by Cinema	Player		由 Cinema 绘制
 Decoding every picture	Player		解码每一帧
+That quality could not be had	Window		无法获取该画质
 Search	Window		搜索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# 或 名称 = @iptv channel:<M3U 列表地址> 用于电视频道
+Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		现在安装吗？pkgman 会在终端窗口中先询问再做任何更改。
 official music video	Categories		官方音乐视频
 The video could not be downloaded	Window		无法下载该视频
 Classic films	Categories		经典电影
@@ -72,8 +77,8 @@ This video can't be played here, try another one.	Window		此视频无法在这�
 TV series	Window		电视剧
 yesterday	Detail		昨天
 Following	Grid		已关注
-{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
 No subtitles available	Player		没有可用的字幕
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		显示最新视频
@@ -83,16 +88,16 @@ Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTu
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema 需要 yt-dlp 和 python3，并且 cinema-helper.py 需在同一位置
 Even volume: films and TV as loud as music	Settings		音量均衡：电影和电视与音乐一样响亮
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#天前}}
-Download	Detail		下载
 Remove	Settings		移除
+Download	Detail		下载
 Downloaded	Window		已下载
 Add	Settings		添加
 Always	Settings		始终
 Remove from the tabs	Categories		从标签页中移除
 Choose…	Settings		选择…
 news today	Categories		今日新闻
-Move to Trash	Detail		移到废纸篓
 Get a key…	Settings		获取密钥…
+Move to Trash	Detail		移到废纸篓
 %peers% sources	Window		%peers% 个来源
 M3U list:	Settings		M3U 列表：
 %views% views	Detail		%views% 次观看
@@ -104,6 +109,8 @@ Free channels of:	Settings		免费频道所在国家：
 Follow	Detail		关注
 No statistics for this video	Player		此视频没有统计信息
 Details	Grid		详细信息
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		按照 Cinema 的 README 所述，把单文件版 yt-dlp 放到 ~/config/non-packaged/bin，然后重新启动 Cinema。
+The lowest quality already	Window		已经是最低画质
 %count% dropped	Player		丢弃 %count% 帧
 even volume %gain% dB	Player		均衡音量 %gain% dB
 %done% of %total%	Window		%done% / %total%
@@ -121,6 +128,7 @@ Open the channel	Grid		打开频道
 Check	Settings		检查
 Playback	Settings		播放
 Subtitles	Subtitles		字幕
+This video comes in one quality only	Window		此视频只有一种画质
 science explained	Categories		科学解说
 Download	Grid		下载
 Channel	Grid		频道
@@ -129,14 +137,17 @@ Looking for the videos…	Window		正在查找视频…
 %count% subscribers	Detail		%count% 位订阅者
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 每行一个顶部栏标签：名称 = 要在 YouTube 上搜索的内容
 Following	Detail		已关注
+YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube 和其他来源需要 Python 3 和 yt-dlp，此系统上缺少它们或无法运行。
 Automatic	Settings		自动
 automatic	Player		自动生成
 No videos downloaded yet: right click a video, or press D	Window		还没有下载的视频：右键点击视频，或按 D
 From a file	Player		来自文件
 Favorites	Window		收藏
 Can you see the video?	Player		你能看到视频吗？
+Install	Window		安装
 Home	Categories		主页
 Checking…	Settings		正在检查…
+Changing to %height%p…	Window		正在切换到 %height%p…
 About Cinema	Window		关于 Cinema
 From a torrent, as it downloads	Player		来自种子，边下载边播放
 Subtitles	Player		字幕

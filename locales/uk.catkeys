@@ -1,7 +1,8 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2128437264
+1	ukrainian	application/x-vnd.atomozero-Cinema	2969662857
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube та іншим джерелам потрібен yt-dlp, якого Python не знаходить у цій системі.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
 Search first in:	Settings		Спершу шукати в:
 full documentary	Categories		повний документальний фільм
@@ -18,6 +19,7 @@ Downloading…	Detail		Завантаження…
 Settings…	Window		Налаштування…
 Decoding without the deblocking filter	Player		Декодування без фільтра деблокінгу
 Add to the tabs	Grid		Додати до вкладок
+Not now	Window		Не зараз
 Processor: Cinema %cinema%%, all %all%%	Player		Процесор: Cinema %cinema%%, усього %all%%
 No subtitles	Player		Без субтитрів
 Decoding the key frames only	Player		Декодування лише ключових кадрів
@@ -39,8 +41,8 @@ Getting the video ready	Player		Підготовка відео
 Follow	Grid		Стежити
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# тиждень тому} few{# тижні тому} many{# тижнів тому} other{# тижня тому}}
 %eta% left	Window		лишилось %eta%
-The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
 Add…	Settings		Додати…
+The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
 News	Categories		Новини
 TV	Window		ТБ
 Decoding the reference pictures only	Player		Декодування лише опорних кадрів
@@ -54,10 +56,13 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		З 
 Downloading…	Grid		Завантаження…
 Stop the download	Grid		Зупинити завантаження
 No	Player		Ні
+The highest quality already	Window		Це вже найвища якість
 drawn by Cinema	Player		малює Cinema
 Decoding every picture	Player		Декодування кожного кадру
+That quality could not be had	Window		Не вдалося отримати цю якість
 Search	Window		Пошук
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# або назва = @iptv channel:<адреса списку M3U> для телеканалів
+Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
 official music video	Categories		офіційний кліп
 The video could not be downloaded	Window		Не вдалося завантажити відео
 Classic films	Categories		Класичні фільми
@@ -72,8 +77,8 @@ This video can't be played here, try another one.	Window		Це відео не �
 TV series	Window		Серіали
 yesterday	Detail		учора
 Following	Grid		Ви стежите
-{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
 No subtitles available	Player		Немає доступних субтитрів
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
 Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
 Show the latest videos	Grid		Показати останні відео
@@ -83,16 +88,16 @@ Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTu
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
 Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
-Download	Detail		Завантажити
 Remove	Settings		Вилучити
+Download	Detail		Завантажити
 Downloaded	Window		Завантажені
 Add	Settings		Додати
 Always	Settings		Завжди
 Remove from the tabs	Categories		Вилучити з вкладок
 Choose…	Settings		Вибрати…
 news today	Categories		новини сьогодні
-Move to Trash	Detail		Перемістити до смітника
 Get a key…	Settings		Отримати ключ…
+Move to Trash	Detail		Перемістити до смітника
 %peers% sources	Window		%peers% джерел
 M3U list:	Settings		Список M3U:
 %views% views	Detail		%views% переглядів
@@ -104,6 +109,8 @@ Free channels of:	Settings		Безкоштовні канали країни:
 Follow	Detail		Стежити
 No statistics for this video	Player		Немає статистики для цього відео
 Details	Grid		Подробиці
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
+The lowest quality already	Window		Це вже найнижча якість
 %count% dropped	Player		пропущено: %count%
 even volume %gain% dB	Player		рівна гучність %gain% дБ
 %done% of %total%	Window		%done% з %total%
@@ -121,6 +128,7 @@ Open the channel	Grid		Відкрити канал
 Check	Settings		Перевірити
 Playback	Settings		Відтворення
 Subtitles	Subtitles		Субтитри
+This video comes in one quality only	Window		Це відео має лише одну якість
 science explained	Categories		наука простими словами
 Download	Grid		Завантажити
 Channel	Grid		Канал
@@ -129,14 +137,17 @@ Looking for the videos…	Window		Пошук відео…
 %count% subscribers	Detail		%count% підписників
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube
 Following	Detail		Ви стежите
+YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube та іншим джерелам потрібні Python 3 і yt-dlp, яких немає або які не працюють у цій системі.
 Automatic	Settings		Автоматично
 automatic	Player		автоматичні
 No videos downloaded yet: right click a video, or press D	Window		Ще немає завантажених відео: клацніть правою кнопкою на відео або натисніть D
 From a file	Player		З файлу
 Favorites	Window		Обране
 Can you see the video?	Player		Ви бачите відео?
+Install	Window		Встановити
 Home	Categories		Головна
 Checking…	Settings		Перевірка…
+Changing to %height%p…	Window		Перехід на %height%p…
 About Cinema	Window		Про Cinema
 From a torrent, as it downloads	Player		З торента, поки завантажується
 Subtitles	Player		Субтитри

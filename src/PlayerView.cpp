@@ -234,6 +234,7 @@ PlayerView::DrawOverlay(BView* target)
 	if (fControls || fPlayer->IsPaused())
 		_DrawControls(target);
 	_DrawStatistics(target);
+	_DrawNotice(target);
 }
 
 
@@ -252,7 +253,7 @@ bool
 PlayerView::HasOverlayContent() const
 {
 	return !fSubtitleLines.empty() || fControls || fPlayer->IsPaused()
-		|| !fStatsLines.empty();
+		|| !fStatsLines.empty() || !fNotice.IsEmpty();
 }
 
 
@@ -305,6 +306,10 @@ PlayerView::FrameResized(float width, float height)
 		ClearViewOverlay();
 	_PlaceOverlay();
 	_UpdateSubtitle();
+	if (!fNotice.IsEmpty())
+		fNoticeRect = _NoticeFrame();
+	if (fShowStats)
+		_UpdateStatistics();
 }
 
 
@@ -463,6 +468,7 @@ PlayerView::Draw(BRect updateRect)
 		if (fControls || fPlayer->IsPaused())
 			_DrawControls(this);
 		_DrawStatistics(this);
+		_DrawNotice(this);
 		_DrawQuestion(this);
 		return;
 	}
@@ -494,6 +500,7 @@ PlayerView::Draw(BRect updateRect)
 	if (fControls || fPlayer->IsPaused() || picture == NULL)
 		_DrawControls(this);
 	_DrawStatistics(this);
+	_DrawNotice(this);
 	_DrawQuestion(this);
 }
 
@@ -576,6 +583,52 @@ PlayerView::_DrawQuestion(BView* target)
 	FillRound(target, _NoFrame(), S(8), (rgb_color){ 60, 60, 66, 255 });
 	DrawCentered(target, B_TRANSLATE("No"), _NoFrame(), Font(14, true),
 		kText);
+}
+
+
+void
+PlayerView::SetNotice(const char* text, bigtime_t duration)
+{
+	if (fNoticeRect.IsValid())
+		Invalidate(fNoticeRect);
+	fNotice = text != NULL ? text : "";
+	fNoticeUntil = duration > 0 ? system_time() + duration : 0;
+	fNoticeRect = _NoticeFrame();
+	if (fNoticeRect.IsValid())
+		Invalidate(fNoticeRect);
+}
+
+
+/*!	At the top in the middle, under the title. */
+BRect
+PlayerView::_NoticeFrame() const
+{
+	if (fNotice.IsEmpty())
+		return BRect();
+	BFont font = Font(16, true);
+	font_height height;
+	font.GetHeight(&height);
+	float width = ceilf(font.StringWidth(fNotice.String())) + S(32);
+	float center = (Bounds().left + Bounds().right) / 2;
+	float top = Bounds().top + S(kBaseTitleHeight) + S(8);
+	return BRect(floorf(center - width / 2), top, ceilf(center + width / 2),
+		top + ceilf(height.ascent + height.descent) + S(16));
+}
+
+
+void
+PlayerView::_DrawNotice(BView* target)
+{
+	if (fNotice.IsEmpty())
+		return;
+	BRect frame = _NoticeFrame();
+	bool composite = target != this;
+	FillRound(target, frame, S(8), (rgb_color){ 0, 0, 0, 190 }, composite);
+	BFont font = Font(16, true);
+	font_height height;
+	font.GetHeight(&height);
+	DrawText(target, fNotice.String(), BPoint(frame.left + S(16),
+		frame.top + S(8) + height.ascent), font, kText, composite);
 }
 
 
@@ -1066,6 +1119,15 @@ PlayerView::KeyDown(const char* bytes, int32 count)
 		case 'M':
 			Window()->PostMessage(kMsgPlayInMediaPlayer);
 			break;
+		case '+':
+		case '=':
+		case '-':
+		{
+			BMessage change(kMsgChangeQuality);
+			change.AddBool("up", bytes[0] != '-');
+			Window()->PostMessage(&change);
+			break;
+		}
 		case 'i':
 		case 'I':
 			fShowStats = !fShowStats;
@@ -1224,6 +1286,9 @@ PlayerView::MessageReceived(BMessage* message)
 			_UpdateSubtitle();
 			if (fShowStats)
 				_UpdateStatistics();
+			if (!fNotice.IsEmpty() && fNoticeUntil != 0
+				&& system_time() > fNoticeUntil)
+				SetNotice(NULL);
 			// the pointer out of the picture after 10 s still, while it
 			// plays: the app_server shows it again when the mouse moves
 			{

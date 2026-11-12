@@ -1,7 +1,8 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2128437264
+1	japanese	application/x-vnd.atomozero-Cinema	2969662857
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube などのソースには yt-dlp が必要ですが、このシステムの Python では見つかりません。
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
 Search first in:	Settings		最初に検索する場所:
 full documentary	Categories		ドキュメンタリー 全編
@@ -18,6 +19,7 @@ Downloading…	Detail		ダウンロード中…
 Settings…	Window		設定…
 Decoding without the deblocking filter	Player		デブロッキングフィルターなしでデコード
 Add to the tabs	Grid		タブに追加
+Not now	Window		後で
 Processor: Cinema %cinema%%, all %all%%	Player		プロセッサ: Cinema %cinema%%、全体 %all%%
 No subtitles	Player		字幕なし
 Decoding the key frames only	Player		キーフレームのみデコード
@@ -39,8 +41,8 @@ Getting the video ready	Player		動画を準備中
 Follow	Grid		フォロー
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
 %eta% left	Window		残り %eta%
-The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
 Add…	Settings		追加…
+The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
 News	Categories		ニュース
 TV	Window		テレビ
 Decoding the reference pictures only	Player		参照フレームのみデコード
@@ -54,10 +56,13 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		キ
 Downloading…	Grid		ダウンロード中…
 Stop the download	Grid		ダウンロードを停止
 No	Player		いいえ
+The highest quality already	Window		すでに最高画質です
 drawn by Cinema	Player		Cinemaが描画
 Decoding every picture	Player		すべてのフレームをデコード
+That quality could not be had	Window		その画質は取得できませんでした
 Search	Window		検索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# または 名前 = @iptv channel:<M3U リストのアドレス> でテレビチャンネル
+Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
 official music video	Categories		公式ミュージックビデオ
 The video could not be downloaded	Window		動画をダウンロードできませんでした
 Classic films	Categories		名作映画
@@ -72,8 +77,8 @@ This video can't be played here, try another one.	Window		この動画はここ�
 TV series	Window		テレビシリーズ
 yesterday	Detail		昨日
 Following	Grid		フォロー中
-{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
 No subtitles available	Player		利用できる字幕がありません
+{0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
 Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
@@ -83,16 +88,16 @@ Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTu
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
 Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#日前}}
-Download	Detail		ダウンロード
 Remove	Settings		削除
+Download	Detail		ダウンロード
 Downloaded	Window		ダウンロード済み
 Add	Settings		追加
 Always	Settings		常に
 Remove from the tabs	Categories		タブから削除
 Choose…	Settings		選択…
 news today	Categories		今日のニュース
-Move to Trash	Detail		ゴミ箱に移動
 Get a key…	Settings		キーを取得…
+Move to Trash	Detail		ゴミ箱に移動
 %peers% sources	Window		ソース %peers% 件
 M3U list:	Settings		M3U リスト:
 %views% views	Detail		%views% 回視聴
@@ -104,6 +109,8 @@ Free channels of:	Settings		無料チャンネルの国:
 Follow	Detail		フォロー
 No statistics for this video	Player		この動画の統計はありません
 Details	Grid		詳細
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。
+The lowest quality already	Window		すでに最低画質です
 %count% dropped	Player		%count% 枚破棄
 even volume %gain% dB	Player		音量の均一化 %gain% dB
 %done% of %total%	Window		%done% / %total%
@@ -121,6 +128,7 @@ Open the channel	Grid		チャンネルを開く
 Check	Settings		確認
 Playback	Settings		再生
 Subtitles	Subtitles		字幕
+This video comes in one quality only	Window		この動画の画質は一つだけです
 science explained	Categories		科学 解説
 Download	Grid		ダウンロード
 Channel	Grid		チャンネル
@@ -129,14 +137,17 @@ Looking for the videos…	Window		動画を検索中…
 %count% subscribers	Detail		チャンネル登録者数 %count%人
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容
 Following	Detail		フォロー中
+YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube などのソースには Python 3 と yt-dlp が必要ですが、このシステムにないか動作していません。
 Automatic	Settings		自動
 automatic	Player		自動生成
 No videos downloaded yet: right click a video, or press D	Window		ダウンロードした動画はまだありません: 動画を右クリックするか、D を押してください
 From a file	Player		ファイルから
 Favorites	Window		お気に入り
 Can you see the video?	Player		動画が見えますか?
+Install	Window		インストール
 Home	Categories		ホーム
 Checking…	Settings		確認中…
+Changing to %height%p…	Window		%height%p に切り替え中…
 About Cinema	Window		Cinema について
 From a torrent, as it downloads	Player		トレントから、ダウンロードしながら
 Subtitles	Player		字幕

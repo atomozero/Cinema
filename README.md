@@ -49,7 +49,9 @@ the first video, whether you can see it, and keeps the answer. **O** switches
 the overlay while a video plays, and the settings can keep it always on or
 off. **I** shows, small at the top, what the player is doing: the size and
 codecs of the video, frames per second, how much it decodes and drops, the
-processor, and the sound ready ahead. The video
+processor, and the sound ready ahead. **+** and **-** ask for a video of
+YouTube a size larger or smaller, from 360p to 1080p: it plays on until the
+new one is found, then goes on from the same point. The video
 quality is in the settings: Automatic means 360p on 32-bit ARM and 720p
 elsewhere, and you can ask for anything from 360p to 1080p. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for
@@ -139,7 +141,10 @@ often, and when videos stop being found a newer yt-dlp usually helps:
 Cinema needs `python3` and yt-dlp, either the Python module
 (`yt_dlp_python3.14`, matching your Python) or the single-file `yt-dlp` in the
 `PATH`, and `curl` for the pictures. yt-dlp is loaded once, by
-`cinema-helper.py`, a small helper that Cinema starts and talks to.
+`cinema-helper.py`, a small helper that Cinema starts and talks to. If they
+are missing or broken, Cinema says so once and, on x86, offers to install
+them: only if you choose Install, and pkgman asks again in a Terminal before
+it changes anything.
 
 Live TV links the FFmpeg libraries: `ffmpeg6` on x86_64, `ffmpeg` on ARM. The
 `ffmpeg` and `ffprobe` commands are used for YouTube above 360p and for the

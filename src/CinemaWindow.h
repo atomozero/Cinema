@@ -123,6 +123,10 @@ private:
 			void				_HomeChanged();
 			void				_ApplyOverlay();
 			void				_LowerQuality(int32 height);
+			void				_ChangeQuality(bool up);
+			void				_FindAtHeight(int32 height);
+			void				_OfferInstall();
+			void				_Install();
 			BString				_OverlayCard() const;
 			int32				_OverlayDecision() const;
 			void				_RememberOverlay(bool works);
@@ -196,6 +200,7 @@ private:
 			bigtime_t			fOpenAt = -1;
 			BMessageRunner*		fOverlayAsker = NULL;	// made again when the details close
 			int32				fHelperRestarts = 0;
+			bool				fInstallOffered = false;
 			bigtime_t			fHelperRestarted = 0;
 			BString				fWanted;		// chosen: worth finding
 			BMessageRunner*		fPrefetchRunner;
