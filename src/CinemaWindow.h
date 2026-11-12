@@ -52,6 +52,9 @@ public:
 	virtual	void				MessageReceived(BMessage* message);
 	virtual	void				DirectConnected(direct_buffer_info* info);
 	virtual	bool				QuitRequested();
+	virtual	BHandler*			ResolveSpecifier(BMessage* message,
+									int32 index, BMessage* specifier,
+									int32 what, const char* property);
 
 			void				SetDirectPaused(bool paused);
 
@@ -130,6 +133,11 @@ private:
 			void				_Upload(BMessage* message);
 			void				_Uploaded(BMessage* message);
 			void				_Trashed(const BString& id);
+			bool				_Scripting(BMessage* message);
+			BString				_DownloadsJson();
+			status_t			_MoveDownload(const char* from,
+									const char* to, BString& moved,
+									BString& error);
 			void				_ShowHiddenPlayer();
 			void				_PlayerOpened();
 			void				_OfferInstall();

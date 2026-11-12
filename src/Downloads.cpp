@@ -9,6 +9,7 @@
 #include "PictureName.h"
 
 #include <algorithm>
+#include <utility>
 
 #include <Bitmap.h>
 #include <Directory.h>
@@ -65,14 +66,26 @@ Load(std::map<BString, BString>* files, int32 pictures)
 	};
 	std::vector<Found> found;
 
-	// the downloads, and the torrents in a folder of their own
-	BString torrents(Folder());
-	torrents << "/Torrent";
-	BDirectory folders[2] = { BDirectory(Folder().String()),
-		BDirectory(torrents.String()) };
-	for (BDirectory& folder : folders) {
+	// the downloads, the torrents in a folder of their own, and the folders
+	// they were put in to keep them in order (Film/..., by hand or by a
+	// script): four levels down, the hidden ones (.pictures) left out
+	std::vector<std::pair<BString, int32>> folders;
+	folders.push_back(std::make_pair(Folder(), 0));
+	for (size_t next = 0; next < folders.size(); next++) {
+	BDirectory folder(folders[next].first.String());
+	int32 depth = folders[next].second;
 	BEntry entry;
 	while (folder.GetNextEntry(&entry) == B_OK) {
+		if (entry.IsDirectory()) {
+			char name[B_FILE_NAME_LENGTH];
+			if (depth < 4 && entry.GetName(name) == B_OK && name[0] != '.') {
+				BPath sub;
+				entry.GetPath(&sub);
+				folders.push_back(std::make_pair(BString(sub.Path()),
+					depth + 1));
+			}
+			continue;
+		}
 		BNode node(&entry);
 		BString id;
 		if (!entry.IsFile() || node.ReadAttrString(kIdAttribute, &id) != B_OK)

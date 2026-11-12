@@ -15,6 +15,7 @@
 #include "CinemaWindow.h"
 #include "Messages.h"
 #include "Provider.h"
+#include "Scripting.h"
 
 
 static const char* kSignature = "application/x-vnd.atomozero-Cinema";
@@ -93,6 +94,24 @@ public:
 			} else
 				_PlayAddress(path.Path(), path.Leaf());
 		}
+	}
+
+	virtual BHandler* ResolveSpecifier(BMessage* message, int32 index,
+		BMessage* specifier, int32 what, const char* property)
+	{
+		// the properties of Cinema: its window knows the downloads
+		if (what == B_DIRECT_SPECIFIER && is_cinema_property(property))
+			return _Window();
+		return BApplication::ResolveSpecifier(message, index, specifier,
+			what, property);
+	}
+
+	virtual status_t GetSupportedSuites(BMessage* data)
+	{
+		data->AddString("suites", kCinemaSuite);
+		BPropertyInfo info(const_cast<property_info*>(kCinemaProperties));
+		data->AddFlat("messages", &info);
+		return BApplication::GetSupportedSuites(data);
 	}
 
 	virtual void ReadyToRun()

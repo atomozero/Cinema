@@ -12,7 +12,9 @@
 #include <Autolock.h>
 #include <Bitmap.h>
 #include <CardLayout.h>
+#include <Directory.h>
 #include <Entry.h>
+#include <FindDirectory.h>
 #include <Button.h>
 #include <Catalog.h>
 #include <GroupView.h>
@@ -47,6 +49,8 @@
 #include "Favorites.h"
 #include "Gamepad.h"
 #include "Helper.h"
+#include "Json.h"
+#include "Scripting.h"
 #include "History.h"
 #include "LiveAddress.h"
 #include "VideoLimits.h"
@@ -1449,9 +1453,218 @@ CinemaWindow::_PlayInMediaPlayer(const char* address, const char* title,
 }
 
 
+BHandler*
+CinemaWindow::ResolveSpecifier(BMessage* message, int32 index,
+	BMessage* specifier, int32 what, const char* property)
+{
+	if (what == B_DIRECT_SPECIFIER && is_cinema_property(property))
+		return this;
+	return BDirectWindow::ResolveSpecifier(message, index, specifier, what,
+		property);
+}
+
+
+/*!	The downloads as JSON, for scripting: what Pippo's assistant reads to
+	put them in order.
+*/
+BString
+CinemaWindow::_DownloadsJson()
+{
+	std::map<BString, BString> files;
+	std::vector<MediaItem> saved = Downloads::Load(&files, 0);
+	Json list = Json::MakeArray();
+	for (const MediaItem& item : saved) {
+		Json video = Json::MakeObject();
+		video.Set("path", item.path.String());
+		video.Set("id", item.id.String());
+		video.Set("provider", item.provider.String());
+		video.Set("kind", item.kind.String());
+		video.Set("title", item.title.String());
+		video.Set("channel", item.channel.String());
+		video.Set("duration", (int)item.duration);
+		off_t size = 0;
+		BEntry(item.path.String()).GetSize(&size);
+		video.Set("size", (double)size);
+		auto upload = fUploads.find(item.path);
+		video.Set("uploading", upload != fUploads.end()
+			? upload->second.GetInt32("percent", 0) : -1);
+		list.Add(video);
+	}
+	return BString(list.ToString().c_str());
+}
+
+
+/*!	A download renamed or moved, its attributes with it (same volume):
+	"to" a new path, or a folder ending with /, relative to ~/Cinema if it
+	does not start with /. Its folders are made; nothing is overwritten.
+*/
+status_t
+CinemaWindow::_MoveDownload(const char* from, const char* to, BString& moved,
+	BString& error)
+{
+	BString source(from);
+	std::map<BString, BString> files;
+	Downloads::Load(&files, 0);
+	BString id;
+	for (const auto& file : files) {
+		if (file.second == source)
+			id = file.first;
+	}
+	if (id.IsEmpty()) {
+		error = "not a download of Cinema";
+		return B_BAD_VALUE;
+	}
+	if (fUploads.find(source) != fUploads.end()) {
+		error = "being copied to the network folder";
+		return B_BUSY;
+	}
+	BString target(to);
+	target.Trim();
+	if (target.IsEmpty()) {
+		error = "no \"to\"";
+		return B_BAD_VALUE;
+	}
+	if (target.ByteAt(0) != '/') {
+		BString base(Downloads::Folder());
+		base << "/" << target;
+		target = base;
+	}
+	BEntry existing(target.String());
+	if (target.EndsWith("/") || existing.IsDirectory()) {
+		if (!target.EndsWith("/"))
+			target << "/";
+		target << BPath(source.String()).Leaf();
+	}
+	BPath path(target.String(), NULL, true);
+	if (path.InitCheck() != B_OK) {
+		error = "a bad path";
+		return B_BAD_VALUE;
+	}
+	if (BEntry(path.Path()).Exists()) {
+		error = "something is there already";
+		return B_FILE_EXISTS;
+	}
+	BPath parent;
+	path.GetParent(&parent);
+	status_t status = create_directory(parent.Path(), 0755);
+	if (status != B_OK) {
+		error = strerror(status);
+		return status;
+	}
+	BEntry entry(source.String());
+	BDirectory folder(parent.Path());
+	status = entry.MoveTo(&folder, path.Leaf());
+	if (status != B_OK) {
+		error = strerror(status);
+		return status;
+	}
+	moved = path.Path();
+	if (fPlayerShown && fPlayingAddress == source)
+		fPlayingAddress = moved;
+	fDownloaded[id] = moved;
+	fHomeLoaded = false;
+	if (_ShowingDownloads())
+		_ShowDownloads();
+	return B_OK;
+}
+
+
+/*!	A scripting message for the properties of Cinema (Scripting.h): true
+	if it was one, answered.
+*/
+bool
+CinemaWindow::_Scripting(BMessage* message)
+{
+	BMessage specifier;
+	int32 index;
+	int32 what;
+	const char* property;
+	if (message->GetCurrentSpecifier(&index, &specifier, &what, &property)
+			!= B_OK || !is_cinema_property(property))
+		return false;
+
+	BMessage reply(B_REPLY);
+	status_t status = B_OK;
+	BString result;
+	BString error;
+	BString name(property);
+	BString value;
+	message->FindString("data", &value);
+	Json arguments = Json::Parse(value.String());
+
+	if (message->what == B_GET_PROPERTY && name == "Downloads")
+		result = _DownloadsJson();
+	else if (message->what == B_GET_PROPERTY && name == "NetworkFolder") {
+		fSettings = Settings::Load();
+		result = fSettings.networkFolder;
+	} else if (message->what == B_SET_PROPERTY && name == "Move") {
+		BString moved;
+		status = _MoveDownload(arguments.GetString("path").c_str(),
+			arguments.GetString("to").c_str(), moved, error);
+		if (status == B_OK) {
+			Json answer = Json::MakeObject();
+			answer.Set("path", moved.String());
+			result = answer.ToString().c_str();
+		}
+	} else if (message->what == B_SET_PROPERTY && name == "Upload") {
+		// a path alone, or {"path", "move"}
+		BString path = arguments.IsObject()
+			? BString(arguments.GetString("path").c_str()) : value;
+		std::map<BString, BString> files;
+		Downloads::Load(&files, 0);
+		BString id;
+		for (const auto& file : files) {
+			if (file.second == path)
+				id = file.first;
+		}
+		fSettings = Settings::Load();
+		if (id.IsEmpty()) {
+			status = B_BAD_VALUE;
+			error = "not a download of Cinema";
+		} else if (fSettings.networkFolder.IsEmpty()) {
+			status = B_NO_INIT;
+			error = "no network folder in the settings";
+		} else {
+			BString title;
+			BNode(path.String()).ReadAttrString("Media:Title", &title);
+			BMessage upload(kMsgUpload);
+			upload.AddString("id", id);
+			upload.AddString("path", path);
+			upload.AddString("title", title.IsEmpty()
+				? BPath(path.String()).Leaf() : title.String());
+			upload.AddBool("move", arguments.GetBool("move", false));
+			_Upload(&upload);
+			result = "{\"started\": true}";
+		}
+	} else if (message->what == B_EXECUTE_PROPERTY && name == "Rescan") {
+		fHomeLoaded = false;
+		if (_ShowingDownloads())
+			_ShowDownloads();
+		result = "{\"ok\": true}";
+	} else {
+		status = B_BAD_SCRIPT_SYNTAX;
+		error = "not something Cinema does with it";
+	}
+
+	if (status == B_OK)
+		reply.AddString("result", result);
+	else {
+		reply.what = B_MESSAGE_NOT_UNDERSTOOD;
+		reply.AddInt32("error", status);
+		reply.AddString("message", error);
+	}
+	message->SendReply(&reply);
+	return true;
+}
+
+
 void
 CinemaWindow::MessageReceived(BMessage* message)
 {
+	if ((message->what == B_GET_PROPERTY || message->what == B_SET_PROPERTY
+			|| message->what == B_EXECUTE_PROPERTY)
+		&& _Scripting(message))
+		return;
 	switch (message->what) {
 		case kMsgFullScreen:
 			_SetFullScreen(!fFullScreen);
@@ -2005,6 +2218,8 @@ CinemaWindow::MessageReceived(BMessage* message)
 			auto upload = fUploads.find(path);
 			if (upload == fUploads.end())
 				break;
+			upload->second.SetInt32("percent",
+				message->GetInt32("percent", 0));
 			BNotification notification(B_PROGRESS_NOTIFICATION);
 			notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
 			notification.SetTitle(upload->second.GetBool("move", false)

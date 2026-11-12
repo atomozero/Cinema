@@ -152,6 +152,24 @@ yt-dlp loads in about three seconds instead of nine on the AC100. YouTube change
 often, and when videos stop being found a newer yt-dlp usually helps:
 `pkgman update`, or the same `curl` again.
 
+## Scripting
+
+Cinema answers scripting, with `hey` or an assistant through an MCP server
+such as Pippo, so that the downloads can be put in order from outside while
+Cinema keeps track of them (they are found in the subfolders of `~/Cinema`
+too):
+
+```sh
+hey Cinema get Downloads             # JSON: path, id, kind, title, channel...
+hey Cinema set Move to '{"path": "/boot/home/Cinema/x.mp4", "to": "Film/"}'
+hey Cinema set Upload to '{"path": "/boot/home/Cinema/Film/x.mp4", "move": true}'
+hey Cinema get NetworkFolder
+hey Cinema execute Rescan
+```
+
+A relative `to` is in `~/Cinema`; a folder ends with `/`. Errors come back as
+`message`.
+
 ## What it needs
 
 Cinema needs `python3` and yt-dlp, either the Python module
