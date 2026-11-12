@@ -125,6 +125,9 @@ private:
 			void				_LowerQuality(int32 height);
 			void				_ChangeQuality(bool up);
 			void				_FindAtHeight(int32 height);
+			void				_HidePlayer();
+			void				_ShowHiddenPlayer();
+			void				_PlayerOpened();
 			void				_OfferInstall();
 			void				_Install(const char* packages);
 			BString				_OverlayCard() const;
@@ -201,6 +204,10 @@ private:
 			BMessageRunner*		fOverlayAsker = NULL;	// made again when the details close
 			int32				fHelperRestarts = 0;
 			bool				fInstallOffered = false;
+			// Esc while the video got ready: it goes on behind, muted, and
+			// paused once open, until its notification is clicked
+			bool				fPlayerHidden = false;
+			float				fHiddenVolume = 1.0f;
 			BString				fPendingTorrent;	// once aria2c is there
 			bigtime_t			fHelperRestarted = 0;
 			BString				fWanted;		// chosen: worth finding

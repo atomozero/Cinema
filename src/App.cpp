@@ -5,6 +5,7 @@
 
 
 #include <Application.h>
+#include <string.h>
 #include <Entry.h>
 #include <Mime.h>
 #include <Path.h>
@@ -31,6 +32,11 @@ public:
 	{
 		// a YouTube address, another address or a file: played right away
 		for (int32 i = 1; i < argc; i++) {
+			// the notification of a video got ready behind, clicked
+			if (strcmp(argv[i], "--show-player") == 0) {
+				_Window()->PostMessage(kMsgShowPlayer);
+				continue;
+			}
 			BString id = YouTubeVideoId(argv[i]);
 			if (!id.IsEmpty()) {
 				BMessage play(kMsgPlay);

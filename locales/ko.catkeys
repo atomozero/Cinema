@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	2509789191
+1	korean	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -20,8 +20,8 @@ Settings…	Window		설정…
 Decoding without the deblocking filter	Player		디블로킹 필터 없이 디코딩
 Add to the tabs	Grid		탭에 추가
 No subtitles	Player		자막 없음
-Not now	Window		나중에
 Processor: Cinema %cinema%%, all %all%%	Player		프로세서: Cinema %cinema%%, 전체 %all%%
+Not now	Window		나중에
 Decoding the key frames only	Player		키 프레임만 디코딩
 Yes	Player		예
 Library	Settings		라이브러리
@@ -81,6 +81,7 @@ Following	Grid		팔로잉
 No subtitles available	Player		사용 가능한 자막 없음
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#개월 전}}
 Move \"%title%\" to the Trash?	Window		'%title%'을(를) 휴지통으로 이동할까요?
+Video ready	Window		동영상 준비됨
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#년 전}}
 Show the latest videos	Grid		최신 동영상 보기
 The key works.	Settings		키가 작동합니다.
@@ -113,8 +114,8 @@ No statistics for this video	Player		이 동영상의 통계가 없습니다
 Details	Grid		세부 정보
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema의 README에 설명된 대로 단일 파일 yt-dlp를 ~/config/non-packaged/bin에 넣고 Cinema를 다시 시작하세요.
 even volume %gain% dB	Player		고른 음량 %gain% dB
-The lowest quality already	Window		이미 가장 낮은 화질입니다
 %count% dropped	Player		%count%개 건너뜀
+The lowest quality already	Window		이미 가장 낮은 화질입니다
 %done% of %total%	Window		%total% 중 %done%
 forced	Subtitles		강제
 Already downloaded	Grid		이미 다운로드됨
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		라이브러리 폴더
 No videos found	Window		동영상을 찾을 수 없습니다
 See all	Home		모두 보기
+Click to watch it	Window		클릭하여 보기
 Open the channel	Grid		채널 열기
 Check	Settings		확인
 Playback	Settings		재생

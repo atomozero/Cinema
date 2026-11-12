@@ -1,4 +1,4 @@
-1	spanish	application/x-vnd.atomozero-Cinema	2509789191
+1	spanish	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
@@ -20,8 +20,8 @@ Settings…	Window		Ajustes…
 Decoding without the deblocking filter	Player		Decodificando sin filtro de desbloqueo
 Add to the tabs	Grid		Añadir a las pestañas
 No subtitles	Player		Sin subtítulos
-Not now	Window		Ahora no
 Processor: Cinema %cinema%%, all %all%%	Player		Procesador: Cinema %cinema%%, total %all%%
+Not now	Window		Ahora no
 Decoding the key frames only	Player		Decodificando solo los fotogramas clave
 Yes	Player		Sí
 Library	Settings		Biblioteca
@@ -81,6 +81,7 @@ Following	Grid		Siguiendo
 No subtitles available	Player		No hay subtítulos disponibles
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{hace # mes} other{hace # meses}}
 Move \"%title%\" to the Trash?	Window		¿Mover «%title%» a la papelera?
+Video ready	Window		Vídeo listo
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{hace # año} other{hace # años}}
 Show the latest videos	Grid		Mostrar los últimos vídeos
 The key works.	Settings		La clave funciona.
@@ -113,8 +114,8 @@ No statistics for this video	Player		No hay estadísticas para este vídeo
 Details	Grid		Detalles
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Pon yt-dlp de un solo archivo en ~/config/non-packaged/bin, como explica el README de Cinema, y vuelve a abrir Cinema.
 even volume %gain% dB	Player		volumen uniforme %gain% dB
-The lowest quality already	Window		Ya es la calidad más baja
 %count% dropped	Player		%count% descartados
+The lowest quality already	Window		Ya es la calidad más baja
 %done% of %total%	Window		%done% de %total%
 forced	Subtitles		forzados
 Already downloaded	Grid		Ya descargado
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		Carpetas de la biblioteca
 No videos found	Window		No se encontraron vídeos
 See all	Home		Ver todo
+Click to watch it	Window		Haz clic para verlo
 Open the channel	Grid		Abrir el canal
 Check	Settings		Comprobar
 Playback	Settings		Reproducción

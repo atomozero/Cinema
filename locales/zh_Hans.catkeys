@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	2509789191
+1	chinese	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -20,8 +20,8 @@ Settings…	Window		设置…
 Decoding without the deblocking filter	Player		解码时不使用去块滤波
 Add to the tabs	Grid		添加到标签页
 No subtitles	Player		无字幕
-Not now	Window		以后再说
 Processor: Cinema %cinema%%, all %all%%	Player		处理器：Cinema %cinema%%，总计 %all%%
+Not now	Window		以后再说
 Decoding the key frames only	Player		仅解码关键帧
 Yes	Player		是
 Library	Settings		媒体库
@@ -81,6 +81,7 @@ Following	Grid		已关注
 No subtitles available	Player		没有可用的字幕
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
+Video ready	Window		视频已就绪
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		显示最新视频
 The key works.	Settings		密钥有效。
@@ -113,8 +114,8 @@ No statistics for this video	Player		此视频没有统计信息
 Details	Grid		详细信息
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		按照 Cinema 的 README 所述，把单文件版 yt-dlp 放到 ~/config/non-packaged/bin，然后重新启动 Cinema。
 even volume %gain% dB	Player		均衡音量 %gain% dB
-The lowest quality already	Window		已经是最低画质
 %count% dropped	Player		丢弃 %count% 帧
+The lowest quality already	Window		已经是最低画质
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		强制
 Already downloaded	Grid		已经下载
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		媒体库文件夹
 No videos found	Window		未找到视频
 See all	Home		查看全部
+Click to watch it	Window		点击观看
 Open the channel	Grid		打开频道
 Check	Settings		检查
 Playback	Settings		播放

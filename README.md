@@ -38,7 +38,9 @@ Videos play in Cinema, from where they were left; a check marks what was
 watched and a red bar what was started. Space pauses, the left and right arrows
 go back and on by 10 seconds, up and down (or the mouse wheel) change the
 volume, shown upright at the right, **F** goes to full screen, **Esc** closes
-the video and **M** plays it in MediaPlayer instead. Subtitles come from
+the video (while it is still getting ready, it sends it behind instead: you can
+browse meanwhile, and a notification says when it is ready, a click on it
+showing it) and **M** plays it in MediaPlayer instead. Subtitles come from
 YouTube, from a subtitle file next to the video, or from the text tracks inside
 it: the **CC** button chooses one and **V** turns them on and off. The star
 next to it, or **S**, keeps the video among the favorites. Cinema shows

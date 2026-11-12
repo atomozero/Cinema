@@ -1,4 +1,4 @@
-1	italian	application/x-vnd.atomozero-Cinema	2509789191
+1	italian	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		Non riesco a raggiungere YouTube: la rete è accesa?
 Video quality:	Settings		Qualità video:
 Downloaded	Detail		Scaricato
@@ -20,8 +20,8 @@ Settings…	Window		Impostazioni…
 Decoding without the deblocking filter	Player		Decodifica senza filtro di deblocking
 Add to the tabs	Grid		Aggiungi alle schede
 No subtitles	Player		Nessun sottotitolo
-Not now	Window		Non ora
 Processor: Cinema %cinema%%, all %all%%	Player		Processore: Cinema %cinema%%, tutto %all%%
+Not now	Window		Non ora
 Decoding the key frames only	Player		Decodifica dei soli fotogrammi chiave
 Yes	Player		Sì
 Library	Settings		Libreria
@@ -81,6 +81,7 @@ Following	Grid		Segui già
 No subtitles available	Player		Nessun sottotitolo disponibile
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# mese fa} other{# mesi fa}}
 Move \"%title%\" to the Trash?	Window		Spostare «%title%» nel Cestino?
+Video ready	Window		Video pronto
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# anno fa} other{# anni fa}}
 Show the latest videos	Grid		Mostra gli ultimi video
 The key works.	Settings		La chiave funziona.
@@ -113,8 +114,8 @@ No statistics for this video	Player		Nessuna statistica per questo video
 Details	Grid		Dettagli
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Metti yt-dlp in un solo file in ~/config/non-packaged/bin, come spiega il README di Cinema, poi riavvia Cinema.
 even volume %gain% dB	Player		volume uniforme %gain% dB
-The lowest quality already	Window		È già la qualità più bassa
 %count% dropped	Player		%count% saltati
+The lowest quality already	Window		È già la qualità più bassa
 %done% of %total%	Window		%done% di %total%
 forced	Subtitles		forzati
 Already downloaded	Grid		Già scaricato
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		Cartelle della libreria
 No videos found	Window		Nessun video trovato
 See all	Home		Vedi tutto
+Click to watch it	Window		Clicca per guardarlo
 Open the channel	Grid		Apri il canale
 Check	Settings		Verifica
 Playback	Settings		Riproduzione

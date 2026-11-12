@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2509789191
+1	japanese	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -20,8 +20,8 @@ Settings…	Window		設定…
 Decoding without the deblocking filter	Player		デブロッキングフィルターなしでデコード
 Add to the tabs	Grid		タブに追加
 No subtitles	Player		字幕なし
-Not now	Window		後で
 Processor: Cinema %cinema%%, all %all%%	Player		プロセッサ: Cinema %cinema%%、全体 %all%%
+Not now	Window		後で
 Decoding the key frames only	Player		キーフレームのみデコード
 Yes	Player		はい
 Library	Settings		ライブラリ
@@ -81,6 +81,7 @@ Following	Grid		フォロー中
 No subtitles available	Player		利用できる字幕がありません
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
 Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
+Video ready	Window		動画の準備ができました
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
 The key works.	Settings		キーは有効です。
@@ -113,8 +114,8 @@ No statistics for this video	Player		この動画の統計はありません
 Details	Grid		詳細
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。
 even volume %gain% dB	Player		音量の均一化 %gain% dB
-The lowest quality already	Window		すでに最低画質です
 %count% dropped	Player		%count% 枚破棄
+The lowest quality already	Window		すでに最低画質です
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		強制
 Already downloaded	Grid		すでにダウンロード済み
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		ライブラリのフォルダー
 No videos found	Window		動画が見つかりません
 See all	Home		すべて表示
+Click to watch it	Window		クリックして見る
 Open the channel	Grid		チャンネルを開く
 Check	Settings		確認
 Playback	Settings		再生

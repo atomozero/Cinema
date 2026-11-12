@@ -276,8 +276,13 @@ CinemaWindow::DispatchMessage(BMessage* message, BHandler* handler)
 				return;
 			}
 			if (bytes[0] == B_ESCAPE) {
-				if (fPlayerShown) {
-					_ClosePlayer();
+				if (fPlayerShown && !fPlayerHidden) {
+					// still getting ready: behind, with a notification once
+					// it is
+					if (!fPlayer->IsOpen())
+						_HidePlayer();
+					else
+						_ClosePlayer();
 					return;
 				}
 				if (fCategoryBar->IsFocus()) {
@@ -524,6 +529,71 @@ CinemaWindow::_LowerQuality(int32 height)
 	if (smaller == 0)
 		return;
 	_FindAtHeight(smaller);
+}
+
+
+/*!	What a video takes once open, in view. */
+void
+CinemaWindow::_PlayerOpened()
+{
+	fPlayerView->SetOpened(true);
+	fPlayerView->SetOverlay(fPlayer->Overlay());
+	if (fAskOverlay && fPlayer->Overlay() != NULL) {
+		// asked once the video had time to show
+		delete fOverlayAsker;
+		BMessage ask(kMsgAskOverlay);
+		fOverlayAsker = new BMessageRunner(BMessenger(this), &ask,
+			4000000, 1);
+	}
+	fPlayerView->RefreshSubtitles();
+	if (fFullScreen)
+		_DirectSync();
+}
+
+
+/*!	Esc while the video gets ready: the window is free to browse, the
+	video goes on getting ready behind it, muted, and waits paused once it
+	is (kMsgPlayerOpened), with a notification.
+*/
+void
+CinemaWindow::_HidePlayer()
+{
+	if (!fPlayerShown || fPlayerHidden)
+		return;
+	fPlayerHidden = true;
+	fHiddenVolume = fPlayer->Volume();
+	fPlayer->SetVolume(0);
+	if (fFullScreen)
+		_DirectSync();
+	_UpdateTopBar();
+	fCards->SetVisibleItem(fPlayerReturn);
+	fCard = fPlayerReturn;
+	_FocusContent();
+}
+
+
+/*!	Its notification clicked: the video hidden while it got ready, in view
+	and playing.
+*/
+void
+CinemaWindow::_ShowHiddenPlayer()
+{
+	if (IsMinimized())
+		Minimize(false);
+	Activate();
+	if (!fPlayerShown || !fPlayerHidden)
+		return;
+	fPlayerHidden = false;
+	fPlayer->SetVolume(fHiddenVolume);
+	fPlayerReturn = fCard;
+	fCards->SetVisibleItem(3);
+	fCard = 3;
+	_UpdateTopBar();
+	fPlayerView->MakeFocus(true);
+	if (fPlayer->IsOpen()) {
+		_PlayerOpened();
+		fPlayer->SetPaused(false);
+	}
 }
 
 
@@ -1016,7 +1086,7 @@ CinemaWindow::_FocusCategoryBar()
 void
 CinemaWindow::_FocusContent()
 {
-	if (fPlayerShown) {
+	if (fPlayerShown && !fPlayerHidden) {
 		fPlayerView->MakeFocus(true);
 		return;
 	}
@@ -1705,18 +1775,25 @@ CinemaWindow::MessageReceived(BMessage* message)
 			// of a video closed since: nothing to do with this one
 			if (message->GetInt32("session", -1) != fPlayer->Session())
 				break;
-			fPlayerView->SetOpened(true);
-			fPlayerView->SetOverlay(fPlayer->Overlay());
-			if (fAskOverlay && fPlayer->Overlay() != NULL) {
-				// asked once the video had time to show
-				delete fOverlayAsker;
-				BMessage ask(kMsgAskOverlay);
-				fOverlayAsker = new BMessageRunner(BMessenger(this), &ask,
-					4000000, 1);
+			if (fPlayerHidden) {
+				// ready behind: it waits, and says so
+				fPlayer->SetPaused(true);
+				BNotification notification(B_INFORMATION_NOTIFICATION);
+				notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
+				notification.SetTitle(B_TRANSLATE("Video ready"));
+				notification.SetMessageID("ready");
+				BString content(fPlayingTitle);
+				content << "\n" << B_TRANSLATE("Click to watch it");
+				notification.SetContent(content);
+				notification.SetOnClickApp("application/x-vnd.atomozero-Cinema");
+				notification.AddOnClickArg("--show-player");
+				notification.Send();
+				break;
 			}
-			fPlayerView->RefreshSubtitles();
-			if (fFullScreen)
-				_DirectSync();
+			_PlayerOpened();
+			break;
+		case kMsgShowPlayer:
+			_ShowHiddenPlayer();
 			break;
 		case kMsgSubtitles:
 		{
@@ -2164,7 +2241,8 @@ CinemaWindow::_SetFullScreen(bool fullScreen)
 void
 CinemaWindow::_DirectSync()
 {
-	bool wanted = fFullScreen && fPlayerShown && direct_enabled()
+	bool wanted = fFullScreen && fPlayerShown && !fPlayerHidden
+		&& direct_enabled()
 		&& !fDirectFailed;
 	bool live = fPlayingKind == "live" || LiveAddress::Is(fPlayingAddress);
 	bool subtitles = fPlayer->SubtitleCount() > 0;
@@ -2504,7 +2582,7 @@ CinemaWindow::_DirectDrawLocked()
 void
 CinemaWindow::_UpdateTopBar()
 {
-	bool hide = fFullScreen && fPlayerShown;
+	bool hide = fFullScreen && fPlayerShown && !fPlayerHidden;
 	if (hide && !fTopBar->IsHidden())
 		fTopBar->Hide();
 	else if (!hide && fTopBar->IsHidden())
@@ -3133,6 +3211,13 @@ CinemaWindow::_ClosePlayer(bool save)
 	fPlayerSaver = NULL;
 	fPlayerView->ClearOverlay();
 	fPlayer->Close();
+	// hidden while it got ready: its volume back, and the window left where
+	// it was browsed
+	bool hidden = fPlayerHidden;
+	if (hidden) {
+		fPlayerHidden = false;
+		fPlayer->SetVolume(fHiddenVolume);
+	}
 	// the volume, for the next videos and the next time Cinema starts
 	if (fabsf(fPlayer->Volume() - fSettings.volume) > 0.01f) {
 		fSettings = Settings::Load();
@@ -3145,12 +3230,15 @@ CinemaWindow::_ClosePlayer(bool save)
 	if (fFullScreen)
 		_DirectSync();
 	_UpdateTopBar();
-	fCards->SetVisibleItem(fPlayerReturn);
-	fCard = fPlayerReturn;
+	if (!hidden) {
+		fCards->SetVisibleItem(fPlayerReturn);
+		fCard = fPlayerReturn;
+	}
 	Positions::Position position = Positions::Get(fPlayingId);
 	fGrid->SetWatched(fPlayingId, position.watched, position.duration > 0
 		? (int32)(position.position * 1000 / position.duration) : 0);
-	_FocusContent();
+	if (!hidden)
+		_FocusContent();
 }
 
 

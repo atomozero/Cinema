@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2509789191
+1	ukrainian	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -20,8 +20,8 @@ Settings…	Window		Налаштування…
 Decoding without the deblocking filter	Player		Декодування без фільтра деблокінгу
 Add to the tabs	Grid		Додати до вкладок
 No subtitles	Player		Без субтитрів
-Not now	Window		Не зараз
 Processor: Cinema %cinema%%, all %all%%	Player		Процесор: Cinema %cinema%%, усього %all%%
+Not now	Window		Не зараз
 Decoding the key frames only	Player		Декодування лише ключових кадрів
 Yes	Player		Так
 Library	Settings		Бібліотека
@@ -81,6 +81,7 @@ Following	Grid		Ви стежите
 No subtitles available	Player		Немає доступних субтитрів
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
 Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
+Video ready	Window		Відео готове
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
 Show the latest videos	Grid		Показати останні відео
 The key works.	Settings		Ключ працює.
@@ -113,8 +114,8 @@ No statistics for this video	Player		Немає статистики для ць
 Details	Grid		Подробиці
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
 even volume %gain% dB	Player		рівна гучність %gain% дБ
-The lowest quality already	Window		Це вже найнижча якість
 %count% dropped	Player		пропущено: %count%
+The lowest quality already	Window		Це вже найнижча якість
 %done% of %total%	Window		%done% з %total%
 forced	Subtitles		примусові
 Already downloaded	Grid		Вже завантажено
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		Теки бібліотеки
 No videos found	Window		Відео не знайдено
 See all	Home		Переглянути всі
+Click to watch it	Window		Натисніть, щоб дивитися
 Open the channel	Grid		Відкрити канал
 Check	Settings		Перевірити
 Playback	Settings		Відтворення

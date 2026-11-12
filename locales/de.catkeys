@@ -1,4 +1,4 @@
-1	german	application/x-vnd.atomozero-Cinema	2509789191
+1	german	application/x-vnd.atomozero-Cinema	1446654558
 YouTube could not be reached: is the network on?	Window		YouTube ist nicht erreichbar: Ist das Netzwerk an?
 Video quality:	Settings		Videoqualität:
 Downloaded	Detail		Heruntergeladen
@@ -20,8 +20,8 @@ Settings…	Window		Einstellungen…
 Decoding without the deblocking filter	Player		Dekodierung ohne Deblocking-Filter
 Add to the tabs	Grid		Zu den Reitern hinzufügen
 No subtitles	Player		Keine Untertitel
-Not now	Window		Nicht jetzt
 Processor: Cinema %cinema%%, all %all%%	Player		Prozessor: Cinema %cinema%%, gesamt %all%%
+Not now	Window		Nicht jetzt
 Decoding the key frames only	Player		Nur Schlüsselbilder werden dekodiert
 Yes	Player		Ja
 Library	Settings		Bibliothek
@@ -81,6 +81,7 @@ Following	Grid		Gefolgt
 No subtitles available	Player		Keine Untertitel verfügbar
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{vor # Monat} other{vor # Monaten}}
 Move \"%title%\" to the Trash?	Window		„%title%“ in den Papierkorb verschieben?
+Video ready	Window		Video bereit
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{vor # Jahr} other{vor # Jahren}}
 Show the latest videos	Grid		Neueste Videos anzeigen
 The key works.	Settings		Der Schlüssel funktioniert.
@@ -113,8 +114,8 @@ No statistics for this video	Player		Keine Statistik für dieses Video
 Details	Grid		Details
 Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Lege das yt-dlp aus einer Datei in ~/config/non-packaged/bin, wie die README von Cinema erklärt, und starte Cinema neu.
 even volume %gain% dB	Player		gleichmäßige Lautstärke %gain% dB
-The lowest quality already	Window		Schon die niedrigste Qualität
 %count% dropped	Player		%count% verworfen
+The lowest quality already	Window		Schon die niedrigste Qualität
 %done% of %total%	Window		%done% von %total%
 forced	Subtitles		erzwungen
 Already downloaded	Grid		Bereits heruntergeladen
@@ -127,6 +128,7 @@ Cinema	System name		Cinema
 Folders of the library	Settings		Ordner der Bibliothek
 No videos found	Window		Keine Videos gefunden
 See all	Home		Alle ansehen
+Click to watch it	Window		Zum Ansehen klicken
 Open the channel	Grid		Kanal öffnen
 Check	Settings		Prüfen
 Playback	Settings		Wiedergabe
