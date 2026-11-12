@@ -57,6 +57,9 @@ public:
 			void				SetDirect(bool direct);
 			void				SetFavorite(int32 favorite);
 			void				SetOverlayQuestion(const char* card);
+			void				SetAvailable(const char* map);
+									// of a torrent playing as it comes:
+									// what is there, on the bar ("" none)
 			void				SetNotice(const char* text,
 									bigtime_t duration = 0);
 									// at the top, for that long (0 until
@@ -124,6 +127,7 @@ private:
 			bool				fShowStats = false;	// the I key
 			std::vector<BString> fStatsLines;
 			BRect				fStatsRect;
+			BString				fAvailable;
 			BString				fNotice;
 			bigtime_t			fNoticeUntil = 0;	// 0 for ever
 			BRect				fNoticeRect;

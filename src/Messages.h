@@ -23,7 +23,9 @@ enum {
 	kMsgHelperGone		= 'gone',
 	kMsgDownloadProgress = 'dwpr',	// "id", "percent", and when known
 									// "done", "total", "speed", "eta",
-									// "peers"
+									// "peers", "map" (a torrent: what of
+									// its video is there, a digit 0-9 for
+									// each part of it)
 	kMsgDownloaded		= 'dwok',	// "id", "path"
 	kMsgDownloadFailed	= 'dwno',	// "id"
 	kMsgDownloadCancelled = 'dwcx',	// "id"

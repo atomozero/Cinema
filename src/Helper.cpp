@@ -521,7 +521,7 @@ Helper::_Handle(const BString& line)
 		BMessage progress(kMsgDownloadProgress);
 		progress.AddString("id", answer.GetString("id", "").c_str());
 		progress.AddInt32("percent", answer.GetInt("percent", 0));
-		for (const char* field : { "done", "total", "speed", "eta" })
+		for (const char* field : { "done", "total", "speed", "eta", "map" })
 			progress.AddString(field, answer.GetString(field, "").c_str());
 		progress.AddInt32("peers", answer.GetInt("peers", -1));
 		Deliver(fTarget, &progress, &fStopping);

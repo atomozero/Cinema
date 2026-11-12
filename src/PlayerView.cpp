@@ -182,6 +182,7 @@ PlayerView::DetachedFromWindow()
 void
 PlayerView::Start(const char* title)
 {
+	fAvailable = "";
 	fTitle = title;
 	fOpened = false;
 	fSubtitleLines.clear();
@@ -587,6 +588,18 @@ PlayerView::_DrawQuestion(BView* target)
 
 
 void
+PlayerView::SetAvailable(const char* map)
+{
+	BString available(map != NULL ? map : "");
+	if (available == fAvailable)
+		return;
+	fAvailable = available;
+	if (Window() != NULL && (fControls || fPlayer->IsPaused()))
+		Invalidate(_BarFrame());
+}
+
+
+void
 PlayerView::SetNotice(const char* text, bigtime_t duration)
 {
 	if (fNoticeRect.IsValid())
@@ -821,6 +834,24 @@ PlayerView::_DrawControls(BView* target)
 	BRect track = _TrackFrame(bounds);
 	FillRound(target, track, S(4), (rgb_color){ 255, 255, 255, 60 },
 		composite);
+	// a torrent as it comes: what of it is there, lighter, the parts as
+	// full as their neighbours drawn as one
+	int32 slots = fAvailable.Length();
+	for (int32 slot = 0; slot < slots;) {
+		int32 level = fAvailable.ByteAt(slot) - '0';
+		int32 end = slot + 1;
+		while (end < slots && fAvailable.ByteAt(end) == fAvailable.ByteAt(slot))
+			end++;
+		if (level > 0 && level <= 9) {
+			BRect part = track;
+			part.left = track.left + track.Width() * slot / slots;
+			part.right = track.left + track.Width() * end / slots;
+			uint8 alpha = 60 + 110 * level / 9;
+			FillRound(target, part, slot == 0 || end == slots ? S(4) : 0,
+				(rgb_color){ 255, 255, 255, alpha }, composite);
+		}
+		slot = end;
+	}
 	if (duration > 0) {
 		BRect done = track;
 		done.right = track.left + track.Width()

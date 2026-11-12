@@ -1590,6 +1590,10 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgDownloadProgress:
 		{
 			BString id = message->GetString("id", "");
+			// a torrent playing as it comes: what of it is there, on the bar
+			BString map = message->GetString("map", "");
+			if (!map.IsEmpty() && fPlayerShown && id == fPlayingId)
+				fPlayerView->SetAvailable(map.String());
 			auto downloading = fDownloading.find(id);
 			if (downloading == fDownloading.end())
 				break;
@@ -2622,6 +2626,10 @@ CinemaWindow::_Downloaded(BMessage* message)
 	BMessage video = downloading->second;
 	fDownloading.erase(downloading);
 	_SavePending();
+	// the torrent playing as it came: all of it there now
+	if (fPlayerShown && id == fPlayingId
+		&& strcmp(video.GetString("provider", ""), "torrent") == 0)
+		fPlayerView->SetAvailable(BString().SetTo('9', 160).String());
 
 	Downloads::Describe(message->GetString("path", ""), video);
 	if (strcmp(video.GetString("provider", ""), "torrent") == 0) {

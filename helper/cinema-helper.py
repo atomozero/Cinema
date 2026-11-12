@@ -33,7 +33,8 @@
 #    "automatic"}, ...]}
 #   {"type": "subtitle", "id": "...", "language": "...", "automatic": false,
 #    "text": "WEBVTT..."}
-#   {"type": "progress", "id": "...", "percent": 42}
+#   {"type": "progress", "id": "...", "percent": 42}, with "map" for a
+#   torrent: what of its video is there (torrent_map)
 #   {"type": "saved", "id": "...", "path": "/..."}
 #   {"type": "failed", "id": "..."}
 #
@@ -1901,6 +1902,46 @@ def torrent_ready(session, start, end):
 	return True
 
 
+def torrent_map(media_id, slots=160):
+	"""How much of the video of a torrent is there, from its start to its
+	end, in slots: a digit each, 0 nothing to 9 all; "" when not known.
+	For the bar of the player, which shows it."""
+	with TORRENTS_LOCK:
+		stream = TORRENTS.get(media_id)
+	if not stream:
+		return ""
+	if stream.get("final"):
+		return "9" * slots
+	session = stream.get("map session")
+	if not session:
+		session = torrent_session(media_id, stream)
+		if not session:
+			return ""
+		stream["map session"] = session
+	status = aria2_call(stream, "aria2.tellStatus", session["gid"],
+		["bitfield", "status"])
+	if not status:
+		return ""
+	if status.get("status") == "complete":
+		return "9" * slots
+	bits = status.get("bitfield") or ""
+	piece, offset, length = session["piece"], session["offset"], \
+		session["length"]
+	digits = []
+	for slot in range(slots):
+		start = offset + length * slot // slots
+		end = max(start, offset + length * (slot + 1) // slots - 1)
+		first, last = start // piece, end // piece
+		have = 0
+		for number in range(first, last + 1):
+			digit = number // 4
+			if digit < len(bits) \
+					and (int(bits[digit], 16) >> (3 - number % 4)) & 1:
+				have += 1
+		digits.append(str(have * 9 // (last - first + 1)))
+	return "".join(digits)
+
+
 def torrent_wait(session, start, end, most=600):
 	"""Until those bytes are there; False if they do not come, or the
 	download is gone."""
@@ -2005,6 +2046,7 @@ class TorrentProvider(Provider):
 		threading.Thread(target=torrent_watch, args=(stream, process),
 			daemon=True).start()
 		got = False
+		mapped = 0.0
 		try:
 			for line in process.stdout:
 				found = self.SUMMARY.search(line)
@@ -2017,11 +2059,19 @@ class TorrentProvider(Provider):
 						value = re.search(name + r":(\S+)", rest)
 						return value.group(1) if value else ""
 
+					# what of the video is there, every two seconds
+					extra = {}
+					if time.time() - mapped >= 2:
+						mapped = time.time()
+						try:
+							extra["map"] = torrent_map(media_id)
+						except Exception:
+							pass
 					progress(int(found.group(3)), done=found.group(1),
 						total=found.group(2), speed=field("DL"),
 						peers=as_int(field("SD"), -1)
 							if field("SD") else as_int(field("CN"), -1),
-						eta=field("ETA"))
+						eta=field("ETA"), **extra)
 		except Exception:
 			process.terminate()
 			try:
@@ -2709,7 +2759,8 @@ def job_download(provider, media_id, folder):
 			raise Cancelled()
 		# twice a second at most, or when the percent changes
 		now = time.time()
-		if percent == last[0] and now - last[1] < 0.5:
+		if percent == last[0] and now - last[1] < 0.5 \
+				and not details.get("map"):
 			return
 		last[0] = percent
 		last[1] = now
