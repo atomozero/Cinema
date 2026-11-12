@@ -952,8 +952,10 @@ CinemaWindow::_SetChannelHeader(const char* name, const char* id,
 {
 	BString source(provider != NULL && provider[0] != '\0' ? provider
 		: fProvider.String());
-	// the channels of people: not TV lists, folders or the favorites
-	if ((source != "youtube" && source != "peertube" && source != "archive")
+	// the channels of people and podcasts: not TV lists, folders or the
+	// favorites
+	if ((source != "youtube" && source != "peertube" && source != "archive"
+			&& source != "podcast")
 		|| strcmp(id, "series") == 0) {
 		fGrid->ClearChannelHeader();
 		return;
