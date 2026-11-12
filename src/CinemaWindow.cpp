@@ -49,6 +49,7 @@
 #include "Helper.h"
 #include "History.h"
 #include "LiveAddress.h"
+#include "VideoLimits.h"
 #include "HomeView.h"
 #include "Player.h"
 #include "PlayerView.h"
@@ -623,9 +624,12 @@ CinemaWindow::_ChangeQuality(bool up)
 	static const int32 kSizes[] = { 360, 480, 720, 1080 };
 	int32 wanted = 0;
 	if (up) {
+		// not above what the helper is let ask for: the screen and the
+		// processor (VideoLimits.h)
 		for (int32 size : kSizes) {
 			if (size > current + 8) {
-				wanted = size;
+				if (size <= VideoHeightLimit())
+					wanted = size;
 				break;
 			}
 		}
