@@ -1,29 +1,35 @@
-1	korean	application/x-vnd.atomozero-Cinema	1244004174
+1	korean	application/x-vnd.atomozero-Cinema	2128437264
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
-full documentary	Categories		다큐멘터리 전편
 Search first in:	Settings		먼저 검색할 곳:
+full documentary	Categories		다큐멘터리 전편
 Add to favorites	Grid		즐겨찾기에 추가
 OK	Window		확인
 Add this channel to the tabs	Categories		이 채널을 탭에 추가
 Play	Grid		재생
 Video downloaded	Window		동영상 다운로드 완료
 Video overlay:	Settings		비디오 오버레이:
+Sound ready: %seconds% s	Player		준비된 소리: %seconds%초
 Getting the video ready	Grid		동영상 준비 중
 today	Detail		오늘
 Downloading…	Detail		다운로드 중…
 Settings…	Window		설정…
+Decoding without the deblocking filter	Player		디블로킹 필터 없이 디코딩
 Add to the tabs	Grid		탭에 추가
+Processor: Cinema %cinema%%, all %all%%	Player		프로세서: Cinema %cinema%%, 전체 %all%%
 No subtitles	Player		자막 없음
+Decoding the key frames only	Player		키 프레임만 디코딩
 Yes	Player		예
 Library	Settings		라이브러리
 Cinema settings	Settings		Cinema 설정
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 다운로드에는 aria2c가 필요하지만 설치되어 있지 않습니다.
+From YouTube, through the helper	Player		YouTube에서, 도우미를 통해
 Cancel	Window		취소
 Back	Detail		뒤로
 Documentaries	Categories		다큐멘터리
+Live stream	Player		라이브 스트림
 TMDB does not accept this key.	Settings		TMDB가 이 키를 받아들이지 않습니다.
 Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer가 아닌 Cinema에서 동영상 재생
 technology review	Categories		기술 리뷰
@@ -37,22 +43,27 @@ The video could not be moved to the Trash: %error%	Window		동영상을 휴지�
 Add…	Settings		추가…
 News	Categories		뉴스
 TV	Window		TV
+Decoding the reference pictures only	Player		참조 프레임만 디코딩
 TV %country%	Settings		%country% TV
 TV channels	Settings		TV 채널
 Technology	Categories		기술
 TMDB key:	Settings		TMDB 키:
 Getting the details…	Detail		세부 정보를 가져오는 중…
-With a key, the library gets posters, plots and casts. It is free.	Settings		키가 있으면 라이브러리에 포스터, 줄거리, 출연진이 표시됩니다. 무료입니다.
 Above 360p, YouTube takes longer to start.	Settings		360p보다 높으면 YouTube 시작이 더 오래 걸립니다.
+With a key, the library gets posters, plots and casts. It is free.	Settings		키가 있으면 라이브러리에 포스터, 줄거리, 출연진이 표시됩니다. 무료입니다.
 Downloading…	Grid		다운로드 중…
 Stop the download	Grid		다운로드 중지
 No	Player		아니요
+drawn by Cinema	Player		Cinema가 그림
+Decoding every picture	Player		모든 프레임 디코딩
 Search	Window		검색
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# 또는 이름 = @iptv channel:<M3U 목록 주소> (TV 채널)
 official music video	Categories		공식 뮤직비디오
 The video could not be downloaded	Window		동영상을 다운로드할 수 없습니다
 Classic films	Categories		고전 영화
+video overlay	Player		비디오 오버레이
 # or name = channel:<id> for the latest videos of a channel	Categories		# 또는 이름 = channel:<id> 로 채널의 최신 동영상
+From the web	Player		웹에서
 MediaPlayer could not be started: %error%	Window		MediaPlayer를 시작할 수 없습니다: %error%
 Move to Trash	Grid		휴지통으로 이동
 Remove from favorites	Grid		즐겨찾기에서 제거
@@ -70,8 +81,8 @@ The key works.	Settings		키가 작동합니다.
 Music	Categories		음악
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube, Internet Archive, PeerTube, BitTorrent 및 내 폴더의 동영상을 보는 Haiku와 RenkuOS용 앱.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema를 사용하려면 yt-dlp와 python3, 그리고 같은 위치의 cinema-helper.py가 필요합니다
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#일 전}}
 Even volume: films and TV as loud as music	Settings		균일한 음량: 영화와 TV를 음악만큼 크게
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#일 전}}
 Download	Detail		다운로드
 Remove	Settings		제거
 Downloaded	Window		다운로드한 동영상
@@ -89,14 +100,17 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		채
 Science	Categories		과학
 Classic cartoons	Categories		고전 만화
 Play	Detail		재생
-Follow	Detail		팔로우
 Free channels of:	Settings		무료 채널 국가:
+Follow	Detail		팔로우
+No statistics for this video	Player		이 동영상의 통계가 없습니다
 Details	Grid		세부 정보
+%count% dropped	Player		%count%개 건너뜀
+even volume %gain% dB	Player		고른 음량 %gain% dB
 %done% of %total%	Window		%total% 중 %done%
 forced	Subtitles		강제
 Already downloaded	Grid		이미 다운로드됨
-Go on from where a video was left	Settings		멈춘 곳부터 동영상 이어서 보기
 Never	Settings		사용 안 함
+Go on from where a video was left	Settings		멈춘 곳부터 동영상 이어서 보기
 Search	Settings		검색
 Type what to look for at the top right	Window		오른쪽 위에 찾을 내용을 입력하세요
 Cinema	System name		Cinema
@@ -115,12 +129,14 @@ Looking for the videos…	Window		동영상을 찾는 중…
 %count% subscribers	Detail		구독자 %count%명
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 한 줄에 상단 막대의 탭 하나: 이름 = YouTube에서 검색할 내용
 Following	Detail		팔로잉
-automatic	Player		자동 생성
 Automatic	Settings		자동
+automatic	Player		자동 생성
 No videos downloaded yet: right click a video, or press D	Window		다운로드한 동영상이 없습니다. 동영상을 오른쪽 클릭하거나 D를 누르세요
+From a file	Player		파일에서
 Favorites	Window		즐겨찾기
 Can you see the video?	Player		동영상이 보이나요?
 Home	Categories		홈
 Checking…	Settings		확인 중…
 About Cinema	Window		Cinema 정보
+From a torrent, as it downloads	Player		토렌트에서, 다운로드하면서
 Subtitles	Player		자막

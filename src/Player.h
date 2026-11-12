@@ -49,6 +49,30 @@ struct SwsContext;
 	sound apart or not, and keeps up on a slow machine by decoding less.
 	It goes out the same way, by the ring of the sound and the bitmaps.
 */
+/*!	What the player does, for the statistics the I key shows; refreshed
+	every second while FFmpeg plays the video (PlayerLive.cpp).
+*/
+struct PlayerStatistics {
+	int32		width = 0;
+	int32		height = 0;
+	BString		videoCodec;
+	BString		audioCodec;
+	int32		sampleRate = 0;
+	int32		channels = 0;
+	float		fps = 0;			// shown in the last second
+	int64		bitRate = 0;		// of the file, bits per second, 0 unknown
+	int32		dropped = 0;		// since it opened
+	int32		skipLevel = 0;		// 0 all decoded .. 3 key frames only
+	float		soundAhead = 0;		// seconds of sound queued
+	bool		overlay = false;
+	float		cinemaLoad = 0;		// % of all the processors
+	float		systemLoad = 0;
+	float		gainDB = 0;
+	bool		evenVolume = true;
+	const char*	source = "";		// "file", "relay", "stream", "torrent"
+};
+
+
 class Player {
 public:
 								Player(const BMessenger& target);
@@ -74,6 +98,8 @@ public:
 			bigtime_t			Position() const;
 			bigtime_t			Duration() const { return fDuration; }
 			bool				IsOpen() const { return fOpened; }
+			bool				Statistics(PlayerStatistics& stats) const;
+									// false when there are none (yet)
 
 			void				SetVolume(float volume);
 			float				Volume() const { return fVolume; }
@@ -221,6 +247,9 @@ private:
 			int32				fLiveUnderrunsSeen = 0;
 			bigtime_t			fLiveUnderrunAt = 0;
 			std::atomic<bool>	fStruggleSent{false};
+			mutable BLocker		fStatsLock{"player statistics"};
+			PlayerStatistics	fStats;
+			bool				fHasStats = false;
 			int					fLivePixels;	// AVPixelFormat of the bitmaps
 			int64				fLiveBase;		// stream time of the clock's 0
 			int64				fLiveSoundEnd;	// stream time of the sound queued

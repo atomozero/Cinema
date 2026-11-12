@@ -1,29 +1,35 @@
-1	english	application/x-vnd.atomozero-Cinema	1244004174
+1	english	application/x-vnd.atomozero-Cinema	2128437264
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.
-full documentary	Categories		full documentary
 Search first in:	Settings		Search first in:
+full documentary	Categories		full documentary
 Add to favorites	Grid		Add to favorites
 OK	Window		OK
 Add this channel to the tabs	Categories		Add this channel to the tabs
 Play	Grid		Play
 Video downloaded	Window		Video downloaded
 Video overlay:	Settings		Video overlay:
+Sound ready: %seconds% s	Player		Sound ready: %seconds% s
 Getting the video ready	Grid		Getting the video ready
 today	Detail		today
 Downloading…	Detail		Downloading…
 Settings…	Window		Settings…
+Decoding without the deblocking filter	Player		Decoding without the deblocking filter
 Add to the tabs	Grid		Add to the tabs
+Processor: Cinema %cinema%%, all %all%%	Player		Processor: Cinema %cinema%%, all %all%%
 No subtitles	Player		No subtitles
+Decoding the key frames only	Player		Decoding the key frames only
 Yes	Player		Yes
 Library	Settings		Library
 Cinema settings	Settings		Cinema settings
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent downloads need aria2c, which is not installed.
+From YouTube, through the helper	Player		From YouTube, through the helper
 Cancel	Window		Cancel
 Back	Detail		Back
 Documentaries	Categories		Documentaries
+Live stream	Player		Live stream
 TMDB does not accept this key.	Settings		TMDB does not accept this key.
 Play the videos in Cinema, not in MediaPlayer	Settings		Play the videos in Cinema, not in MediaPlayer
 technology review	Categories		technology review
@@ -37,22 +43,27 @@ The video could not be moved to the Trash: %error%	Window		The video could not b
 Add…	Settings		Add…
 News	Categories		News
 TV	Window		TV
+Decoding the reference pictures only	Player		Decoding the reference pictures only
 TV %country%	Settings		TV %country%
 TV channels	Settings		TV channels
 Technology	Categories		Technology
 TMDB key:	Settings		TMDB key:
 Getting the details…	Detail		Getting the details…
-With a key, the library gets posters, plots and casts. It is free.	Settings		With a key, the library gets posters, plots and casts. It is free.
 Above 360p, YouTube takes longer to start.	Settings		Above 360p, YouTube takes longer to start.
+With a key, the library gets posters, plots and casts. It is free.	Settings		With a key, the library gets posters, plots and casts. It is free.
 Downloading…	Grid		Downloading…
 Stop the download	Grid		Stop the download
 No	Player		No
+drawn by Cinema	Player		drawn by Cinema
+Decoding every picture	Player		Decoding every picture
 Search	Window		Search
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# or name = @iptv channel:<address of an M3U list> for TV channels
 official music video	Categories		official music video
 The video could not be downloaded	Window		The video could not be downloaded
 Classic films	Categories		Classic films
+video overlay	Player		video overlay
 # or name = channel:<id> for the latest videos of a channel	Categories		# or name = channel:<id> for the latest videos of a channel
+From the web	Player		From the web
 MediaPlayer could not be started: %error%	Window		MediaPlayer could not be started: %error%
 Move to Trash	Grid		Move to Trash
 Remove from favorites	Grid		Remove from favorites
@@ -70,8 +81,8 @@ The key works.	Settings		The key works.
 Music	Categories		Music
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema needs yt-dlp and python3, and cinema-helper.py next to it
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# day ago} other{# days ago}}
 Even volume: films and TV as loud as music	Settings		Even volume: films and TV as loud as music
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# day ago} other{# days ago}}
 Download	Detail		Download
 Remove	Settings		Remove
 Downloaded	Window		Downloaded
@@ -89,14 +100,17 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		The
 Science	Categories		Science
 Classic cartoons	Categories		Classic cartoons
 Play	Detail		Play
-Follow	Detail		Follow
 Free channels of:	Settings		Free channels of:
+Follow	Detail		Follow
+No statistics for this video	Player		No statistics for this video
 Details	Grid		Details
+%count% dropped	Player		%count% dropped
+even volume %gain% dB	Player		even volume %gain% dB
 %done% of %total%	Window		%done% of %total%
 forced	Subtitles		forced
 Already downloaded	Grid		Already downloaded
-Go on from where a video was left	Settings		Go on from where a video was left
 Never	Settings		Never
+Go on from where a video was left	Settings		Go on from where a video was left
 Search	Settings		Search
 Type what to look for at the top right	Window		Type what to look for at the top right
 Cinema	System name		Cinema
@@ -115,12 +129,14 @@ Looking for the videos…	Window		Looking for the videos…
 %count% subscribers	Detail		%count% subscribers
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# One tab of the top bar per line: name = what to search on YouTube
 Following	Detail		Following
-automatic	Player		automatic
 Automatic	Settings		Automatic
+automatic	Player		automatic
 No videos downloaded yet: right click a video, or press D	Window		No videos downloaded yet: right click a video, or press D
+From a file	Player		From a file
 Favorites	Window		Favorites
 Can you see the video?	Player		Can you see the video?
 Home	Categories		Home
 Checking…	Settings		Checking…
 About Cinema	Window		About Cinema
+From a torrent, as it downloads	Player		From a torrent, as it downloads
 Subtitles	Player		Subtitles

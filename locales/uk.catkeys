@@ -1,29 +1,35 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	1244004174
+1	ukrainian	application/x-vnd.atomozero-Cinema	2128437264
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
-full documentary	Categories		повний документальний фільм
 Search first in:	Settings		Спершу шукати в:
+full documentary	Categories		повний документальний фільм
 Add to favorites	Grid		Додати до обраного
 OK	Window		Гаразд
 Add this channel to the tabs	Categories		Додати цей канал до вкладок
 Play	Grid		Відтворити
 Video downloaded	Window		Відео завантажено
 Video overlay:	Settings		Відеооверлей:
+Sound ready: %seconds% s	Player		Звук готовий: %seconds% с
 Getting the video ready	Grid		Підготовка відео
 today	Detail		сьогодні
 Downloading…	Detail		Завантаження…
 Settings…	Window		Налаштування…
+Decoding without the deblocking filter	Player		Декодування без фільтра деблокінгу
 Add to the tabs	Grid		Додати до вкладок
+Processor: Cinema %cinema%%, all %all%%	Player		Процесор: Cinema %cinema%%, усього %all%%
 No subtitles	Player		Без субтитрів
+Decoding the key frames only	Player		Декодування лише ключових кадрів
 Yes	Player		Так
 Library	Settings		Бібліотека
 Cinema settings	Settings		Налаштування Cinema
 BitTorrent downloads need aria2c, which is not installed.	Window		Для завантажень BitTorrent потрібен aria2c, який не встановлено.
+From YouTube, through the helper	Player		З YouTube, через помічника
 Cancel	Window		Скасувати
 Back	Detail		Назад
 Documentaries	Categories		Документальні фільми
+Live stream	Player		Пряма трансляція
 TMDB does not accept this key.	Settings		TMDB не приймає цей ключ.
 Play the videos in Cinema, not in MediaPlayer	Settings		Відтворювати відео в Cinema, а не в MediaPlayer
 technology review	Categories		огляд технологій
@@ -37,22 +43,27 @@ The video could not be moved to the Trash: %error%	Window		Не вдалося �
 Add…	Settings		Додати…
 News	Categories		Новини
 TV	Window		ТБ
+Decoding the reference pictures only	Player		Декодування лише опорних кадрів
 TV %country%	Settings		ТБ %country%
 TV channels	Settings		Телеканали
 Technology	Categories		Технології
 TMDB key:	Settings		Ключ TMDB:
 Getting the details…	Detail		Отримання подробиць…
-With a key, the library gets posters, plots and casts. It is free.	Settings		З ключем бібліотека отримує постери, сюжети та акторський склад. Він безкоштовний.
 Above 360p, YouTube takes longer to start.	Settings		Понад 360p YouTube запускається довше.
+With a key, the library gets posters, plots and casts. It is free.	Settings		З ключем бібліотека отримує постери, сюжети та акторський склад. Він безкоштовний.
 Downloading…	Grid		Завантаження…
 Stop the download	Grid		Зупинити завантаження
 No	Player		Ні
+drawn by Cinema	Player		малює Cinema
+Decoding every picture	Player		Декодування кожного кадру
 Search	Window		Пошук
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# або назва = @iptv channel:<адреса списку M3U> для телеканалів
 official music video	Categories		офіційний кліп
 The video could not be downloaded	Window		Не вдалося завантажити відео
 Classic films	Categories		Класичні фільми
+video overlay	Player		відеооверлей
 # or name = channel:<id> for the latest videos of a channel	Categories		# або назва = channel:<id> для останніх відео каналу
+From the web	Player		З інтернету
 MediaPlayer could not be started: %error%	Window		Не вдалося запустити MediaPlayer: %error%
 Move to Trash	Grid		Перемістити до смітника
 Remove from favorites	Grid		Прибрати з обраного
@@ -70,8 +81,8 @@ The key works.	Settings		Ключ працює.
 Music	Categories		Музика
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
 Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
 Download	Detail		Завантажити
 Remove	Settings		Вилучити
 Downloaded	Window		Завантажені
@@ -89,14 +100,17 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		А�
 Science	Categories		Наука
 Classic cartoons	Categories		Класичні мультфільми
 Play	Detail		Відтворити
-Follow	Detail		Стежити
 Free channels of:	Settings		Безкоштовні канали країни:
+Follow	Detail		Стежити
+No statistics for this video	Player		Немає статистики для цього відео
 Details	Grid		Подробиці
+%count% dropped	Player		пропущено: %count%
+even volume %gain% dB	Player		рівна гучність %gain% дБ
 %done% of %total%	Window		%done% з %total%
 forced	Subtitles		примусові
 Already downloaded	Grid		Вже завантажено
-Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
 Never	Settings		Ніколи
+Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
 Search	Settings		Пошук
 Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
 Cinema	System name		Cinema
@@ -115,12 +129,14 @@ Looking for the videos…	Window		Пошук відео…
 %count% subscribers	Detail		%count% підписників
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube
 Following	Detail		Ви стежите
-automatic	Player		автоматичні
 Automatic	Settings		Автоматично
+automatic	Player		автоматичні
 No videos downloaded yet: right click a video, or press D	Window		Ще немає завантажених відео: клацніть правою кнопкою на відео або натисніть D
+From a file	Player		З файлу
 Favorites	Window		Обране
 Can you see the video?	Player		Ви бачите відео?
 Home	Categories		Головна
 Checking…	Settings		Перевірка…
 About Cinema	Window		Про Cinema
+From a torrent, as it downloads	Player		З торента, поки завантажується
 Subtitles	Player		Субтитри

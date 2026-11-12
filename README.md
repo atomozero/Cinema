@@ -47,7 +47,9 @@ spares the processor. As some drivers accept an overlay and show only its
 green background, on a graphics card it does not know Cinema asks once, over
 the first video, whether you can see it, and keeps the answer. **O** switches
 the overlay while a video plays, and the settings can keep it always on or
-off. The video
+off. **I** shows, small at the top, what the player is doing: the size and
+codecs of the video, frames per second, how much it decodes and drops, the
+processor, and the sound ready ahead. The video
 quality is in the settings: Automatic means 360p on 32-bit ARM and 720p
 elsewhere, and you can ask for anything from 360p to 1080p. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for

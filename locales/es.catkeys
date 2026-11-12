@@ -1,29 +1,35 @@
-1	spanish	application/x-vnd.atomozero-Cinema	1244004174
+1	spanish	application/x-vnd.atomozero-Cinema	2128437264
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automático pregunta una sola vez, en una tarjeta gráfica que no conoce, si ves el vídeo. O lo cambia durante un vídeo.
-full documentary	Categories		documental completo
 Search first in:	Settings		Buscar primero en:
+full documentary	Categories		documental completo
 Add to favorites	Grid		Añadir a favoritos
 OK	Window		Aceptar
 Add this channel to the tabs	Categories		Añadir este canal a las pestañas
 Play	Grid		Reproducir
 Video downloaded	Window		Vídeo descargado
 Video overlay:	Settings		Overlay de vídeo:
+Sound ready: %seconds% s	Player		Sonido listo: %seconds% s
 Getting the video ready	Grid		Preparando el vídeo
 today	Detail		hoy
 Downloading…	Detail		Descargando…
 Settings…	Window		Ajustes…
+Decoding without the deblocking filter	Player		Decodificando sin filtro de desbloqueo
 Add to the tabs	Grid		Añadir a las pestañas
+Processor: Cinema %cinema%%, all %all%%	Player		Procesador: Cinema %cinema%%, total %all%%
 No subtitles	Player		Sin subtítulos
+Decoding the key frames only	Player		Decodificando solo los fotogramas clave
 Yes	Player		Sí
 Library	Settings		Biblioteca
 Cinema settings	Settings		Ajustes de Cinema
 BitTorrent downloads need aria2c, which is not installed.	Window		Las descargas BitTorrent necesitan aria2c, que no está instalado.
+From YouTube, through the helper	Player		Desde YouTube, a través del asistente
 Cancel	Window		Cancelar
 Back	Detail		Atrás
 Documentaries	Categories		Documentales
+Live stream	Player		Directo
 TMDB does not accept this key.	Settings		TMDB no acepta esta clave.
 Play the videos in Cinema, not in MediaPlayer	Settings		Reproducir los vídeos en Cinema, no en MediaPlayer
 technology review	Categories		análisis tecnología
@@ -37,22 +43,27 @@ The video could not be moved to the Trash: %error%	Window		No se pudo mover el v
 Add…	Settings		Añadir…
 News	Categories		Noticias
 TV	Window		TV
+Decoding the reference pictures only	Player		Decodificando solo las imágenes de referencia
 TV %country%	Settings		TV %country%
 TV channels	Settings		Canales de TV
 Technology	Categories		Tecnología
 TMDB key:	Settings		Clave de TMDB:
 Getting the details…	Detail		Obteniendo los detalles…
-With a key, the library gets posters, plots and casts. It is free.	Settings		Con una clave, la biblioteca obtiene carteles, argumentos y repartos. Es gratuita.
 Above 360p, YouTube takes longer to start.	Settings		Por encima de 360p, YouTube tarda más en empezar.
+With a key, the library gets posters, plots and casts. It is free.	Settings		Con una clave, la biblioteca obtiene carteles, argumentos y repartos. Es gratuita.
 Downloading…	Grid		Descargando…
 Stop the download	Grid		Detener la descarga
 No	Player		No
+drawn by Cinema	Player		dibujado por Cinema
+Decoding every picture	Player		Decodificando cada imagen
 Search	Window		Buscar
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# o nombre = @iptv channel:<dirección de una lista M3U> para canales de TV
 official music video	Categories		videoclip oficial
 The video could not be downloaded	Window		No se pudo descargar el vídeo
 Classic films	Categories		Películas clásicas
+video overlay	Player		superposición de vídeo
 # or name = channel:<id> for the latest videos of a channel	Categories		# o nombre = channel:<id> para los últimos vídeos de un canal
+From the web	Player		Desde la web
 MediaPlayer could not be started: %error%	Window		No se pudo abrir MediaPlayer: %error%
 Move to Trash	Grid		Mover a la papelera
 Remove from favorites	Grid		Quitar de favoritos
@@ -70,8 +81,8 @@ The key works.	Settings		La clave funciona.
 Music	Categories		Música
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: vídeos para Haiku y RenkuOS, desde YouTube, el Internet Archive, PeerTube, BitTorrent y tus propias carpetas.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema necesita yt-dlp y python3, y cinema-helper.py a su lado
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{hace # día} other{hace # días}}
 Even volume: films and TV as loud as music	Settings		Volumen uniforme: películas y TV tan altas como la música
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{hace # día} other{hace # días}}
 Download	Detail		Descargar
 Remove	Settings		Quitar
 Downloaded	Window		Descargados
@@ -89,14 +100,17 @@ The address of a list of channels, or drop an .m3u file on Cinema.	Settings		La 
 Science	Categories		Ciencia
 Classic cartoons	Categories		Dibujos animados clásicos
 Play	Detail		Reproducir
-Follow	Detail		Seguir
 Free channels of:	Settings		Canales gratuitos de:
+Follow	Detail		Seguir
+No statistics for this video	Player		No hay estadísticas para este vídeo
 Details	Grid		Detalles
+%count% dropped	Player		%count% descartados
+even volume %gain% dB	Player		volumen uniforme %gain% dB
 %done% of %total%	Window		%done% de %total%
 forced	Subtitles		forzados
 Already downloaded	Grid		Ya descargado
-Go on from where a video was left	Settings		Seguir los vídeos desde donde se dejaron
 Never	Settings		Nunca
+Go on from where a video was left	Settings		Seguir los vídeos desde donde se dejaron
 Search	Settings		Búsqueda
 Type what to look for at the top right	Window		Escribe arriba a la derecha qué buscar
 Cinema	System name		Cinema
@@ -115,12 +129,14 @@ Looking for the videos…	Window		Buscando los vídeos…
 %count% subscribers	Detail		%count% suscriptores
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Una pestaña de la barra superior por línea: nombre = qué buscar en YouTube
 Following	Detail		Siguiendo
-automatic	Player		automáticos
 Automatic	Settings		Automática
+automatic	Player		automáticos
 No videos downloaded yet: right click a video, or press D	Window		Aún no hay vídeos descargados: clic derecho en un vídeo, o pulsa D
+From a file	Player		Desde un archivo
 Favorites	Window		Favoritos
 Can you see the video?	Player		¿Ves el vídeo?
 Home	Categories		Inicio
 Checking…	Settings		Comprobando…
 About Cinema	Window		Acerca de Cinema
+From a torrent, as it downloads	Player		Desde un torrent, mientras se descarga
 Subtitles	Player		Subtítulos

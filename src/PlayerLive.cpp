@@ -438,6 +438,10 @@ Player::_OpenLive()
 	fLiveStarveSince = 0;
 	fLiveKeyWait = 10000000;
 	fStruggleSent = false;
+	{
+		BAutolock locker(fStatsLock);
+		fHasStats = false;
+	}
 	_LiveSkip(kSlowProcessor ? 1 : 0);
 
 	// the pictures
@@ -988,6 +992,14 @@ Player::_LiveLoop()
 	const bool debug = getenv("CINEMA_LIVE_DEBUG") != NULL;
 	int decoded = 0, shown = 0, dropped = 0, lateCount = 0, audioFrames = 0;
 	bigtime_t nextReport = system_time() + 5000000;
+	// for the statistics, every second
+	int droppedAll = 0, shownSecond = 0;
+	bigtime_t nextStats = system_time() + 1000000;
+	bigtime_t statsCpuAt = system_time(), statsTeamCpu = 0, statsSystemCpu = 0;
+	{
+		int32 cpus;
+		_CpuTimes(statsTeamCpu, statsSystemCpu, cpus);
+	}
 	bigtime_t lastCpuAt = system_time(), lastTeamCpu = 0, lastSystemCpu = 0;
 	{
 		int32 cpus;
@@ -1080,9 +1092,9 @@ Player::_LiveLoop()
 			if (late)
 				lateCount++;
 			if (drop)
-				dropped++;
+				dropped++, droppedAll++;
 			else
-				shown++;
+				shown++, shownSecond++;
 			bool ok = drop || _LiveRender(next);
 			av_frame_free(&next);
 			if (!ok)
@@ -1353,6 +1365,53 @@ Player::_LiveLoop()
 				fLoudness.IsEnabled() ? "" : " (even volume off)");
 			decoded = shown = dropped = lateCount = audioFrames = 0;
 			nextReport += 5000000;
+		}
+
+		if (system_time() >= nextStats) {
+			bigtime_t now = system_time(), team, system;
+			int32 cpus;
+			_CpuTimes(team, system, cpus);
+			double capacity = std::max((bigtime_t)1, now - statsCpuAt)
+				* (double)std::max((int32)1, cpus);
+			PlayerStatistics stats;
+			if (fLiveVideo != NULL) {
+				stats.width = fLiveVideo->width;
+				stats.height = fLiveVideo->height;
+				stats.videoCodec = avcodec_get_name(fLiveVideo->codec_id);
+			}
+			if (fLiveAudio != NULL) {
+				stats.audioCodec = avcodec_get_name(fLiveAudio->codec_id);
+				stats.sampleRate = fLiveAudio->sample_rate;
+				stats.channels = fLiveAudio->ch_layout.nb_channels;
+			}
+			stats.fps = shownSecond * 1e6f / std::max((bigtime_t)1,
+				now - (nextStats - 1000000));
+			stats.bitRate = format->bit_rate > 0 ? format->bit_rate : 0;
+			stats.dropped = droppedAll;
+			stats.skipLevel = fLiveSkipLevel;
+			{
+				BAutolock ring(fRingLock);
+				stats.soundAhead = fFrameSize > 0 && fSound.frame_rate > 0
+					? fRingFill / (double)fFrameSize / fSound.frame_rate : 0;
+			}
+			stats.overlay = fOverlay != NULL;
+			stats.cinemaLoad = 100.0 * (team - statsTeamCpu) / capacity;
+			stats.systemLoad = 100.0 * (system - statsSystemCpu) / capacity;
+			stats.gainDB = fLoudness.GainDB();
+			stats.evenVolume = fLoudness.IsEnabled();
+			stats.source = fLive ? "stream" : fRelay ? "relay"
+				: fAddress.StartsWith("http://localhost:") ? "torrent"
+				: fAddress.ByteAt(0) == '/' ? "file" : "web";
+			{
+				BAutolock locker(fStatsLock);
+				fStats = stats;
+				fHasStats = true;
+			}
+			statsCpuAt = now;
+			statsTeamCpu = team;
+			statsSystemCpu = system;
+			shownSecond = 0;
+			nextStats = now + 1000000;
 		}
 
 		// the sound of the file over before its pictures: their queue full

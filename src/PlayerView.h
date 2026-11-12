@@ -23,7 +23,8 @@ class Player;
 
 	Space or Enter pauses, the arrows go back and on by 10 seconds (a minute
 	with Shift) and change the volume (shown upright at the right, as the
-	keys; the wheel and a click on it change it too), M plays it in MediaPlayer instead, V
+	keys; the wheel and a click on it change it too), M plays it in
+	MediaPlayer instead, I shows what the player does (small, at the top), V
 	chooses the subtitles, S gives the video a star; a click on the bar goes
 	there, on CC chooses the subtitles, on the star next to it gives or
 	takes the star, a click elsewhere pauses. The window closes it, with Esc.
@@ -74,6 +75,8 @@ private:
 			BRect				_YesFrame() const;
 			BRect				_NoFrame() const;
 			void				_DrawQuestion(BView* target);
+			void				_UpdateStatistics();
+			void				_DrawStatistics(BView* target);
 			BRect				_FavoriteButtonFrame(const BRect& bounds) const;
 			void				_ShowControls();
 			void				_TogglePause();
@@ -111,6 +114,9 @@ private:
 			int32				fFavorite = -1;
 			bool				fAsking = false;	// whether the video shows
 			BString				fCard;
+			bool				fShowStats = false;	// the I key
+			std::vector<BString> fStatsLines;
+			BRect				fStatsRect;
 };
 
 

@@ -233,6 +233,7 @@ PlayerView::DrawOverlay(BView* target)
 	_DrawSubtitle(target);
 	if (fControls || fPlayer->IsPaused())
 		_DrawControls(target);
+	_DrawStatistics(target);
 }
 
 
@@ -250,7 +251,8 @@ PlayerView::SetDirect(bool direct)
 bool
 PlayerView::HasOverlayContent() const
 {
-	return !fSubtitleLines.empty() || fControls || fPlayer->IsPaused();
+	return !fSubtitleLines.empty() || fControls || fPlayer->IsPaused()
+		|| !fStatsLines.empty();
 }
 
 
@@ -460,6 +462,7 @@ PlayerView::Draw(BRect updateRect)
 		_DrawSubtitle(this);
 		if (fControls || fPlayer->IsPaused())
 			_DrawControls(this);
+		_DrawStatistics(this);
 		_DrawQuestion(this);
 		return;
 	}
@@ -490,6 +493,7 @@ PlayerView::Draw(BRect updateRect)
 	}
 	if (fControls || fPlayer->IsPaused() || picture == NULL)
 		_DrawControls(this);
+	_DrawStatistics(this);
 	_DrawQuestion(this);
 }
 
@@ -572,6 +576,123 @@ PlayerView::_DrawQuestion(BView* target)
 	FillRound(target, _NoFrame(), S(8), (rgb_color){ 60, 60, 66, 255 });
 	DrawCentered(target, B_TRANSLATE("No"), _NoFrame(), Font(14, true),
 		kText);
+}
+
+
+/*!	The lines of the statistics, from the player, and where they go: at
+	the top left, under the title.
+*/
+void
+PlayerView::_UpdateStatistics()
+{
+	std::vector<BString> lines;
+	PlayerStatistics stats;
+	if (!fShowStats || !fPlayer->IsOpen())
+		;	// none
+	else if (!fPlayer->Statistics(stats))
+		lines.push_back(B_TRANSLATE("No statistics for this video"));
+	else {
+		BString line;
+		line.SetToFormat("%" B_PRId32 "x%" B_PRId32 " %s \xC2\xB7 %.0f fps",
+			stats.width, stats.height, stats.videoCodec.String(), stats.fps);
+		if (stats.bitRate > 0)
+			line << " \xC2\xB7 " << (int32)(stats.bitRate / 1000) << " kb/s";
+		lines.push_back(line);
+		if (!stats.audioCodec.IsEmpty()) {
+			line.SetToFormat("%s %.1f kHz %" B_PRId32 " ch",
+				stats.audioCodec.String(), stats.sampleRate / 1000.0,
+				stats.channels);
+			lines.push_back(line);
+		}
+		const char* source = B_TRANSLATE("From the web");
+		if (strcmp(stats.source, "file") == 0)
+			source = B_TRANSLATE("From a file");
+		else if (strcmp(stats.source, "relay") == 0)
+			source = B_TRANSLATE("From YouTube, through the helper");
+		else if (strcmp(stats.source, "torrent") == 0)
+			source = B_TRANSLATE("From a torrent, as it downloads");
+		else if (strcmp(stats.source, "stream") == 0)
+			source = B_TRANSLATE("Live stream");
+		line = source;
+		line << " \xC2\xB7 " << (stats.overlay
+			? B_TRANSLATE("video overlay") : B_TRANSLATE("drawn by Cinema"));
+		lines.push_back(line);
+		const char* decoding = B_TRANSLATE("Decoding every picture");
+		if (stats.skipLevel == 1)
+			decoding = B_TRANSLATE("Decoding without the deblocking filter");
+		else if (stats.skipLevel == 2)
+			decoding = B_TRANSLATE("Decoding the reference pictures only");
+		else if (stats.skipLevel >= 3)
+			decoding = B_TRANSLATE("Decoding the key frames only");
+		line = decoding;
+		BString dropped(B_TRANSLATE("%count% dropped"));
+		BString count;
+		count << stats.dropped;
+		dropped.ReplaceFirst("%count%", count.String());
+		line << " \xC2\xB7 " << dropped;
+		lines.push_back(line);
+		BString load(B_TRANSLATE("Processor: Cinema %cinema%%, all %all%%"));
+		BString number;
+		number.SetToFormat("%.0f", stats.cinemaLoad);
+		load.ReplaceFirst("%cinema%", number.String());
+		number.SetToFormat("%.0f", stats.systemLoad);
+		load.ReplaceFirst("%all%", number.String());
+		lines.push_back(load);
+		BString sound(B_TRANSLATE("Sound ready: %seconds% s"));
+		number.SetToFormat("%.1f", stats.soundAhead);
+		sound.ReplaceFirst("%seconds%", number.String());
+		if (stats.evenVolume) {
+			BString gain(B_TRANSLATE("even volume %gain% dB"));
+			number.SetToFormat("%+.1f", stats.gainDB);
+			gain.ReplaceFirst("%gain%", number.String());
+			sound << " \xC2\xB7 " << gain;
+		}
+		lines.push_back(sound);
+	}
+
+	BFont font = Font(12);
+	font_height height;
+	font.GetHeight(&height);
+	float lineHeight = ceilf(height.ascent + height.descent + S(2));
+	float width = 0;
+	for (const BString& line : lines)
+		width = std::max(width, font.StringWidth(line.String()));
+	BRect frame;
+	if (!lines.empty()) {
+		frame.left = Bounds().left + S(12);
+		frame.top = Bounds().top + S(kBaseTitleHeight) + S(8);
+		frame.right = frame.left + ceilf(width) + S(16);
+		frame.bottom = frame.top + lineHeight * lines.size() + S(10);
+	}
+	if (lines == fStatsLines && frame == fStatsRect)
+		return;
+	if (fStatsRect.IsValid())
+		Invalidate(fStatsRect);
+	fStatsLines = lines;
+	fStatsRect = frame;
+	if (fStatsRect.IsValid())
+		Invalidate(fStatsRect);
+}
+
+
+void
+PlayerView::_DrawStatistics(BView* target)
+{
+	if (fStatsLines.empty() || !fStatsRect.IsValid())
+		return;
+	bool composite = target != this;
+	FillRound(target, fStatsRect, S(6), (rgb_color){ 0, 0, 0, 170 },
+		composite);
+	BFont font = Font(12);
+	font_height height;
+	font.GetHeight(&height);
+	float lineHeight = ceilf(height.ascent + height.descent + S(2));
+	float y = fStatsRect.top + S(5) + height.ascent;
+	for (const BString& line : fStatsLines) {
+		DrawText(target, line.String(), BPoint(fStatsRect.left + S(8), y),
+			font, kText, composite);
+		y += lineHeight;
+	}
 }
 
 
@@ -945,6 +1066,11 @@ PlayerView::KeyDown(const char* bytes, int32 count)
 		case 'M':
 			Window()->PostMessage(kMsgPlayInMediaPlayer);
 			break;
+		case 'i':
+		case 'I':
+			fShowStats = !fShowStats;
+			_UpdateStatistics();
+			break;
 		case 'o':
 		case 'O':
 			// only a green background: the picture drawn by Cinema instead
@@ -1096,6 +1222,8 @@ PlayerView::MessageReceived(BMessage* message)
 			} else if (fControls || fPlayer->IsPaused())
 				Invalidate(_BarFrame());
 			_UpdateSubtitle();
+			if (fShowStats)
+				_UpdateStatistics();
 			// the pointer out of the picture after 10 s still, while it
 			// plays: the app_server shows it again when the mouse moves
 			{

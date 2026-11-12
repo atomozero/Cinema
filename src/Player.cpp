@@ -238,6 +238,10 @@ Player::_Close(bool keepSubtitles)
 	fHasFrame = false;
 	fOpened = false;
 	fDuration = 0;
+	{
+		BAutolock locker(fStatsLock);
+		fHasStats = false;
+	}
 	fRing.clear();
 	fRingRead = fRingFill = 0;
 }
@@ -489,6 +493,17 @@ Player::_Clock() const
 	if (fPaused)
 		return fPausedClock;
 	return fClockBase + system_time() - fClockStart;
+}
+
+
+bool
+Player::Statistics(PlayerStatistics& stats) const
+{
+	BAutolock locker(fStatsLock);
+	if (!fHasStats || !fOpened)
+		return false;
+	stats = fStats;
+	return true;
 }
 
 
