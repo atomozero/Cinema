@@ -447,6 +447,22 @@ SLOW_MACHINE = platform.machine().lower().startswith("arm")
 HEIGHT = [0]
 
 
+# what the JavaScript of the web client of YouTube needs on the AC100 with
+# yt-dlp and QuickJS, at its peak: more than 100 MB, a few minutes; with
+# less free, the 512 MB of the machine ran out and it stopped answering
+JS_MEMORY = 160 * 1024 * 1024
+# one at a time there
+JS_LOCK = threading.Lock()
+
+
+def free_memory():
+	"""The memory free now, in bytes, or None when it is not known."""
+	try:
+		return os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+	except (ValueError, OSError, AttributeError):
+		return None
+
+
 def wanted_height():
 	return HEIGHT[0] or (360 if SLOW_MACHINE else 720)
 
@@ -856,7 +872,16 @@ class YouTubeProvider(Provider):
 	def find(self, media_id, kind="video"):
 		url = "https://www.youtube.com/watch?v=" + media_id
 		if wanted_height() > 360:
-			found = self.find_separate(url, wanted_height())
+			found = None
+			if not SLOW_MACHINE:
+				found = self.find_separate(url, wanted_height())
+			else:
+				with JS_LOCK:
+					free = free_memory()
+					if free is None or free >= JS_MEMORY:
+						found = self.find_separate(url, wanted_height())
+					# else 360p, which needs no JavaScript, rather than the
+					# machine stopping
 			if found:
 				return found
 		kept = kept_stream(media_id)
@@ -965,7 +990,9 @@ class YouTubeProvider(Provider):
 			outtmpl=os.path.join(folder,
 				"%(title).150B [%(id)s].%(ext)s"),
 			extractor_args={"youtube": {"player_client": ["android"]}})
-		if download_height() > 360 and shutil.which("ffmpeg"):
+		free = free_memory() if SLOW_MACHINE else None
+		if download_height() > 360 and shutil.which("ffmpeg") \
+				and (free is None or free >= JS_MEMORY):
 			# above 360p, the picture and the sound that ffmpeg puts
 			# together; the single file if they cannot be had
 			better = dict(options, format=self.separate(download_height())
