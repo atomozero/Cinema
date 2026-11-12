@@ -41,11 +41,13 @@ volume, shown upright at the right, **F** goes to full screen, **Esc** closes
 the video and **M** plays it in MediaPlayer instead. Subtitles come from
 YouTube, from a subtitle file next to the video, or from the text tracks inside
 it: the **CC** button chooses one and **V** turns them on and off. The star
-next to it, or **S**, keeps the video among the favorites. On 32-bit ARM
-Cinema shows videos through the video overlay of the graphics card, which
-spares the processor; on x86 it draws them itself unless you turn the overlay
-on in the settings, as some drivers accept one and show only its green
-background. **O** switches it while a video plays. The video
+next to it, or **S**, keeps the video among the favorites. Cinema shows
+videos through the video overlay of the graphics card where it works, which
+spares the processor. As some drivers accept an overlay and show only its
+green background, on a graphics card it does not know Cinema asks once, over
+the first video, whether you can see it, and keeps the answer. **O** switches
+the overlay while a video plays, and the settings can keep it always on or
+off. The video
 quality is in the settings: Automatic means 360p on 32-bit ARM and 720p
 elsewhere, and you can ask for anything from 360p to 1080p. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for
@@ -76,7 +78,9 @@ show in the **Downloaded** tab, which works without the network; a downloaded
 video plays from its file wherever it appears. Paste a magnet link in the
 search field, or drop a `.torrent` file on the window, and the biggest video it
 shares is downloaded with `aria2c` into the same tab, where you can follow and
-stop it; a stopped or interrupted download picks up where it was. Use it for
+stop it. It plays while it downloads: its pieces come in order, and Cinema
+starts it as soon as the first ones are there (a link with `xs=`, the address
+of its `.torrent`, starts in a few seconds); a stopped or interrupted download picks up where it was. Use it for
 what you may share, such as the films of the Blender Foundation or the torrents
 of the Internet Archive. **S** or a right click gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.

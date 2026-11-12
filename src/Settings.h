@@ -8,12 +8,21 @@
 
 #include <String.h>
 
+#include <vector>
+
 
 /*!	What the settings window changes, kept in the settings folder
 	(Cinema/settings). The key of TMDB has a file of its own
 	(Cinema/tmdb_key), which the helper reads; the folders of the library
 	are the local tabs of the categories file.
 */
+enum {
+	kOverlayAutomatic = 0,
+	kOverlayAlways = 1,
+	kOverlayNever = 2
+};
+
+
 struct Settings {
 	bool		playInCinema;	// or in MediaPlayer
 	bool		resume;			// from where it was left
@@ -27,25 +36,15 @@ struct Settings {
 								// empty for the languages of the system
 	bool		evenVolume;		// films and TV brought to the level of
 								// music, without jumps (Loudness)
-	bool		overlay;		// the video overlay of the graphics card,
-								// where it has one: off where it shows
-								// only its key color, green. On by default
-								// on ARM, where the AC100's works and the
-								// processor needs it; off on x86, where
-								// some drivers accept it and show nothing
+	int32		overlayChoice;	// the video overlay of the graphics card:
+								// kOverlayAutomatic, kOverlayAlways or
+								// kOverlayNever
+	std::vector<BString> overlayWorks;	// graphics cards where it was
+	std::vector<BString> overlayFails;	// seen to work, or not to
 
 				Settings() : playInCinema(true), resume(true),
 					videoHeight(0), tvOffered(false), volume(1.0f),
-					evenVolume(true), overlay(OverlayByDefault()) {}
-
-	static	bool		OverlayByDefault()
-						{
-#if defined(__arm__) || defined(__aarch64__)
-							return true;
-#else
-							return false;
-#endif
-						}
+					evenVolume(true), overlayChoice(0) {}
 
 	static	Settings	Load();
 			void		Save() const;

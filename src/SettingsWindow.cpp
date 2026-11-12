@@ -170,13 +170,26 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		"films and TV as loud as music"), new BMessage(kMsgEvenVolume));
 	fEvenVolume->SetValue(fSettings.evenVolume);
 	fEvenVolume->SetEnabled(fSettings.playInCinema);
-	fOverlay = new BCheckBox("overlay", B_TRANSLATE("Use the video overlay "
-		"of the graphics card"), new BMessage(kMsgOverlay));
-	fOverlay->SetValue(fSettings.overlay);
+	BPopUpMenu* overlays = new BPopUpMenu("overlays");
+	const char* overlayLabels[] = { B_TRANSLATE("Automatic"),
+		B_TRANSLATE("Always"), B_TRANSLATE("Never") };
+	for (int32 i = 0; i < 3; i++) {
+		BMessage* message = new BMessage(kMsgOverlay);
+		message->AddInt32("choice", i);
+		BMenuItem* item = new BMenuItem(overlayLabels[i], message);
+		item->SetMarked(i == fSettings.overlayChoice);
+		overlays->AddItem(item);
+	}
+	if (overlays->FindMarked() == NULL)
+		overlays->ItemAt(0)->SetMarked(true);
+	Style::ScaleMenu(overlays);
+	fOverlay = new BMenuField("overlay", B_TRANSLATE("Video overlay:"),
+		overlays);
 	fOverlay->SetEnabled(fSettings.playInCinema);
 	BStringView* overlayNote = new BStringView("overlay note",
-		B_TRANSLATE("Turn it off if videos show only a green background (or "
-			"press O while one plays)."));
+		B_TRANSLATE("Automatic asks once, on a graphics card it does not "
+			"know, whether you see the video. O switches it while one "
+			"plays."));
 
 	// how big the pictures of YouTube and PeerTube are
 	BPopUpMenu* qualities = new BPopUpMenu("qualities");
@@ -358,7 +371,7 @@ SettingsWindow::_Changed()
 	saved.searchSource = fSettings.searchSource;
 	saved.videoHeight = fSettings.videoHeight;
 	saved.evenVolume = fSettings.evenVolume;
-	saved.overlay = fSettings.overlay;
+	saved.overlayChoice = fSettings.overlayChoice;
 	fSettings = saved;
 	fSettings.Save();
 	fTarget.SendMessage(kMsgSettingsChanged);
@@ -484,7 +497,8 @@ SettingsWindow::MessageReceived(BMessage* message)
 			_Changed();
 			break;
 		case kMsgOverlay:
-			fSettings.overlay = fOverlay->Value() == B_CONTROL_ON;
+			fSettings.overlayChoice = message->GetInt32("choice",
+				kOverlayAutomatic);
 			_Changed();
 			break;
 		case kMsgEvenVolume:

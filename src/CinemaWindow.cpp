@@ -157,7 +157,7 @@ CinemaWindow::CinemaWindow()
 	fPlayer = new Player(BMessenger(this));
 	// as it was left the last time
 	fPlayer->SetVolume(fSettings.volume);
-	fPlayer->SetOverlayAllowed(fSettings.overlay);
+	fPlayer->SetOverlayAllowed(_OverlayDecision() != 0);
 	fPlayer->SetNormalized(fSettings.evenVolume);
 	fPlayer->SetSubtitlePreference(fSettings.subtitleLanguage.String());
 	fPlayerView = new PlayerView(fPlayer);
@@ -207,7 +207,10 @@ CinemaWindow::CinemaWindow()
 	if (be_app->GetAppInfo(&info) == B_OK
 		&& script.SetTo(&info.ref) == B_OK && script.GetParent(&script) == B_OK)
 		script.Append("cinema-helper.py");
-	fHelper->SetHeight(fSettings.videoHeight);
+	// CINEMA_VIDEO_HEIGHT=720, say: that size for this run, to try it
+	// without changing the settings
+	const char* height = getenv("CINEMA_VIDEO_HEIGHT");
+	fHelper->SetHeight(height != NULL ? atoi(height) : fSettings.videoHeight);
 	fHelper->Start(script.Path(), fWorker->Cache());
 	Watchdog::Start(fWorker->Cache(), BMessenger(this));
 
@@ -234,6 +237,7 @@ CinemaWindow::~CinemaWindow()
 	Watchdog::Enter('quit');
 	delete fGamepad;
 	delete fPrefetchRunner;
+	delete fOverlayAsker;
 	delete fPlayerSaver;
 	delete fDirectRunner;
 	fDirectRunner = NULL;
@@ -481,15 +485,141 @@ CinemaWindow::_AddChannel(const char* name, const char* id)
 /*!	The tabs changed: the shelves of the home, which know them by their
 	place, are made again, now or when the page of a video over them closes.
 */
+/*!	The pictures of a video cost more than this processor has: a video of
+	YouTube is found again a size smaller, 720p for 1080p and so on down to
+	360p, and goes on from where it is once found, the old one playing
+	meanwhile. Not a file, nor TV: they have one size only.
+*/
+void
+CinemaWindow::_LowerQuality(int32 height)
+{
+	if (!fPlayerShown || fPlayingId.IsEmpty() || fPlayingKind == "live"
+		|| _ProviderOf(fPlayingId) != "youtube"
+		|| fFinding.count(fPlayingId) > 0)
+		return;
+	static const int32 kSizes[] = { 720, 480, 360 };
+	int32 smaller = 0;
+	for (int32 size : kSizes) {
+		if (size < height) {
+			smaller = size;
+			break;
+		}
+	}
+	if (smaller == 0)
+		return;
+	_SavePosition();
+	fOpenAt = fPlayer->Position();
+	fLowered = fPlayingId;
+	fStreams.erase(fPlayingId);
+	fHelper->SetHeight(smaller);
+	fWaiting = fPlayingId;
+	fWaitingTitle = fPlayingTitle;
+	_Find(fPlayingId);
+}
+
+
 /*!	The overlay as the settings want it, on the video playing too: its view
 	gives up the key color first.
 */
 void
 CinemaWindow::_ApplyOverlay()
 {
-	if (!fSettings.overlay && fPlayer->Overlay() != NULL)
+	int32 decision = _OverlayDecision();
+	bool allowed = decision != 0;
+	fAskOverlay = decision == 2;
+	if (!fAskOverlay)
+		fPlayerView->SetOverlayQuestion(NULL);
+	if (!allowed && fPlayer->Overlay() != NULL)
 		fPlayerView->ClearOverlay();
-	fPlayer->SetOverlayAllowed(fSettings.overlay);
+	fPlayer->SetOverlayAllowed(allowed);
+}
+
+
+/*!	The graphics card, as its driver names it: "NVIDIA Tegra 2 (Tegra20 DC)".
+*/
+BString
+CinemaWindow::_OverlayCard() const
+{
+	BScreen screen(const_cast<CinemaWindow*>(this));
+	accelerant_device_info info;
+	BString card;
+	if (screen.GetDeviceInfo(&info) == B_OK) {
+		card.SetTo(info.name, sizeof(info.name));
+		BString chipset;
+		chipset.SetTo(info.chipset, sizeof(info.chipset));
+		if (!chipset.IsEmpty() && chipset != card)
+			card << " (" << chipset << ")";
+	}
+	return card;
+}
+
+
+/*!	Whether to use the overlay: 1 yes, 0 no, 2 yes and ask whether the video
+	shows. The screen cannot tell: the overlay is put over the picture as it
+	goes out, after what app_server sees, and some drivers accept one and
+	show only its key color.
+*/
+int32
+CinemaWindow::_OverlayDecision() const
+{
+	// CINEMA_ASK_OVERLAY=1 asks on any card, to try the question
+	const char* ask = getenv("CINEMA_ASK_OVERLAY");
+	if (ask != NULL && strcmp(ask, "1") == 0)
+		return 2;
+	if (fSettings.overlayChoice == kOverlayAlways)
+		return 1;
+	if (fSettings.overlayChoice == kOverlayNever)
+		return 0;
+	BString card = _OverlayCard();
+	for (const BString& failed : fSettings.overlayFails) {
+		if (failed == card)
+			return 0;
+	}
+	for (const BString& works : fSettings.overlayWorks) {
+		if (works == card)
+			return 1;
+	}
+	// the drivers seen to show it, and those seen not to
+	static const char* kWorks[] = { "Tegra" };
+	static const char* kFails[] = { NULL };
+	for (const char* name : kWorks) {
+		if (name != NULL && card.FindFirst(name) >= 0)
+			return 1;
+	}
+	for (const char* name : kFails) {
+		if (name != NULL && card.FindFirst(name) >= 0)
+			return 0;
+	}
+#if defined(__arm__) || defined(__aarch64__)
+	// a slow processor needs it, and the ARM boards have shown it
+	return 1;
+#else
+	return card.IsEmpty() ? 0 : 2;
+#endif
+}
+
+
+/*!	What was seen on this graphics card, for the next times. */
+void
+CinemaWindow::_RememberOverlay(bool works)
+{
+	BString card = _OverlayCard();
+	if (card.IsEmpty())
+		return;
+	Settings saved = Settings::Load();
+	for (std::vector<BString>* list : { &saved.overlayWorks,
+			&saved.overlayFails }) {
+		for (size_t i = 0; i < list->size(); i++) {
+			if ((*list)[i] == card) {
+				list->erase(list->begin() + i);
+				break;
+			}
+		}
+	}
+	(works ? saved.overlayWorks : saved.overlayFails).push_back(card);
+	saved.Save();
+	fSettings.overlayWorks = saved.overlayWorks;
+	fSettings.overlayFails = saved.overlayFails;
 }
 
 
@@ -1104,16 +1234,42 @@ CinemaWindow::MessageReceived(BMessage* message)
 			_ShowChannel(message->GetString("channel", ""),
 				message->GetString("channel id", ""));
 			break;
+		case kMsgPlayerStruggling:
+		{
+			// of a video closed since: nothing to do with this one
+			if (message->GetInt32("session", -1) != fPlayer->Session())
+				break;
+			_LowerQuality(message->GetInt32("height", 0));
+			break;
+		}
+		case kMsgAddTorrent:
+			_AddTorrent(message->GetString("source", ""));
+			break;
 		case kMsgToggleOverlay:
 		{
-			// kept for the next videos and the next time Cinema starts
-			Settings saved = Settings::Load();
-			saved.overlay = !fPlayer->IsOverlayAllowed();
-			saved.Save();
-			fSettings.overlay = saved.overlay;
+			// the O key: the overlay used shows nothing, or the one not used
+			// is wanted; kept for this graphics card, in the automatic way
+			bool works = !fPlayer->IsOverlayAllowed();
+			_RememberOverlay(works);
+			if (fSettings.overlayChoice != kOverlayAutomatic) {
+				Settings saved = Settings::Load();
+				saved.overlayChoice = kOverlayAutomatic;
+				saved.Save();
+				fSettings.overlayChoice = kOverlayAutomatic;
+			}
 			_ApplyOverlay();
 			break;
 		}
+		case kMsgAskOverlay:
+			// a few seconds of the overlay: is the video there?
+			if (fAskOverlay && fPlayerShown && fPlayer->Overlay() != NULL)
+				fPlayerView->SetOverlayQuestion(_OverlayCard().String());
+			break;
+		case kMsgOverlayAnswer:
+			_RememberOverlay(message->GetBool("works", true));
+			fPlayerView->SetOverlayQuestion(NULL);
+			_ApplyOverlay();
+			break;
 		case kMsgFollowChannel:
 		{
 			BString id = message->GetString("channel id", "");
@@ -1369,6 +1525,13 @@ CinemaWindow::MessageReceived(BMessage* message)
 				break;
 			fPlayerView->SetOpened(true);
 			fPlayerView->SetOverlay(fPlayer->Overlay());
+			if (fAskOverlay && fPlayer->Overlay() != NULL) {
+				// asked once the video had time to show
+				delete fOverlayAsker;
+				BMessage ask(kMsgAskOverlay);
+				fOverlayAsker = new BMessageRunner(BMessenger(this), &ask,
+					4000000, 1);
+			}
 			fPlayerView->RefreshSubtitles();
 			if (fFullScreen)
 				_DirectSync();
@@ -1653,6 +1816,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 		{
 			BString id = message->GetString("id", "");
 			fFinding.erase(id);
+			// the next videos at the size of the settings again
+			if (id == fLowered)
+				fHelper->SetHeight(fSettings.videoHeight);
 			Stream stream = { message->GetString("url", ""), system_time() };
 			fStreams[id] = stream;
 			if (id == fWaiting) {
@@ -1669,6 +1835,8 @@ CinemaWindow::MessageReceived(BMessage* message)
 		{
 			BString id = message->GetString("id", "");
 			fFinding.erase(id);
+			if (id == fLowered)
+				fHelper->SetHeight(fSettings.videoHeight);
 			if (id == fWanted)
 				fWanted = "";
 			if (id == fWaiting) {
@@ -2378,6 +2546,11 @@ CinemaWindow::_AddTorrent(const char* source)
 	_Download(&download);
 	// where it can be followed, and stopped
 	_ShowDownloads();
+	// and watched meanwhile: the helper plays it as its pieces come, in
+	// order, from the start
+	BMessage play(download);
+	play.what = kMsgPlay;
+	PostMessage(&play);
 }
 
 
@@ -2623,7 +2796,12 @@ CinemaWindow::_OpenPlayer(const char* address, const char* title,
 	fPlayerView->MakeFocus(true);
 	// the overlay of the video before goes before its bitmap
 	fPlayerView->ClearOverlay();
-	fPlayer->Open(address, fSettings.resume ? Positions::ResumeAt(id) : 0);
+	// a video of YouTube made smaller goes on from where it was
+	bigtime_t at = fSettings.resume ? Positions::ResumeAt(id) : 0;
+	if (fOpenAt >= 0 && fLowered == id)
+		at = fOpenAt;
+	fOpenAt = -1;
+	fPlayer->Open(address, at);
 	fPlayerView->RefreshSubtitles();
 
 	fSubtitlesAsked.clear();

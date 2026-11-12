@@ -1,7 +1,8 @@
-1	korean	application/x-vnd.atomozero-Cinema	2681905046
+1	korean	application/x-vnd.atomozero-Cinema	1244004174
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
+Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
 full documentary	Categories		다큐멘터리 전편
 Search first in:	Settings		먼저 검색할 곳:
 Add to favorites	Grid		즐겨찾기에 추가
@@ -9,12 +10,14 @@ OK	Window		확인
 Add this channel to the tabs	Categories		이 채널을 탭에 추가
 Play	Grid		재생
 Video downloaded	Window		동영상 다운로드 완료
+Video overlay:	Settings		비디오 오버레이:
 Getting the video ready	Grid		동영상 준비 중
 today	Detail		오늘
 Downloading…	Detail		다운로드 중…
 Settings…	Window		설정…
 Add to the tabs	Grid		탭에 추가
 No subtitles	Player		자막 없음
+Yes	Player		예
 Library	Settings		라이브러리
 Cinema settings	Settings		Cinema 설정
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 다운로드에는 aria2c가 필요하지만 설치되어 있지 않습니다.
@@ -43,6 +46,7 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		키
 Above 360p, YouTube takes longer to start.	Settings		360p보다 높으면 YouTube 시작이 더 오래 걸립니다.
 Downloading…	Grid		다운로드 중…
 Stop the download	Grid		다운로드 중지
+No	Player		아니요
 Search	Window		검색
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# 또는 이름 = @iptv channel:<M3U 목록 주소> (TV 채널)
 official music video	Categories		공식 뮤직비디오
@@ -62,10 +66,9 @@ No subtitles available	Player		사용 가능한 자막 없음
 Move \"%title%\" to the Trash?	Window		'%title%'을(를) 휴지통으로 이동할까요?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#년 전}}
 Show the latest videos	Grid		최신 동영상 보기
-Music	Categories		음악
 The key works.	Settings		키가 작동합니다.
+Music	Categories		음악
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube, Internet Archive, PeerTube, BitTorrent 및 내 폴더의 동영상을 보는 Haiku와 RenkuOS용 앱.
-Use the video overlay of the graphics card	Settings		그래픽 카드의 비디오 오버레이 사용
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema를 사용하려면 yt-dlp와 python3, 그리고 같은 위치의 cinema-helper.py가 필요합니다
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#일 전}}
 Even volume: films and TV as loud as music	Settings		균일한 음량: 영화와 TV를 음악만큼 크게
@@ -73,12 +76,12 @@ Download	Detail		다운로드
 Remove	Settings		제거
 Downloaded	Window		다운로드한 동영상
 Add	Settings		추가
+Always	Settings		항상
 Remove from the tabs	Categories		탭에서 제거
 Choose…	Settings		선택…
 news today	Categories		오늘의 뉴스
 Move to Trash	Detail		휴지통으로 이동
 Get a key…	Settings		키 받기…
-Turn it off if videos show only a green background (or press O while one plays).	Settings		동영상이 초록색 배경만 보이면 끄세요 (또는 재생 중에 O를 누르세요).
 %peers% sources	Window		소스 %peers%개
 M3U list:	Settings		M3U 목록:
 %views% views	Detail		조회수 %views%회
@@ -93,6 +96,7 @@ Details	Grid		세부 정보
 forced	Subtitles		강제
 Already downloaded	Grid		이미 다운로드됨
 Go on from where a video was left	Settings		멈춘 곳부터 동영상 이어서 보기
+Never	Settings		사용 안 함
 Search	Settings		검색
 Type what to look for at the top right	Window		오른쪽 위에 찾을 내용을 입력하세요
 Cinema	System name		Cinema
@@ -115,6 +119,7 @@ automatic	Player		자동 생성
 Automatic	Settings		자동
 No videos downloaded yet: right click a video, or press D	Window		다운로드한 동영상이 없습니다. 동영상을 오른쪽 클릭하거나 D를 누르세요
 Favorites	Window		즐겨찾기
+Can you see the video?	Player		동영상이 보이나요?
 Home	Categories		홈
 Checking…	Settings		확인 중…
 About Cinema	Window		Cinema 정보

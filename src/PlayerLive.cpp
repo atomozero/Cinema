@@ -368,10 +368,19 @@ Player::_OpenLive()
 			? "Cinema (Haiku)" : live.agent.String(), 0);
 		if (!live.referrer.IsEmpty())
 			av_dict_set(&options, "referer", live.referrer.String(), 0);
-		av_dict_set(&options, "rw_timeout", "15000000", 0);
-		av_dict_set(&options, "reconnect", "1", 0);
-		av_dict_set(&options, "reconnect_streamed", "1", 0);
-		av_dict_set(&options, "reconnect_on_network_error", "1", 0);
+		// a torrent the helper serves as it downloads waits for its pieces:
+		// minutes, rather than the 15 seconds of a server gone quiet
+		av_dict_set(&options, "rw_timeout",
+			live.url.StartsWith("http://localhost:") ? "600000000" : "15000000",
+			0);
+		// not to the relay of the helper: asked again, it would start the
+		// video over from where it was opened, the picture waiting for a
+		// time gone by; the window finds it again instead
+		if (!fRelay) {
+			av_dict_set(&options, "reconnect", "1", 0);
+			av_dict_set(&options, "reconnect_streamed", "1", 0);
+			av_dict_set(&options, "reconnect_on_network_error", "1", 0);
+		}
 		int status = avformat_open_input(&format, live.url.String(), NULL,
 			&options);
 		av_dict_free(&options);
@@ -426,6 +435,9 @@ Player::_OpenLive()
 	if (fLiveAudio == NULL)
 		fLiveAudioIndex = -1;
 	fLiveLate = fLiveOnTime = 0;
+	fLiveStarveSince = 0;
+	fLiveKeyWait = 10000000;
+	fStruggleSent = false;
 	_LiveSkip(kSlowProcessor ? 1 : 0);
 
 	// the pictures
@@ -673,11 +685,74 @@ Player::_LiveSkip(int level)
 {
 	if (fLiveVideo == NULL)
 		return;
-	fLiveSkipLevel = std::max(0, std::min(2, level));
+	level = std::max(0, std::min(3, level));
+	if (level != fLiveSkipLevel)
+		fLiveLevelSince = system_time();
+	fLiveSkipLevel = level;
 	fLiveVideo->skip_loop_filter = fLiveSkipLevel >= 1
 		? AVDISCARD_ALL : AVDISCARD_DEFAULT;
-	fLiveVideo->skip_frame = fLiveSkipLevel >= 2
-		? AVDISCARD_NONREF : AVDISCARD_DEFAULT;
+	fLiveVideo->skip_frame = fLiveSkipLevel >= 3 ? AVDISCARD_NONKEY
+		: fLiveSkipLevel >= 2 ? AVDISCARD_NONREF : AVDISCARD_DEFAULT;
+	// too much for this machine: the window may want less of it
+	if (fLiveSkipLevel >= 3)
+		_Struggling();
+}
+
+
+/*!	The pictures cost more than this machine has: told once to the window,
+	which plays a video of YouTube at a smaller size then.
+*/
+void
+Player::_Struggling()
+{
+	if (fStruggleSent.exchange(true))
+		return;
+	BMessage struggling(kMsgPlayerStruggling);
+	struggling.AddInt32("height", fLiveVideo != NULL ? fLiveVideo->height : 0);
+	_Tell(&struggling);
+}
+
+
+/*!	Each turn of the loop: the sound running out while the pictures are
+	decoded means the processor cannot keep up, as the clock follows the
+	sound and the pictures seem on time; then only the key frames, the sound
+	whole. After a while there, the frames that are referred to again, a
+	longer while each time it was too much.
+*/
+void
+Player::_LiveLoad()
+{
+	if (fLiveVideo == NULL || _LiveClock() - fClockBase < kSettling)
+		return;
+	bigtime_t now = system_time();
+	// the sound player found the ring empty in the last second
+	int32 underruns = fSoundUnderruns;
+	if (underruns != fLiveUnderrunsSeen) {
+		fLiveUnderrunsSeen = underruns;
+		fLiveUnderrunAt = now;
+	}
+	bool starving = now - fLiveUnderrunAt < 1000000;
+	if (!starving || fLiveSkipLevel < 2)
+		fLiveStarveSince = 0;
+	else if (fLiveStarveSince == 0)
+		fLiveStarveSince = now;
+	if (fLiveSkipLevel == 2 && fLiveStarveSince != 0
+		&& now - fLiveStarveSince > 3000000) {
+		fLiveStarveSince = 0;
+		_LiveSkip(3);
+		return;
+	}
+	if (fLiveSkipLevel == 2 && now - fLiveLevelSince > 15000000)
+		_Struggling();
+	// CINEMA_FORCE_STRUGGLE=1: as if the processor could not keep up, 20 s
+	// in, to try what follows on a machine that can
+	static const bool force = getenv("CINEMA_FORCE_STRUGGLE") != NULL;
+	if (force && _LiveClock() - fClockBase > 20000000)
+		_Struggling();
+	if (fLiveSkipLevel == 3 && now - fLiveLevelSince > fLiveKeyWait) {
+		fLiveKeyWait = std::min(fLiveKeyWait * 2, (bigtime_t)60000000);
+		_LiveSkip(2);
+	}
 }
 
 
@@ -701,7 +776,9 @@ Player::_LiveLateness(bool late)
 		}
 	} else {
 		fLiveLate = 0;
-		if (++fLiveOnTime >= 60 && fLiveSkipLevel > base) {
+		// from the key frames only, the time says when to try again
+		if (++fLiveOnTime >= 60 && fLiveSkipLevel > base
+			&& fLiveSkipLevel < 3) {
 			_LiveSkip(fLiveSkipLevel - 1);
 			fLiveOnTime = 0;
 		}
@@ -934,8 +1011,12 @@ Player::_LiveLoop()
 	// pictures has the clock go on without it, two seconds of nothing
 	// later, or the pictures would wait for it and the reading for them
 	bigtime_t lastSound = system_time();
+	// packets of sound read and not handled yet: with them waiting, the
+	// sound is not over, only late, on a processor that cannot keep up
+	std::atomic<int32> soundQueued(0);
 	auto soundOver = [&]() {
-		if (audio < 0 || fAudioEnded || system_time() - lastSound < 2000000)
+		if (audio < 0 || fAudioEnded || system_time() - lastSound < 2000000
+			|| soundQueued > 0)
 			return;
 		BAutolock ring(fRingLock);
 		if (fRingFill == 0)
@@ -1141,6 +1222,8 @@ Player::_LiveLoop()
 			}
 			AVPacket* copy = av_packet_alloc();
 			av_packet_move_ref(copy, got);
+			if (copy->stream_index == audio)
+				soundQueued++;
 			std::lock_guard<std::mutex> locker(readLock);
 			read.push_back(copy);
 		}
@@ -1162,6 +1245,8 @@ Player::_LiveLoop()
 			if (!read.empty()) {
 				next = read.front();
 				read.pop_front();
+				if (next->stream_index == audio)
+					soundQueued--;
 			}
 			ended = next == NULL && readEnded;
 		}
@@ -1274,6 +1359,11 @@ Player::_LiveLoop()
 		if (started && video >= 0 && queuedSpan() >= maxQueuedVideo)
 			soundOver();
 
+		// a processor that cannot keep up: the sound runs out while the
+		// pictures are decoded
+		if (started && video >= 0 && audio >= 0 && !fAudioEnded)
+			_LiveLoad();
+
 		// without sound nothing else paces the reading
 		if (!failed && video >= 0 && frames.size() >= maxDecodedFrames
 			&& queuedSpan() >= maxQueuedVideo && !showFrames(true))
@@ -1304,7 +1394,8 @@ Player::_LiveLoop()
 	}
 	// a video from the network that stopped halfway is not over: the
 	// window finds it again, or says so
-	bool broken = readFailed && !fLive && fAddress.ByteAt(0) != '/'
+	// (the relay ends its stream without saying why)
+	bool broken = (readFailed || fRelay) && !fLive && fAddress.ByteAt(0) != '/'
 		&& fDuration > 0 && Position() < fDuration - 5000000;
 	if (!fQuit && !fEndSent.exchange(true))
 		_Tell((started || !failed) && !broken ? kMsgPlayerEnded

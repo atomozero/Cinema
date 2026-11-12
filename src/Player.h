@@ -164,6 +164,8 @@ private:
 			int					_LiveVideoStream(int32 maxHeight);
 			void				_LiveSkip(int level);
 			void				_LiveLateness(bool late);
+			void				_LiveLoad();
+			void				_Struggling();
 			bool				_LiveRender(AVFrame* frame);
 			void				_LiveQueueSound(const void* data,
 									size_t bytes);
@@ -212,6 +214,13 @@ private:
 			int					fLiveSkipLevel;
 			int					fLiveLate;
 			int					fLiveOnTime;
+			bigtime_t			fLiveLevelSince = 0;
+			bigtime_t			fLiveStarveSince = 0;
+			bigtime_t			fLiveKeyWait = 10000000;
+			std::atomic<int32>	fSoundUnderruns{0};
+			int32				fLiveUnderrunsSeen = 0;
+			bigtime_t			fLiveUnderrunAt = 0;
+			std::atomic<bool>	fStruggleSent{false};
 			int					fLivePixels;	// AVPixelFormat of the bitmaps
 			int64				fLiveBase;		// stream time of the clock's 0
 			int64				fLiveSoundEnd;	// stream time of the sound queued

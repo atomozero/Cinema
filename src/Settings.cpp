@@ -69,10 +69,15 @@ Settings::Load()
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
 	settings.evenVolume = archive.GetBool("even volume", true);
-	// a key of its own since 1.4.3: 1.4.2 saved "overlay" on for all, and
-	// x86 is off by default now
-	settings.overlay = archive.GetBool("use overlay",
-		Settings::OverlayByDefault());
+	settings.overlayChoice = archive.GetInt32("overlay choice",
+		kOverlayAutomatic);
+	const char* card;
+	for (int32 i = 0; archive.FindString("overlay works", i, &card) == B_OK;
+			i++)
+		settings.overlayWorks.push_back(card);
+	for (int32 i = 0; archive.FindString("overlay fails", i, &card) == B_OK;
+			i++)
+		settings.overlayFails.push_back(card);
 	return settings;
 }
 
@@ -92,7 +97,11 @@ Settings::Save() const
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);
 	archive.AddBool("even volume", evenVolume);
-	archive.AddBool("use overlay", overlay);
+	archive.AddInt32("overlay choice", overlayChoice);
+	for (const BString& card : overlayWorks)
+		archive.AddString("overlay works", card);
+	for (const BString& card : overlayFails)
+		archive.AddString("overlay fails", card);
 	write_file(path, &archive, NULL);
 }
 

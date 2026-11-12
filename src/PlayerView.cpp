@@ -190,6 +190,7 @@ PlayerView::Start(const char* title)
 	fSubtitleWidth = -1;
 	fSubtitleHeight = -1;
 	fSubtitleControls = false;
+	fAsking = false;
 	_ShowControls();
 	Invalidate();
 }
@@ -459,6 +460,7 @@ PlayerView::Draw(BRect updateRect)
 		_DrawSubtitle(this);
 		if (fControls || fPlayer->IsPaused())
 			_DrawControls(this);
+		_DrawQuestion(this);
 		return;
 	}
 
@@ -488,6 +490,88 @@ PlayerView::Draw(BRect updateRect)
 	}
 	if (fControls || fPlayer->IsPaused() || picture == NULL)
 		_DrawControls(this);
+	_DrawQuestion(this);
+}
+
+
+/*!	Asked once, on a graphics card Cinema does not know: does the video show
+	through its overlay, or only the green of its key color? The answer
+	comes as kMsgOverlayAnswer. NULL takes the question away.
+*/
+void
+PlayerView::SetOverlayQuestion(const char* card)
+{
+	bool asking = card != NULL;
+	if (asking == fAsking && (!asking || fCard == card))
+		return;
+	if (fAsking)
+		Invalidate(_QuestionFrame());
+	fAsking = asking;
+	fCard = card != NULL ? card : "";
+	if (fAsking)
+		Invalidate(_QuestionFrame());
+}
+
+
+BRect
+PlayerView::_QuestionFrame() const
+{
+	BRect bounds = Bounds();
+	BFont font = Font(16, true);
+	BFont small = Font(13);
+	float width = std::max(font.StringWidth(B_TRANSLATE("Can you see the "
+		"video?")), small.StringWidth(fCard.String()));
+	width = std::min(bounds.Width() - S(32), std::max(width, S(220)) + S(40));
+	float top = bounds.top + S(kBaseTitleHeight) + S(16);
+	float left = bounds.left + roundf((bounds.Width() - width) / 2);
+	return BRect(left, top, left + width, top + S(118));
+}
+
+
+BRect
+PlayerView::_YesFrame() const
+{
+	BRect frame = _QuestionFrame();
+	float middle = (frame.left + frame.right) / 2;
+	return BRect(middle - S(8) - S(90), frame.bottom - S(46),
+		middle - S(8), frame.bottom - S(14));
+}
+
+
+BRect
+PlayerView::_NoFrame() const
+{
+	BRect frame = _QuestionFrame();
+	float middle = (frame.left + frame.right) / 2;
+	return BRect(middle + S(8), frame.bottom - S(46), middle + S(8) + S(90),
+		frame.bottom - S(14));
+}
+
+
+void
+PlayerView::_DrawQuestion(BView* target)
+{
+	if (!fAsking)
+		return;
+	BRect frame = _QuestionFrame();
+	FillRound(target, frame, S(10), (rgb_color){ 20, 20, 24, 235 });
+	BFont font = Font(16, true);
+	BFont small = Font(13);
+	font_height height;
+	font.GetHeight(&height);
+	DrawCentered(target, B_TRANSLATE("Can you see the video?"),
+		BRect(frame.left, frame.top + S(12), frame.right,
+			frame.top + S(36)), font, kText);
+	BString card(fCard);
+	small.TruncateString(&card, B_TRUNCATE_MIDDLE, frame.Width() - S(24));
+	DrawCentered(target, card.String(), BRect(frame.left, frame.top + S(38),
+		frame.right, frame.top + S(58)), small, kTextDim);
+	FillRound(target, _YesFrame(), S(8), kAccent);
+	DrawCentered(target, B_TRANSLATE("Yes"), _YesFrame(), Font(14, true),
+		kText);
+	FillRound(target, _NoFrame(), S(8), (rgb_color){ 60, 60, 66, 255 });
+	DrawCentered(target, B_TRANSLATE("No"), _NoFrame(), Font(14, true),
+		kText);
 }
 
 
@@ -895,6 +979,16 @@ PlayerView::MouseDown(BPoint where)
 	int32 clicks = 1;
 	if (Window()->CurrentMessage() != NULL)
 		Window()->CurrentMessage()->FindInt32("clicks", &clicks);
+
+	if (fAsking && _QuestionFrame().Contains(where)) {
+		bool yes = _YesFrame().Contains(where);
+		if (yes || _NoFrame().Contains(where)) {
+			BMessage answer(kMsgOverlayAnswer);
+			answer.AddBool("works", yes);
+			Window()->PostMessage(&answer);
+		}
+		return;
+	}
 
 	if ((fControls || fPlayer->IsPaused())
 		&& _SubtitleButtonFrame().Contains(where)) {

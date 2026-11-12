@@ -39,6 +39,15 @@ public:
 				continue;
 			}
 			BString address(argv[i]);
+			// a magnet link, or the address or path of a .torrent: downloaded,
+			// and played while it comes
+			if (address.IStartsWith("magnet:")
+				|| address.IEndsWith(".torrent")) {
+				BMessage torrent(kMsgAddTorrent);
+				torrent.AddString("source", address);
+				_Window()->PostMessage(&torrent);
+				continue;
+			}
 			// a live address too, which plays with FFmpeg: a file such as
 			// cinema-live:?url=%2Fboot%2Fhome%2Fvideo.mp4 as well
 			if (address.IStartsWith("http://")

@@ -69,12 +69,16 @@ enum {
 	kMsgPlayerFrame		= 'plfr',	// a new picture to show
 	kMsgPlayerEnded		= 'plen',
 	kMsgPlayerError		= 'pler',	// it cannot play it
+	kMsgPlayerStruggling = 'plst',	// "height": too much for the processor
 	kMsgPlayerReopen	= 'plro',	// "time": a stream of the relay, opened
 									// again from there to go there
 	kMsgPlayerTick		= 'pltk',	// the time shown, the controls hidden
 	kMsgPlayerSave		= 'plsv',	// where it is, to go on later
 	kMsgPlayerClose		= 'plcl',
+	kMsgAddTorrent		= 'tadd',	// "source": a magnet link or a .torrent
 	kMsgToggleOverlay	= 'plov',	// the O key: the overlay off or on
+	kMsgAskOverlay		= 'plaq',	// time to ask whether the video shows
+	kMsgOverlayAnswer	= 'plan',	// "works": the answer
 	kMsgPlayInMediaPlayer = 'plmp',	// the same address, in MediaPlayer
 	kMsgSubtitles		= 'plts',	// "id", then for each track
 									// "language", "name", "automatic"

@@ -1,7 +1,8 @@
-1	chinese	application/x-vnd.atomozero-Cinema	2681905046
+1	chinese	application/x-vnd.atomozero-Cinema	1244004174
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
+Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自动模式会在不认识的显卡上询问一次是否能看到视频。播放时可按 O 切换。
 full documentary	Categories		完整纪录片
 Search first in:	Settings		优先搜索：
 Add to favorites	Grid		添加到收藏
@@ -9,12 +10,14 @@ OK	Window		确定
 Add this channel to the tabs	Categories		将此频道添加到标签页
 Play	Grid		播放
 Video downloaded	Window		视频已下载
+Video overlay:	Settings		视频叠加层：
 Getting the video ready	Grid		正在准备视频
 today	Detail		今天
 Downloading…	Detail		正在下载…
 Settings…	Window		设置…
 Add to the tabs	Grid		添加到标签页
 No subtitles	Player		无字幕
+Yes	Player		是
 Library	Settings		媒体库
 Cinema settings	Settings		Cinema 设置
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 下载需要 aria2c，但尚未安装。
@@ -43,6 +46,7 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		有
 Above 360p, YouTube takes longer to start.	Settings		高于 360p 时，YouTube 开始播放需要更久。
 Downloading…	Grid		正在下载…
 Stop the download	Grid		停止下载
+No	Player		否
 Search	Window		搜索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# 或 名称 = @iptv channel:<M3U 列表地址> 用于电视频道
 official music video	Categories		官方音乐视频
@@ -62,10 +66,9 @@ No subtitles available	Player		没有可用的字幕
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		显示最新视频
-Music	Categories		音乐
 The key works.	Settings		密钥有效。
+Music	Categories		音乐
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema：适用于 Haiku 和 RenkuOS 的视频应用，来自 YouTube、Internet Archive、PeerTube、BitTorrent 以及你自己的文件夹。
-Use the video overlay of the graphics card	Settings		使用显卡的视频叠加层
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema 需要 yt-dlp 和 python3，并且 cinema-helper.py 需在同一位置
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#天前}}
 Even volume: films and TV as loud as music	Settings		音量均衡：电影和电视与音乐一样响亮
@@ -73,12 +76,12 @@ Download	Detail		下载
 Remove	Settings		移除
 Downloaded	Window		已下载
 Add	Settings		添加
+Always	Settings		始终
 Remove from the tabs	Categories		从标签页中移除
 Choose…	Settings		选择…
 news today	Categories		今日新闻
 Move to Trash	Detail		移到废纸篓
 Get a key…	Settings		获取密钥…
-Turn it off if videos show only a green background (or press O while one plays).	Settings		如果视频只显示绿色背景，请关闭此项（或在播放时按 O）。
 %peers% sources	Window		%peers% 个来源
 M3U list:	Settings		M3U 列表：
 %views% views	Detail		%views% 次观看
@@ -93,6 +96,7 @@ Details	Grid		详细信息
 forced	Subtitles		强制
 Already downloaded	Grid		已经下载
 Go on from where a video was left	Settings		从上次停下的地方继续播放视频
+Never	Settings		从不
 Search	Settings		搜索
 Type what to look for at the top right	Window		在右上角输入要搜索的内容
 Cinema	System name		Cinema
@@ -115,6 +119,7 @@ automatic	Player		自动生成
 Automatic	Settings		自动
 No videos downloaded yet: right click a video, or press D	Window		还没有下载的视频：右键点击视频，或按 D
 Favorites	Window		收藏
+Can you see the video?	Player		你能看到视频吗？
 Home	Categories		主页
 Checking…	Settings		正在检查…
 About Cinema	Window		关于 Cinema

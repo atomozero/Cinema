@@ -122,6 +122,10 @@ private:
 			bool				_Ready(const BString& id) const;
 			void				_HomeChanged();
 			void				_ApplyOverlay();
+			void				_LowerQuality(int32 height);
+			BString				_OverlayCard() const;
+			int32				_OverlayDecision() const;
+			void				_RememberOverlay(bool works);
 			int32				_Followed(const MediaItem& item) const;
 			void				_SetChannelHeader(const char* name,
 									const char* id, const char* provider);
@@ -186,7 +190,11 @@ private:
 			BString				fWaiting;		// clicked, not found yet
 			BString				fWaitingTitle;
 			BString				fRetried;	// found again after a failure
-			bool				fHomeStale = false;	// made again when the details close
+			bool				fHomeStale = false;
+			bool				fAskOverlay = false;	// once the video plays
+			BString				fLowered;		// found again smaller
+			bigtime_t			fOpenAt = -1;
+			BMessageRunner*		fOverlayAsker = NULL;	// made again when the details close
 			int32				fHelperRestarts = 0;
 			bigtime_t			fHelperRestarted = 0;
 			BString				fWanted;		// chosen: worth finding

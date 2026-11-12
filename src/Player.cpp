@@ -848,8 +848,12 @@ Player::_FillSound(void* buffer, size_t size)
 	memcpy(out + first, &fRing[0], bytes - first);
 	fRingRead = (fRingRead + bytes) % fRing.size();
 	fRingFill -= bytes;
-	if (bytes < size)
+	if (bytes < size) {
 		memset(out + bytes, 0, size - bytes);
+		// the sound ran out: counted, while there is more to come
+		if (!fAudioEnded)
+			fSoundUnderruns++;
+	}
 	_NoteFill(size, bytes);
 	fPlayed += bytes / std::max((size_t)1, fFrameSize);
 	fFillTime = (bigtime_t)(size / std::max((size_t)1, fFrameSize)) * 1000000LL

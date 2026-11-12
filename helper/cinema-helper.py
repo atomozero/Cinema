@@ -54,6 +54,7 @@ import os
 import platform
 import re
 import shutil
+import socket
 import subprocess
 import sys
 import threading
@@ -1348,6 +1349,75 @@ class Relay:
 		self.sessions = {}		# token: the inputs, [{"url", "headers"}]
 		self.playing = {}		# token: the ffmpeg serving it
 
+	def torrent_address(self, session, name):
+		"""Where a video of a torrent being downloaded can be played from:
+		http://localhost:<port>/torrent/<token>/<name>, not 127.0.0.1, which
+		is the relay for Cinema; an ordinary file, which the player reads by
+		ranges as it would a video on the web."""
+		token = hashlib.sha1(session["id"].encode("utf-8")).hexdigest()[:16]
+		with self.lock:
+			self.torrents = getattr(self, "torrents", {})
+			self.torrents[token] = session
+			if self.server is None:
+				self.start()
+		return "http://localhost:%d/torrent/%s/%s" % (self.server.server_port,
+			token, urllib.parse.quote(name))
+
+	def serve_torrent(self, request, head=False):
+		"""The bytes of the video asked, as aria2c gets their pieces: what is
+		not there yet is waited for, a few minutes at most."""
+		token = request.path.split("/")[2] if request.path.count("/") >= 2 \
+			else ""
+		with self.lock:
+			session = getattr(self, "torrents", {}).get(token)
+		if session is None:
+			request.send_error(404)
+			return
+		size = session["length"]
+		start, end = 0, size - 1
+		ranged = request.headers.get("Range", "")
+		found = re.match(r"bytes=(\d*)-(\d*)", ranged)
+		if found and (found.group(1) or found.group(2)):
+			if found.group(1):
+				start = int(found.group(1))
+				if found.group(2):
+					end = min(size - 1, int(found.group(2)))
+			else:
+				start = max(0, size - int(found.group(2)))
+			if start >= size:
+				request.send_response(416)
+				request.send_header("Content-Range", "bytes */%d" % size)
+				request.end_headers()
+				return
+			request.send_response(206)
+			request.send_header("Content-Range", "bytes %d-%d/%d"
+				% (start, end, size))
+		else:
+			request.send_response(200)
+		request.send_header("Content-Length", str(end - start + 1))
+		request.send_header("Accept-Ranges", "bytes")
+		request.send_header("Content-Type", "video/mp4"
+			if session["name"].lower().endswith((".mp4", ".m4v", ".mov"))
+			else "application/octet-stream")
+		request.end_headers()
+		if head:
+			return
+		position = start
+		chunk = 256 * 1024
+		try:
+			while position <= end:
+				last = min(end, position + chunk - 1)
+				if not torrent_wait(session, position, last):
+					return
+				data = torrent_read(session, position, last - position + 1)
+				if not data:
+					return
+				request.wfile.write(data)
+				position += len(data)
+		except (OSError, ValueError):
+			# the player went away, or moved to another place
+			return
+
 	def address(self, inputs, duration=0):
 		key = "\n".join(entry["url"] for entry in inputs)
 		token = hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
@@ -1366,6 +1436,9 @@ class Relay:
 				pass
 
 			def do_HEAD(self):
+				if self.path.startswith("/torrent/"):
+					relay.serve_torrent(self, head=True)
+					return
 				if relay.inputs(self.path) is None:
 					self.send_error(404)
 					return
@@ -1374,6 +1447,9 @@ class Relay:
 				self.end_headers()
 
 			def do_GET(self):
+				if self.path.startswith("/torrent/"):
+					relay.serve_torrent(self)
+					return
 				relay.serve(self)
 
 		self.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0),
@@ -1429,6 +1505,10 @@ class Relay:
 			# a connection gone quiet ends ffmpeg, and the stream, rather
 			# than holding both forever
 			command += ["-rw_timeout", "15000000"]
+			# a connection YouTube drops halfway is made again from where
+			# it was, rather than ending the stream
+			command += ["-reconnect", "1", "-reconnect_on_network_error", "1",
+				"-reconnect_delay_max", "5"]
 			if start > 0:
 				command += ["-ss", "%.3f" % start]
 			command += ["-i", entry["url"]]
@@ -1683,6 +1763,140 @@ VIDEO_EXTENSIONS = (".mp4", ".m4v", ".mkv", ".webm", ".avi", ".mov", ".ogv",
 	".mpg", ".mpeg", ".wmv", ".flv", ".ts")
 
 
+# the torrents being downloaded, for playing them meanwhile: their aria2c's
+# RPC port and secret, and where the video went once done ("final")
+TORRENTS = {}
+TORRENTS_LOCK = threading.Lock()
+
+
+def free_port():
+	with socket.socket() as probe:
+		probe.bind(("127.0.0.1", 0))
+		return probe.getsockname()[1]
+
+
+def aria2_call(stream, method, *params):
+	"""A call to the RPC of an aria2c; its result, or None."""
+	body = json.dumps({"jsonrpc": "2.0", "id": "cinema", "method": method,
+		"params": ["token:" + stream["secret"]] + list(params)}).encode()
+	request = urllib.request.Request(
+		"http://127.0.0.1:%d/jsonrpc" % stream["port"], data=body,
+		headers={"Content-Type": "application/json"})
+	try:
+		with urllib.request.urlopen(request, timeout=5) as response:
+			return json.load(response).get("result")
+	except Exception:
+		return None
+
+
+def torrent_watch(stream, process):
+	"""aria2c with its RPC on stays when there is nothing left to get: told
+	to go then, twice seen idle so as not to stop it between the .torrent
+	and what it shares."""
+	idle = 0
+	while process.poll() is None:
+		time.sleep(2)
+		stat = aria2_call(stream, "aria2.getGlobalStat")
+		if not stat:
+			continue
+		if stat.get("numActive") == "0" and stat.get("numWaiting") == "0":
+			idle += 1
+			if idle >= 2:
+				aria2_call(stream, "aria2.shutdown")
+				return
+		else:
+			idle = 0
+
+
+def torrent_complete(work):
+	"""Whether what aria2c got in work is whole: no control file left."""
+	got = False
+	for directory, _, names in os.walk(work):
+		for name in names:
+			if name.endswith(".aria2"):
+				return False
+			if name.lower().endswith(VIDEO_EXTENSIONS):
+				got = True
+	return got
+
+
+def torrent_session(media_id, stream):
+	"""The biggest video of the torrent aria2c is getting, once it knows its
+	files: where it is, where it starts among the pieces, how big they are.
+	None while the files are not known yet."""
+	if stream.get("final"):
+		path = stream["final"]
+		return {"id": media_id, "stream": stream, "path": path,
+			"name": os.path.basename(path), "offset": 0,
+			"length": os.path.getsize(path), "piece": 1, "gid": None}
+	keys = ["gid", "files", "pieceLength", "status"]
+	downloads = (aria2_call(stream, "aria2.tellActive", keys) or []) \
+		+ (aria2_call(stream, "aria2.tellStopped", 0, 20, keys) or [])
+	best = None
+	for download in downloads:
+		offset = 0
+		for entry in download.get("files") or []:
+			length = as_int(entry.get("length"), 0)
+			path = entry.get("path") or ""
+			if path.lower().endswith(VIDEO_EXTENSIONS) and length > 0 \
+					and (best is None or length > best["length"]):
+				best = {"id": media_id, "stream": stream, "path": path,
+					"name": os.path.basename(path), "offset": offset,
+					"length": length, "gid": download.get("gid"),
+					"piece": max(1, as_int(download.get("pieceLength"), 1))}
+			offset += length
+	return best
+
+
+def torrent_ready(session, start, end):
+	"""Whether the pieces of the bytes from start to end are there."""
+	stream = session["stream"]
+	if stream.get("final") or session["gid"] is None:
+		return True
+	now = time.time()
+	if now - session.get("asked", 0) > 0.5:
+		status = aria2_call(stream, "aria2.tellStatus", session["gid"],
+			["bitfield", "status"])
+		session["asked"] = now
+		if status:
+			session["bitfield"] = status.get("bitfield") or ""
+			session["status"] = status.get("status") or ""
+	if session.get("status") == "complete":
+		return True
+	bits = session.get("bitfield") or ""
+	first = (session["offset"] + start) // session["piece"]
+	last = (session["offset"] + end) // session["piece"]
+	for piece in range(first, last + 1):
+		digit = piece // 4
+		if digit >= len(bits) or not (int(bits[digit], 16)
+				>> (3 - piece % 4)) & 1:
+			return False
+	return True
+
+
+def torrent_wait(session, start, end, most=600):
+	"""Until those bytes are there; False if they do not come, or the
+	download is gone."""
+	deadline = time.time() + most
+	while time.time() < deadline:
+		if torrent_ready(session, start, end):
+			return True
+		if session.get("status") in ("error", "removed"):
+			return False
+		time.sleep(0.3)
+	return False
+
+
+def torrent_read(session, position, count):
+	path = session["stream"].get("final") or session["path"]
+	try:
+		with open(path, "rb") as file:
+			file.seek(position)
+			return file.read(count)
+	except OSError:
+		return b""
+
+
 class TorrentProvider(Provider):
 	"""Downloads what a magnet link or a .torrent file (a path or an
 	address) shares, with aria2c, and keeps its biggest video. The id is
@@ -1691,11 +1905,112 @@ class TorrentProvider(Provider):
 
 	id = "torrent"
 	name = "BitTorrent"
-	kinds = ("download",)
+	kinds = ("download", "find")
 
 	# [#2089b0 400KiB/33MiB(1%) CN:44 SD:3 DL:115KiB ETA:4m25s]
 	SUMMARY = re.compile(r"\[#\w+ (?:SEED\S* )?([\d.]+\w*B)/([\d.]+\w*B)"
 		r"\((\d+)%\)(.*?)\]")
+
+	@staticmethod
+	def sources(media_id):
+		"""What to give aria2c: the .torrent a magnet link points to with
+		xs= first, which brings the files at once and the web seeds of the
+		site, then the link itself."""
+		found = []
+		if media_id.startswith("magnet:"):
+			query = urllib.parse.parse_qs(urllib.parse.urlsplit(
+				media_id).query)
+			for source in query.get("xs", []):
+				if source.startswith(("http://", "https://")) \
+						and source.endswith(".torrent"):
+					found.append(source)
+		found.append(media_id)
+		return found
+
+	def find(self, media_id, kind="video"):
+		"""A video of a torrent while it downloads: the address the relay
+		plays it from, once aria2c knows its files."""
+		deadline = time.time() + 180
+		while time.time() < deadline:
+			with TORRENTS_LOCK:
+				stream = TORRENTS.get(media_id)
+			if stream is not None:
+				session = torrent_session(media_id, stream)
+				if session is not None:
+					return RELAY.torrent_address(session, session["name"])
+			elif media_id not in RUNNING and time.time() > deadline - 150:
+				# no download of it after half a minute: nothing to play
+				return None
+			time.sleep(1)
+		return None
+
+	def run(self, media_id, source, work, progress):
+		"""aria2c on one source, until it is done or gives up: its exit
+		status, and whether anything came."""
+		# its pieces in order, the start and the end first, and a local RPC
+		# Cinema asks which pieces it has, so that the video plays while it
+		# comes
+		stream = {"port": free_port(),
+			"secret": hashlib.sha1(os.urandom(16)).hexdigest()}
+		command = ["aria2c", "--dir=" + work, "--seed-time=0",
+			"--summary-interval=1", "--console-log-level=error",
+			"--follow-torrent=mem", "--file-allocation=none",
+			"--continue=true", "--bt-save-metadata=true",
+			"--bt-load-saved-metadata=true", "--enable-dht=true",
+			"--auto-file-renaming=false",
+			"--stream-piece-selector=inorder",
+			"--bt-prioritize-piece=head=8M,tail=2M",
+			"--enable-rpc=true", "--rpc-listen-all=false",
+			"--rpc-listen-port=%d" % stream["port"],
+			"--rpc-secret=" + stream["secret"],
+			# give up after ten minutes with nothing coming
+			"--bt-stop-timeout=600", "--connect-timeout=30",
+			source]
+		process = subprocess.Popen(command, stdout=subprocess.PIPE,
+			stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+			text=True, errors="replace")
+		with CHILDREN_LOCK:
+			CHILDREN.add(process)
+			RUNNING[media_id] = process
+		with TORRENTS_LOCK:
+			TORRENTS[media_id] = stream
+		# with RPC on, aria2c stays when it is done: told to go then
+		threading.Thread(target=torrent_watch, args=(stream, process),
+			daemon=True).start()
+		got = False
+		try:
+			for line in process.stdout:
+				found = self.SUMMARY.search(line)
+				if found and int(found.group(3)) > 0:
+					got = True
+				if found and progress is not None:
+					rest = found.group(4)
+
+					def field(name):
+						value = re.search(name + r":(\S+)", rest)
+						return value.group(1) if value else ""
+
+					progress(int(found.group(3)), done=found.group(1),
+						total=found.group(2), speed=field("DL"),
+						peers=as_int(field("SD"), -1)
+							if field("SD") else as_int(field("CN"), -1),
+						eta=field("ETA"))
+		except Exception:
+			process.terminate()
+			try:
+				process.wait(5)
+			except Exception:
+				process.kill()
+			with CHILDREN_LOCK:
+				CHILDREN.discard(process)
+			raise
+		finally:
+			with CHILDREN_LOCK:
+				RUNNING.pop(media_id, None)
+		status = process.wait()
+		with CHILDREN_LOCK:
+			CHILDREN.discard(process)
+		return status, got
 
 	def download(self, media_id, folder, progress=None):
 		key = hashlib.sha1(media_id.encode()).hexdigest()[:12]
@@ -1706,52 +2021,16 @@ class TorrentProvider(Provider):
 		stop_others(work)
 		complete = False
 		try:
-			command = ["aria2c", "--dir=" + work, "--seed-time=0",
-				"--summary-interval=1", "--console-log-level=error",
-				"--follow-torrent=mem", "--file-allocation=none",
-				"--continue=true", "--bt-save-metadata=true",
-				"--bt-load-saved-metadata=true", "--enable-dht=true",
-				"--auto-file-renaming=false",
-				# give up after ten minutes with nothing coming
-				"--bt-stop-timeout=600", "--connect-timeout=30",
-				media_id]
-			process = subprocess.Popen(command, stdout=subprocess.PIPE,
-				stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
-				text=True, errors="replace")
-			with CHILDREN_LOCK:
-				CHILDREN.add(process)
-				RUNNING[media_id] = process
-			try:
-				for line in process.stdout:
-					found = self.SUMMARY.search(line)
-					if found and progress is not None:
-						rest = found.group(4)
-
-						def field(name):
-							value = re.search(name + r":(\S+)", rest)
-							return value.group(1) if value else ""
-
-						progress(int(found.group(3)), done=found.group(1),
-							total=found.group(2), speed=field("DL"),
-							peers=as_int(field("SD"), -1)
-								if field("SD") else as_int(field("CN"), -1),
-							eta=field("ETA"))
-			except Exception:
-				process.terminate()
-				try:
-					process.wait(5)
-				except Exception:
-					process.kill()
-				with CHILDREN_LOCK:
-					CHILDREN.discard(process)
-				raise
-			finally:
-				with CHILDREN_LOCK:
-					RUNNING.pop(media_id, None)
-			status = process.wait()
-			with CHILDREN_LOCK:
-				CHILDREN.discard(process)
-			if status != 0:
+			status = 1
+			for source in self.sources(media_id):
+				if media_id in CANCELLED:
+					break
+				status, got = self.run(media_id, source, work, progress)
+				# done, or begun: the next source is for when this one
+				# brought nothing
+				if (status == 0 and torrent_complete(work)) or got:
+					break
+			if status != 0 or not torrent_complete(work):
 				return None
 			complete = True
 
@@ -1771,6 +2050,10 @@ class TorrentProvider(Provider):
 			path = os.path.join(torrents, "%s [%s]%s"
 				% (file_name(stem), key[:8], extension))
 			shutil.move(source, path)
+			# a video played meanwhile goes on from where it is now
+			with TORRENTS_LOCK:
+				if media_id in TORRENTS:
+					TORRENTS[media_id]["final"] = path
 			return path
 		finally:
 			# kept when interrupted, to go on later; not when it is done or

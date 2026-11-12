@@ -1,7 +1,8 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2681905046
+1	japanese	application/x-vnd.atomozero-Cinema	1244004174
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
+Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
 full documentary	Categories		ドキュメンタリー 全編
 Search first in:	Settings		最初に検索する場所:
 Add to favorites	Grid		お気に入りに追加
@@ -9,12 +10,14 @@ OK	Window		OK
 Add this channel to the tabs	Categories		このチャンネルをタブに追加
 Play	Grid		再生
 Video downloaded	Window		動画をダウンロードしました
+Video overlay:	Settings		ビデオオーバーレイ:
 Getting the video ready	Grid		動画を準備中
 today	Detail		今日
 Downloading…	Detail		ダウンロード中…
 Settings…	Window		設定…
 Add to the tabs	Grid		タブに追加
 No subtitles	Player		字幕なし
+Yes	Player		はい
 Library	Settings		ライブラリ
 Cinema settings	Settings		Cinema の設定
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent でのダウンロードには aria2c が必要ですが、インストールされていません。
@@ -43,6 +46,7 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		キ
 Above 360p, YouTube takes longer to start.	Settings		360pを超えると、YouTubeの再生開始に時間がかかります。
 Downloading…	Grid		ダウンロード中…
 Stop the download	Grid		ダウンロードを停止
+No	Player		いいえ
 Search	Window		検索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# または 名前 = @iptv channel:<M3U リストのアドレス> でテレビチャンネル
 official music video	Categories		公式ミュージックビデオ
@@ -62,10 +66,9 @@ No subtitles available	Player		利用できる字幕がありません
 Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
-Music	Categories		音楽
 The key works.	Settings		キーは有効です。
+Music	Categories		音楽
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
-Use the video overlay of the graphics card	Settings		グラフィックカードのビデオオーバーレイを使う
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#日前}}
 Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
@@ -73,12 +76,12 @@ Download	Detail		ダウンロード
 Remove	Settings		削除
 Downloaded	Window		ダウンロード済み
 Add	Settings		追加
+Always	Settings		常に
 Remove from the tabs	Categories		タブから削除
 Choose…	Settings		選択…
 news today	Categories		今日のニュース
 Move to Trash	Detail		ゴミ箱に移動
 Get a key…	Settings		キーを取得…
-Turn it off if videos show only a green background (or press O while one plays).	Settings		動画が緑の背景だけになる場合はオフにしてください (再生中に O を押しても切り替えられます)。
 %peers% sources	Window		ソース %peers% 件
 M3U list:	Settings		M3U リスト:
 %views% views	Detail		%views% 回視聴
@@ -93,6 +96,7 @@ Details	Grid		詳細
 forced	Subtitles		強制
 Already downloaded	Grid		すでにダウンロード済み
 Go on from where a video was left	Settings		動画を止めたところから再開
+Never	Settings		使わない
 Search	Settings		検索
 Type what to look for at the top right	Window		右上に探したいものを入力してください
 Cinema	System name		Cinema
@@ -115,6 +119,7 @@ automatic	Player		自動生成
 Automatic	Settings		自動
 No videos downloaded yet: right click a video, or press D	Window		ダウンロードした動画はまだありません: 動画を右クリックするか、D を押してください
 Favorites	Window		お気に入り
+Can you see the video?	Player		動画が見えますか?
 Home	Categories		ホーム
 Checking…	Settings		確認中…
 About Cinema	Window		Cinema について

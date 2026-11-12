@@ -11,9 +11,10 @@
 #include <algorithm>
 
 
-// the level aimed at: about that of mastered music (-14 dBFS RMS)
-static const float kTarget = 0.2f;
-static const float kMostGain = 5.62f;		// +15 dB
+// the level aimed at: a little above mastered music (-12.4 dBFS RMS), 20%
+// louder than -14, which sounded soft next to other players
+static const float kTarget = 0.24f;
+static const float kMostGain = 6.76f;		// +16.6 dB, 20% above +15
 static const float kLeastGain = 0.708f;		// -3 dB
 // below this (-50 dBFS) it is silence, or nearly: the gain stays
 static const float kGate = 0.00316f;

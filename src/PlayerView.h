@@ -54,6 +54,7 @@ public:
 			bool				HasOverlayContent() const;
 			void				SetDirect(bool direct);
 			void				SetFavorite(int32 favorite);
+			void				SetOverlayQuestion(const char* card);
 									// 1 with a star, 0 without, -1 none
 									// to give (live TV, an address)
 
@@ -69,6 +70,10 @@ private:
 			BRect				_VolumeFrame(const BRect& bounds) const;
 			BRect				_VolumeTrack(const BRect& bounds) const;
 			BRect				_FavoriteButtonFrame() const;
+			BRect				_QuestionFrame() const;
+			BRect				_YesFrame() const;
+			BRect				_NoFrame() const;
+			void				_DrawQuestion(BView* target);
 			BRect				_FavoriteButtonFrame(const BRect& bounds) const;
 			void				_ShowControls();
 			void				_TogglePause();
@@ -104,6 +109,8 @@ private:
 			float				fSubtitleHeight;
 			bool				fSubtitleControls;
 			int32				fFavorite = -1;
+			bool				fAsking = false;	// whether the video shows
+			BString				fCard;
 };
 
 

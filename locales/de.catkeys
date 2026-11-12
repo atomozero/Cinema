@@ -1,7 +1,8 @@
-1	german	application/x-vnd.atomozero-Cinema	2681905046
+1	german	application/x-vnd.atomozero-Cinema	1244004174
 YouTube could not be reached: is the network on?	Window		YouTube ist nicht erreichbar: Ist das Netzwerk an?
 Video quality:	Settings		Videoqualität:
 Downloaded	Detail		Heruntergeladen
+Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatisch fragt einmal, bei einer unbekannten Grafikkarte, ob du das Video siehst. O schaltet es während eines Videos um.
 full documentary	Categories		ganze Dokumentation
 Search first in:	Settings		Zuerst suchen in:
 Add to favorites	Grid		Zu Favoriten hinzufügen
@@ -9,12 +10,14 @@ OK	Window		OK
 Add this channel to the tabs	Categories		Diesen Kanal zu den Reitern hinzufügen
 Play	Grid		Abspielen
 Video downloaded	Window		Video heruntergeladen
+Video overlay:	Settings		Video-Overlay:
 Getting the video ready	Grid		Das Video wird vorbereitet
 today	Detail		heute
 Downloading…	Detail		Wird heruntergeladen…
 Settings…	Window		Einstellungen…
 Add to the tabs	Grid		Zu den Reitern hinzufügen
 No subtitles	Player		Keine Untertitel
+Yes	Player		Ja
 Library	Settings		Bibliothek
 Cinema settings	Settings		Cinema-Einstellungen
 BitTorrent downloads need aria2c, which is not installed.	Window		Für BitTorrent-Downloads wird aria2c benötigt, das nicht installiert ist.
@@ -43,6 +46,7 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		Mit
 Above 360p, YouTube takes longer to start.	Settings		Über 360p braucht YouTube länger zum Starten.
 Downloading…	Grid		Wird heruntergeladen…
 Stop the download	Grid		Download anhalten
+No	Player		Nein
 Search	Window		Suchen
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# oder Name = @iptv channel:<Adresse einer M3U-Liste> für TV-Sender
 official music video	Categories		offizielles Musikvideo
@@ -62,10 +66,9 @@ No subtitles available	Player		Keine Untertitel verfügbar
 Move \"%title%\" to the Trash?	Window		„%title%“ in den Papierkorb verschieben?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{vor # Jahr} other{vor # Jahren}}
 Show the latest videos	Grid		Neueste Videos anzeigen
-Music	Categories		Musik
 The key works.	Settings		Der Schlüssel funktioniert.
+Music	Categories		Musik
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: Videos für Haiku und RenkuOS, von YouTube, dem Internet Archive, PeerTube, BitTorrent und aus deinen eigenen Ordnern.
-Use the video overlay of the graphics card	Settings		Video-Overlay der Grafikkarte verwenden
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema braucht yt-dlp und python3, und cinema-helper.py daneben
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{vor # Tag} other{vor # Tagen}}
 Even volume: films and TV as loud as music	Settings		Gleichmäßige Lautstärke: Filme und TV so laut wie Musik
@@ -73,12 +76,12 @@ Download	Detail		Herunterladen
 Remove	Settings		Entfernen
 Downloaded	Window		Heruntergeladen
 Add	Settings		Hinzufügen
+Always	Settings		Immer
 Remove from the tabs	Categories		Aus den Reitern entfernen
 Choose…	Settings		Auswählen…
 news today	Categories		Nachrichten heute
 Move to Trash	Detail		In den Papierkorb verschieben
 Get a key…	Settings		Schlüssel holen…
-Turn it off if videos show only a green background (or press O while one plays).	Settings		Ausschalten, wenn Videos nur einen grünen Hintergrund zeigen (oder während eines Videos O drücken).
 %peers% sources	Window		%peers% Quellen
 M3U list:	Settings		M3U-Liste:
 %views% views	Detail		%views% Aufrufe
@@ -93,6 +96,7 @@ Details	Grid		Details
 forced	Subtitles		erzwungen
 Already downloaded	Grid		Bereits heruntergeladen
 Go on from where a video was left	Settings		Videos dort fortsetzen, wo sie angehalten wurden
+Never	Settings		Nie
 Search	Settings		Suche
 Type what to look for at the top right	Window		Oben rechts eingeben, wonach gesucht werden soll
 Cinema	System name		Cinema
@@ -115,6 +119,7 @@ automatic	Player		automatisch
 Automatic	Settings		Automatisch
 No videos downloaded yet: right click a video, or press D	Window		Noch keine Videos heruntergeladen: Rechtsklick auf ein Video oder D drücken
 Favorites	Window		Favoriten
+Can you see the video?	Player		Siehst du das Video?
 Home	Categories		Start
 Checking…	Settings		Wird geprüft…
 About Cinema	Window		Über Cinema

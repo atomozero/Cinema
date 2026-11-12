@@ -16,7 +16,7 @@
 	peaks, and their dialogue ends up faint.
 
 	A slow automatic gain on the level of the last ~300 ms brings it towards
-	the level of music: up to +15 dB, down to -3 dB, quick to go down (50 ms),
+	the level of music: up to +16.6 dB, down to -3 dB, quick to go down (50 ms),
 	slow to go up (1.5 s), held during silence so as not to raise its noise.
 	A soft limiter then keeps the peaks from clipping, and the samples become
 	16-bit ones with saturation. Turned off, only the limiter and the

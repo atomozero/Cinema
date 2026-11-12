@@ -1,7 +1,8 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2681905046
+1	ukrainian	application/x-vnd.atomozero-Cinema	1244004174
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
+Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
 full documentary	Categories		повний документальний фільм
 Search first in:	Settings		Спершу шукати в:
 Add to favorites	Grid		Додати до обраного
@@ -9,12 +10,14 @@ OK	Window		Гаразд
 Add this channel to the tabs	Categories		Додати цей канал до вкладок
 Play	Grid		Відтворити
 Video downloaded	Window		Відео завантажено
+Video overlay:	Settings		Відеооверлей:
 Getting the video ready	Grid		Підготовка відео
 today	Detail		сьогодні
 Downloading…	Detail		Завантаження…
 Settings…	Window		Налаштування…
 Add to the tabs	Grid		Додати до вкладок
 No subtitles	Player		Без субтитрів
+Yes	Player		Так
 Library	Settings		Бібліотека
 Cinema settings	Settings		Налаштування Cinema
 BitTorrent downloads need aria2c, which is not installed.	Window		Для завантажень BitTorrent потрібен aria2c, який не встановлено.
@@ -43,6 +46,7 @@ With a key, the library gets posters, plots and casts. It is free.	Settings		З 
 Above 360p, YouTube takes longer to start.	Settings		Понад 360p YouTube запускається довше.
 Downloading…	Grid		Завантаження…
 Stop the download	Grid		Зупинити завантаження
+No	Player		Ні
 Search	Window		Пошук
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# або назва = @iptv channel:<адреса списку M3U> для телеканалів
 official music video	Categories		офіційний кліп
@@ -62,10 +66,9 @@ No subtitles available	Player		Немає доступних субтитрів
 Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
 Show the latest videos	Grid		Показати останні відео
-Music	Categories		Музика
 The key works.	Settings		Ключ працює.
+Music	Categories		Музика
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
-Use the video overlay of the graphics card	Settings		Використовувати відеооверлей відеокарти
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
 {0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
 Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
@@ -73,12 +76,12 @@ Download	Detail		Завантажити
 Remove	Settings		Вилучити
 Downloaded	Window		Завантажені
 Add	Settings		Додати
+Always	Settings		Завжди
 Remove from the tabs	Categories		Вилучити з вкладок
 Choose…	Settings		Вибрати…
 news today	Categories		новини сьогодні
 Move to Trash	Detail		Перемістити до смітника
 Get a key…	Settings		Отримати ключ…
-Turn it off if videos show only a green background (or press O while one plays).	Settings		Вимкніть, якщо відео показує лише зелене тло (або натисніть O під час відео).
 %peers% sources	Window		%peers% джерел
 M3U list:	Settings		Список M3U:
 %views% views	Detail		%views% переглядів
@@ -93,6 +96,7 @@ Details	Grid		Подробиці
 forced	Subtitles		примусові
 Already downloaded	Grid		Вже завантажено
 Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
+Never	Settings		Ніколи
 Search	Settings		Пошук
 Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
 Cinema	System name		Cinema
@@ -115,6 +119,7 @@ automatic	Player		автоматичні
 Automatic	Settings		Автоматично
 No videos downloaded yet: right click a video, or press D	Window		Ще немає завантажених відео: клацніть правою кнопкою на відео або натисніть D
 Favorites	Window		Обране
+Can you see the video?	Player		Ви бачите відео?
 Home	Categories		Головна
 Checking…	Settings		Перевірка…
 About Cinema	Window		Про Cinema
