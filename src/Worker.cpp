@@ -12,6 +12,7 @@
 #include <Entry.h>
 #include <FindDirectory.h>
 #include <MessageQueue.h>
+#include <Node.h>
 #include <Path.h>
 
 #include <algorithm>
@@ -69,6 +70,40 @@ Worker::MessageReceived(BMessage* message)
 
 
 /*!	One picture, to the file asked; false if it could not be got. */
+static const char* kSourceAttribute = "Cinema:source";
+
+
+/*!	Whether the picture kept at path is still the one at url: the address
+	it came from is kept in an attribute. One kept before that, of a film
+	or a series of the library (its id a path or "series:..."), may be a
+	frame of the file got before TMDB had a poster for it: got again.
+*/
+static bool
+kept_picture(const BString& path, const BString& url, const char* id)
+{
+	BNode node(path.String());
+	if (node.InitCheck() != B_OK)
+		return false;
+	BString source;
+	if (node.ReadAttrString(kSourceAttribute, &source) == B_OK)
+		return url.IsEmpty() || source == url;
+	BString name(id);
+	return url.IsEmpty() || !url.StartsWith("http")
+		|| (name.FindFirst('/') < 0 && name.FindFirst(':') < 0);
+}
+
+
+static void
+keep_source(const BString& path, const BString& url)
+{
+	if (url.IsEmpty())
+		return;
+	BNode node(path.String());
+	if (node.InitCheck() == B_OK)
+		node.WriteAttrString(kSourceAttribute, &url);
+}
+
+
 bool
 Worker::_Get(const char* url, const char* path)
 {
@@ -118,16 +153,21 @@ Worker::_Thumbnails(BMessage* message)
 
 		int32 last = std::min(count, first + kBatch);
 		std::vector<BString> paths;
+		std::vector<BString> sources;
 		std::vector<BString> arguments = { "curl", "-sfL", "--max-time", "60" };
 		for (int32 i = first; i < last; i++) {
 			const char* id = message->GetString("id", i, "");
 			BString path(fCache);
 			path << "/" << PictureName(id) << ".jpg";
 			paths.push_back(path);
-			if (BEntry(path.String()).Exists())
-				continue;
 			// the address the provider gave, or YouTube's from the id
 			BString url = message->GetString("url", i, "");
+			sources.push_back(url);
+			if (BEntry(path.String()).Exists()) {
+				if (kept_picture(path, url, id))
+					continue;
+				BEntry(path.String()).Remove();
+			}
 			if (url.IsEmpty())
 				url.SetToFormat("https://i.ytimg.com/vi/%s/mqdefault.jpg", id);
 			BString temporary(path);
@@ -140,13 +180,17 @@ Worker::_Thumbnails(BMessage* message)
 			// curl goes on after a picture that fails: each is looked at.
 			// Out of time, the last may be half there: none is kept then.
 			bool late = RunProgram(arguments) == 28;
-			for (const BString& path : paths) {
+			for (size_t i = 0; i < paths.size(); i++) {
+				const BString& path = paths[i];
 				BString temporary(path);
 				temporary << ".part";
 				BEntry part(temporary.String());
-				if (part.Exists()
-					&& (late || part.Rename(path.String(), true) != B_OK))
+				if (!part.Exists())
+					continue;
+				if (late || part.Rename(path.String(), true) != B_OK)
 					part.Remove();
+				else
+					keep_source(path, sources[i]);
 			}
 		}
 
@@ -191,8 +235,12 @@ Worker::_Picture(BMessage* message)
 	// a path or an address gives a hash, as for the small pictures
 	BString path(fCache);
 	path << "/poster-" << PictureName(id) << ".jpg";
+	if (BEntry(path.String()).Exists() && !kept_picture(path, url, id))
+		BEntry(path.String()).Remove();
 	if (!BEntry(path.String()).Exists()) {
-		if (!_Get(url.String(), path.String())) {
+		if (_Get(url.String(), path.String()))
+			keep_source(path, url);
+		else {
 			// the biggest picture may not be there for an old video; the
 			// one every video has is
 			BString fallback;
