@@ -17,6 +17,9 @@
 #   {"type": "subtitle", "id": "...", "provider": "youtube", "language": "it",
 #    "automatic": false}
 #   {"type": "download", "id": "...", "provider": "youtube", "folder": "/..."}
+#   {"type": "upload", "id": "...", "path": "/...", "target": "ftp://...",
+#    "user": "...", "password": "..."}, and "upload check" without id and
+#   path: a downloaded video copied to a network folder
 #
 # Any of them may carry "height": the highest picture wanted, 0 for what
 # suits the machine.
@@ -37,6 +40,9 @@
 #   torrent: what of its video is there (torrent_map)
 #   {"type": "saved", "id": "...", "path": "/..."}
 #   {"type": "failed", "id": "..."}
+#   {"type": "uploading", "id": "...", "percent": 42}
+#   {"type": "uploaded", "id": "...", "ok": true, "error": ""}
+#   {"type": "upload checked", "ok": true, "error": ""}
 #
 # A MediaItem is {"provider", "kind", "id", "title", "description",
 # "channel", "channel_id", "duration", "year", "date", "views", "rating",
@@ -2295,7 +2301,7 @@ class DlnaProvider(Provider):
 
 	id = "dlna"
 	name = "Home network"
-	kinds = ("channel", "find")
+	kinds = ("channel", "find", "download")
 	cache_channels = False
 
 	SEARCH = "urn:schemas-upnp-org:device:MediaServer:1"
@@ -2310,6 +2316,7 @@ class DlnaProvider(Provider):
 		self.lock = threading.Lock()
 		self.servers = {}	# the address of its ContentDirectory: its name
 		self.urls = {}		# id: the address of the video
+		self.titles = {}	# id: its title, for the name of a download
 
 	def discover(self, wait=3.0):
 		"""The servers that answer in wait seconds, added to those known."""
@@ -2443,6 +2450,7 @@ class DlnaProvider(Provider):
 					continue
 				with self.lock:
 					self.urls[media_id] = url
+					self.titles[media_id] = title
 				item["kind"] = "video"
 				date = element.findtext("dc:date", "", names) or ""
 				if date[:4].isdigit():
@@ -2498,6 +2506,56 @@ class DlnaProvider(Provider):
 			return None
 		with self.lock:
 			return self.urls.get(media_id)
+
+
+	def download(self, media_id, folder, progress=None):
+		"""The video copied from its server into folder, at the speed of
+		the network: then it plays from the disk."""
+		url = self.find(media_id)
+		if not url:
+			return None
+		with self.lock:
+			title = self.titles.get(media_id) or "video"
+		extension = os.path.splitext(urllib.parse.urlparse(url).path)[1]
+		if not re.fullmatch(r"\.[A-Za-z0-9]{1,5}", extension or ""):
+			extension = ".mp4"
+		name = re.sub(r'[/\\:*?"<>|]', "_", title)[:150].strip() or "video"
+		os.makedirs(folder, exist_ok=True)
+		path = os.path.join(folder, name + extension)
+		temporary = path + ".part"
+		request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+		with urllib.request.urlopen(request, timeout=30) as response, \
+				open(temporary, "wb") as file:
+			total = as_int(response.headers.get("Content-Length"), 0)
+			done = 0
+			began = time.time()
+			while True:
+				data = response.read(1024 * 1024)
+				if not data:
+					break
+				file.write(data)
+				done += len(data)
+				if progress is not None:
+					speed = done / max(0.001, time.time() - began)
+					left = (total - done) / speed if total and speed else 0
+					progress(int(done * 100 / total) if total else 0,
+						done=human_size(done), total=human_size(total)
+							if total else "",
+						speed=human_size(speed) + "/s",
+						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
+		if total and os.path.getsize(temporary) != total:
+			os.remove(temporary)
+			return None
+		os.replace(temporary, path)
+		return path
+
+
+def human_size(size):
+	"""12.3MiB, as aria2c says it."""
+	for unit in ("B", "KiB", "MiB", "GiB"):
+		if size < 1024 or unit == "GiB":
+			return ("%d%s" if unit == "B" else "%.1f%s") % (size, unit)
+		size /= 1024.0
 
 
 def look_for_servers():
@@ -3012,6 +3070,10 @@ def job_download(provider, media_id, folder):
 
 
 def cancel(media_id):
+	# a copy to the network folder
+	if media_id in UPLOADS:
+		UPLOADS[media_id] = True
+		return
 	CANCELLED.add(media_id)
 	# a torrent may wait for its peers a long time between two lines
 	with CHILDREN_LOCK:
@@ -3021,6 +3083,89 @@ def cancel(media_id):
 			process.terminate()
 		except OSError:
 			pass
+
+
+UPLOADS = {}		# id: True once cancelled
+
+
+def ftp_open(target, user, password):
+	"""An FTP connection in the folder of target, ftp://host[:port]/dir,
+	the folder made if it is not there."""
+	import ftplib
+	parts = urllib.parse.urlparse(target)
+	if parts.scheme != "ftp" or not parts.hostname:
+		raise ValueError("not an ftp:// address")
+	ftp = ftplib.FTP()
+	ftp.encoding = "utf-8"
+	ftp.connect(parts.hostname, parts.port or 21, timeout=20)
+	ftp.login(user or "anonymous", password or "")
+	for folder in [p for p in urllib.parse.unquote(parts.path).split("/") if p]:
+		try:
+			ftp.cwd(folder)
+		except ftplib.error_perm:
+			ftp.mkd(folder)
+			ftp.cwd(folder)
+	return ftp
+
+
+def job_upload_check(target, user, password):
+	"""Whether the network folder can be written to: a small file put
+	there and taken away."""
+	import io
+	try:
+		ftp = ftp_open(target, user, password)
+		name = ".cinema-test-%d" % os.getpid()
+		ftp.storbinary("STOR " + name, io.BytesIO(b"Cinema"))
+		ftp.delete(name)
+		ftp.quit()
+		answer({"type": "upload checked", "ok": True, "error": ""})
+	except Exception as error:
+		answer({"type": "upload checked", "ok": False,
+			"error": str(error)[:200]})
+
+
+def job_upload(media_id, path, target, user, password):
+	"""A downloaded video copied into the network folder, its progress
+	told as it goes; "uploaded" says whether the copy there is whole (its
+	size checked)."""
+	name = os.path.basename(path)
+	error = ""
+	try:
+		total = os.path.getsize(path)
+		ftp = ftp_open(target, user, password)
+		sent = [0, 0.0, -1]
+
+		def block(data):
+			if UPLOADS.get(media_id):
+				raise Cancelled()
+			sent[0] += len(data)
+			now = time.time()
+			percent = int(sent[0] * 100 / total) if total else 100
+			if percent != sent[2] and now - sent[1] >= 0.5:
+				sent[1] = now
+				sent[2] = percent
+				answer({"type": "uploading", "id": media_id,
+					"percent": percent})
+
+		with open(path, "rb") as file:
+			ftp.storbinary("STOR " + name, file, 256 * 1024, block)
+		try:
+			ftp.voidcmd("TYPE I")
+			there = ftp.size(name)
+		except Exception:
+			there = None
+		ftp.quit()
+		ok = there == total
+		if not ok:
+			error = "size %s of %d" % (there, total)
+	except Cancelled:
+		ok = False
+		error = "cancelled"
+	except Exception as failure:
+		ok = False
+		error = str(failure)[:200]
+	UPLOADS.pop(media_id, None)
+	answer({"type": "uploaded", "id": media_id, "ok": ok, "error": error})
 
 
 def job_check():
@@ -3037,6 +3182,17 @@ def work(request):
 		return
 	if request.get("type") == "check":
 		threading.Thread(target=job_check, daemon=True).start()
+		return
+	if request.get("type") in ("upload", "upload check"):
+		arguments = (request.get("target", ""), request.get("user", ""),
+			request.get("password", ""))
+		if request.get("type") == "upload":
+			UPLOADS[request.get("id", "")] = False
+			threading.Thread(target=job_upload, args=(request.get("id", ""),
+				request.get("path", "")) + arguments, daemon=True).start()
+		else:
+			threading.Thread(target=job_upload_check, args=arguments,
+				daemon=True).start()
 		return
 	provider = PROVIDERS.get(request.get("provider") or DEFAULT_PROVIDER)
 	if provider is None and request.get("type") == "download":

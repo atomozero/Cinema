@@ -238,6 +238,8 @@ private:
 			int					fLiveVideoIndex;
 			int					fLiveAudioIndex;
 			int					fLiveSkipLevel;
+			int					fLiveFloor = 0;	// the lowest skip level: 1 for a
+												// video too heavy to decode whole
 			int					fLiveLate;
 			int					fLiveOnTime;
 			bigtime_t			fLiveLevelSince = 0;

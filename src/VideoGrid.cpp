@@ -939,6 +939,18 @@ VideoGrid::_ShowMenu(int32 index, BPoint where)
 		trash->AddString("path", video.path);
 		trash->AddString("title", video.title);
 		menu->AddItem(new BMenuItem(B_TRANSLATE("Move to Trash"), trash));
+		// to the network folder of the settings, a FRITZ!Box say
+		menu->AddSeparatorItem();
+		for (bool move : { false, true }) {
+			BMessage* upload = new BMessage(kMsgUpload);
+			upload->AddString("id", video.id);
+			upload->AddString("path", video.path);
+			upload->AddString("title", video.title);
+			upload->AddBool("move", move);
+			menu->AddItem(new BMenuItem(move
+				? B_TRANSLATE("Move to the network folder")
+				: B_TRANSLATE("Copy to the network folder"), upload));
+		}
 	}
 	menu->SetTargetForItems(Window());
 	ScaleMenu(menu);

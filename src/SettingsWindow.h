@@ -29,7 +29,8 @@ class BTextControl;
 	first. What is changed is kept at once, and told to the main window
 	(the target): kMsgSettingsChanged, kMsgAddFolder and kMsgRemoveFolder
 	("path"), kMsgAddTvList and kMsgRemoveTvList ("address"),
-	kMsgCheckTmdb, whose answer, kMsgTmdbChecked, it sends back here. It
+	kMsgCheckTmdb, whose answer, kMsgTmdbChecked, it sends back here, and
+	kMsgCheckUpload for the network folder (kMsgUploadChecked back). It
 	sends kMsgSettingsFolders when the folders or the lists change, and
 	kMsgSettingsClosed when this goes away.
 */
@@ -47,6 +48,7 @@ public:
 private:
 			void				_SetFolders(const BMessage* message);
 			void				_Changed();
+			void				_SaveNetwork();
 
 			BMessenger			fTarget;
 			Settings			fSettings;
@@ -68,6 +70,12 @@ private:
 			BMenuField*			fQuality;
 			BMenuField*			fSource;
 			BFilePanel*			fPanel;
+			BTextControl*		fNetworkFolder;
+			BTextControl*		fNetworkUser;
+			BTextControl*		fNetworkPassword;
+			BButton*			fNetworkTest;
+			BStringView*		fNetworkStatus;
+			bool				fPasswordChanged = false;
 };
 
 

@@ -1,4 +1,4 @@
-1	italian	application/x-vnd.atomozero-Cinema	2008134928
+1	italian	application/x-vnd.atomozero-Cinema	991436070
 YouTube could not be reached: is the network on?	Window		Non riesco a raggiungere YouTube: la rete è accesa?
 Video quality:	Settings		Qualità video:
 Downloaded	Detail		Scaricato
@@ -15,13 +15,14 @@ Video overlay:	Settings		Overlay video:
 Sound ready: %seconds% s	Player		Audio pronto: %seconds% s
 Getting the video ready	Grid		Preparo il video
 today	Detail		oggi
-Downloading…	Detail		Download in corso…
 Settings…	Window		Impostazioni…
+Downloading…	Detail		Download in corso…
 Decoding without the deblocking filter	Player		Decodifica senza filtro di deblocking
 Add to the tabs	Grid		Aggiungi alle schede
 No subtitles	Player		Nessun sottotitolo
 Processor: Cinema %cinema%%, all %all%%	Player		Processore: Cinema %cinema%%, tutto %all%%
 Not now	Window		Non ora
+Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		Prima scegli la cartella di rete nelle impostazioni: un indirizzo come ftp://192.168.178.1/USB/Video, con utente e password.
 Decoding the key frames only	Player		Decodifica dei soli fotogrammi chiave
 Yes	Player		Sì
 Library	Settings		Libreria
@@ -30,16 +31,18 @@ BitTorrent downloads need aria2c, which is not installed.	Window		Per scaricare 
 From YouTube, through the helper	Player		Da YouTube, attraverso l'helper
 Cancel	Window		Annulla
 Back	Detail		Indietro
-Documentaries	Categories		Documentari
 Live stream	Player		Diretta
+Documentaries	Categories		Documentari
 TMDB does not accept this key.	Settings		TMDB non accetta questa chiave.
 Play the videos in Cinema, not in MediaPlayer	Settings		Riproduci i video in Cinema, non in MediaPlayer
 technology review	Categories		recensione tecnologia
+User:	Settings		Utente:
 Continue watching	Window		Continua a guardare
 Move to Trash	Window		Sposta nel Cestino
 Getting the video ready	Player		Preparo il video
 Follow	Grid		Segui
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# settimana fa} other{# settimane fa}}
+The password could not be kept in the keyring.	Settings		Non è stato possibile conservare la password nel portachiavi.
 Watch now	Window		Guarda ora
 %eta% left	Window		%eta% rimasti
 Add…	Settings		Aggiungi…
@@ -54,12 +57,14 @@ TMDB key:	Settings		Chiave TMDB:
 Getting the details…	Detail		Carico i dettagli…
 Above 360p, YouTube takes longer to start.	Settings		Sopra i 360p, YouTube impiega di più a partire.
 With a key, the library gets posters, plots and casts. It is free.	Settings		Con una chiave, la libreria riceve locandine, trame e cast. È gratuita.
+Address:	Settings		Indirizzo:
+Copied to the network folder	Window		Copiato nella cartella di rete
 Downloading…	Grid		Download in corso…
 Stop the download	Grid		Ferma il download
 No	Player		No
 The highest quality already	Window		È già la qualità più alta
-drawn by Cinema	Player		disegnato da Cinema
 Decoding every picture	Player		Decodifica di ogni fotogramma
+drawn by Cinema	Player		disegnato da Cinema
 That quality could not be had	Window		Non è stato possibile avere quella qualità
 Search	Window		Cerca
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# oppure nome = @iptv channel:<indirizzo di una lista M3U> per i canali TV
@@ -68,6 +73,7 @@ official music video	Categories		video musicale ufficiale
 The video could not be downloaded	Window		Non è stato possibile scaricare il video
 Classic films	Categories		Film classici
 video overlay	Player		overlay video
+Downloaded videos can be copied or moved there, with a right click.	Settings		I video scaricati si possono copiare o spostare lì, con il tasto destro.
 # or name = channel:<id> for the latest videos of a channel	Categories		# oppure nome = channel:<id> per gli ultimi video di un canale
 From the web	Player		Dal web
 MediaPlayer could not be started: %error%	Window		Non riesco ad aprire MediaPlayer: %error%
@@ -84,8 +90,10 @@ Move \"%title%\" to the Trash?	Window		Spostare «%title%» nel Cestino?
 Video ready	Window		Video pronto
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# anno fa} other{# anni fa}}
 Show the latest videos	Grid		Mostra gli ultimi video
+Copy to the network folder	Grid		Copia nella cartella di rete
 The key works.	Settings		La chiave funziona.
 Music	Categories		Musica
+Test	Settings		Prova
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: video per Haiku e RenkuOS, da YouTube, Internet Archive, PeerTube, BitTorrent e dalle tue cartelle.
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema ha bisogno di yt-dlp e python3, e di cinema-helper.py accanto
 Even volume: films and TV as loud as music	Settings		Volume uniforme: film e TV forti come la musica
@@ -97,6 +105,7 @@ Add	Settings		Aggiungi
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Vuoi installarlo adesso? pkgman chiede conferma prima di cambiare qualcosa, in una finestra del Terminale.
 Always	Settings		Sempre
 Remove from the tabs	Categories		Rimuovi dalle schede
+The folder can be written to.	Settings		Nella cartella si può scrivere.
 Choose…	Settings		Scegli…
 news today	Categories		notizie di oggi
 Get a key…	Settings		Ottieni una chiave…
@@ -119,21 +128,26 @@ even volume %gain% dB	Player		volume uniforme %gain% dB
 The lowest quality already	Window		È già la qualità più bassa
 %done% of %total%	Window		%done% di %total%
 forced	Subtitles		forzati
+For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		Per un FRITZ!Box: ftp://192.168.178.1/ e il nome del suo disco.
 Already downloaded	Grid		Già scaricato
 Never	Settings		Mai
 Go on from where a video was left	Settings		Riprendi i video da dove erano rimasti
 Search	Settings		Ricerca
+Not copied to the network folder	Window		Non copiato nella cartella di rete
 Type what to look for at the top right	Window		Scrivi in alto a destra cosa cercare
 Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" si sta scaricando. Guardarlo ora, chiudendo il video in corso, o più tardi dai download?
 Folders of the library	Settings		Cartelle della libreria
+Moving to the network folder	Window		Spostamento nella cartella di rete
 No videos found	Window		Nessun video trovato
 See all	Home		Vedi tutto
 Click to watch it	Window		Clicca per guardarlo
+Moved to the network folder	Window		Spostato nella cartella di rete
 Open the channel	Grid		Apri il canale
 Check	Settings		Verifica
 Playback	Settings		Riproduzione
 Subtitles	Subtitles		Sottotitoli
+It does not work: %error%	Settings		Non funziona: %error%
 This video comes in one quality only	Window		Questo video ha una sola qualità
 science explained	Categories		scienza spiegata
 Download	Grid		Scarica
@@ -142,13 +156,17 @@ Movies	Window		Film
 Later	Window		Più tardi
 Looking for the videos…	Window		Cerco i video…
 %count% subscribers	Detail		%count% iscritti
+Password:	Settings		Password:
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Una scheda della barra in alto per riga: nome = cosa cercare su YouTube
+Move to the network folder	Grid		Sposta nella cartella di rete
 Following	Detail		Segui già
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube e le altre fonti hanno bisogno di Python 3 e yt-dlp, che mancano o non funzionano su questo sistema.
 Automatic	Settings		Automatica
 automatic	Player		automatici
 No videos downloaded yet: right click a video, or press D	Window		Nessun video scaricato: clic destro su un video, oppure premi D
+Copying to the network folder	Window		Copia nella cartella di rete in corso
 From a file	Player		Da un file
+Network folder	Settings		Cartella di rete
 Favorites	Window		Preferiti
 Can you see the video?	Player		Vedi il video?
 Install	Window		Installa

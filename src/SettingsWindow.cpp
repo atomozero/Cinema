@@ -57,6 +57,9 @@ static const uint32 kMsgTvAdd = 'stv+';
 static const uint32 kMsgTvRemove = 'stv-';
 static const uint32 kMsgTvCountry = 'stvc';
 static const uint32 kMsgActivate = 'sact';
+static const uint32 kMsgNetworkChanged = 'snet';
+static const uint32 kMsgPasswordChanged = 'snpw';
+static const uint32 kMsgNetworkTest = 'sntt';
 
 
 static const char* kKeyPage = "https://www.themoviedb.org/settings/api";
@@ -253,6 +256,34 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 			B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
 		.Add(fSource);
 
+	// the network folder: where downloads are copied or moved, a disk of
+	// a FRITZ!Box say, by FTP; the password in the keyring of Haiku
+	fNetworkFolder = new BTextControl("network folder",
+		B_TRANSLATE("Address:"), fSettings.networkFolder.String(),
+		new BMessage(kMsgNetworkChanged));
+	fNetworkFolder->SetModificationMessage(new BMessage(kMsgNetworkChanged));
+	fNetworkUser = new BTextControl("network user", B_TRANSLATE("User:"),
+		fSettings.networkUser.String(), new BMessage(kMsgNetworkChanged));
+	fNetworkUser->SetModificationMessage(new BMessage(kMsgNetworkChanged));
+	// read from the keyring only when there is a folder: it may ask
+	fNetworkPassword = new BTextControl("network password",
+		B_TRANSLATE("Password:"), fSettings.networkFolder.IsEmpty() ? ""
+			: Settings::NetworkPassword().String(),
+		new BMessage(kMsgPasswordChanged));
+	fNetworkPassword->SetModificationMessage(
+		new BMessage(kMsgPasswordChanged));
+	fNetworkPassword->TextView()->HideTyping(true);
+	fNetworkTest = new BButton("network test", B_TRANSLATE("Test"),
+		new BMessage(kMsgNetworkTest));
+	fNetworkStatus = new BStringView("network status", "");
+	fNetworkStatus->SetExplicitMinSize(BSize(Style::S(300), B_SIZE_UNSET));
+	BStringView* networkNote = new BStringView("network note",
+		B_TRANSLATE("Downloaded videos can be copied or moved there, with a "
+			"right click."));
+	BStringView* networkExample = new BStringView("network example",
+		B_TRANSLATE("For a FRITZ!Box: ftp://192.168.178.1/ and the name of "
+			"its disk."));
+
 	// three tabs, so that the window fits a small screen such as the
 	// AC100's 1024x600: the library, the TV channels, how the videos play
 	BView* libraryTab = new BView(B_TRANSLATE("Library"), 0);
@@ -289,10 +320,26 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		.Add(search)
 		.AddGlue();
 
+	BView* networkTab = new BView(B_TRANSLATE("Network folder"), 0);
+	BLayoutBuilder::Group<>(networkTab, B_VERTICAL, B_USE_SMALL_SPACING)
+		.SetInsets(B_USE_WINDOW_SPACING)
+		.AddGrid(B_USE_SMALL_SPACING, B_USE_SMALL_SPACING)
+			.AddTextControl(fNetworkFolder, 0, 0)
+			.AddTextControl(fNetworkUser, 0, 1)
+			.AddTextControl(fNetworkPassword, 0, 2)
+		.End()
+		.Add(networkExample)
+		.AddGroup(B_HORIZONTAL)
+			.Add(fNetworkStatus, 10)
+			.Add(fNetworkTest)
+		.End()
+		.Add(networkNote)
+		.AddGlue();
+
 	BTabView* tabs = new BTabView("tabs", B_WIDTH_FROM_LABEL);
 	tabs->SetBorder(B_NO_BORDER);
 	// the tabs not shown are out of the window: scaled one by one
-	BView* pages[] = { libraryTab, tvTab, playbackTab };
+	BView* pages[] = { libraryTab, tvTab, playbackTab, networkTab };
 	for (BView* page : pages) {
 		page->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
 		Style::ScaleView(page);
@@ -336,6 +383,7 @@ SettingsWindow::QuitRequested()
 {
 	// the key as it is, even without Enter
 	Settings::SetTmdbKey(fKey->Text());
+	_SaveNetwork();
 	fTarget.SendMessage(kMsgSettingsClosed);
 	return true;
 }
@@ -379,9 +427,62 @@ SettingsWindow::_Changed()
 
 
 void
+SettingsWindow::_SaveNetwork()
+{
+	Settings saved = Settings::Load();
+	BString folder(fNetworkFolder->Text());
+	folder.Trim();
+	saved.networkFolder = folder;
+	saved.networkUser = fNetworkUser->Text();
+	saved.Save();
+	fSettings.networkFolder = saved.networkFolder;
+	fSettings.networkUser = saved.networkUser;
+	if (fPasswordChanged) {
+		fPasswordChanged = false;
+		if (Settings::SetNetworkPassword(fNetworkPassword->Text()) != B_OK)
+			fNetworkStatus->SetText(B_TRANSLATE("The password could not be "
+				"kept in the keyring."));
+	}
+}
+
+
+void
 SettingsWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
+		case kMsgNetworkChanged:
+			_SaveNetwork();
+			fNetworkStatus->SetText("");
+			break;
+		case kMsgPasswordChanged:
+			fPasswordChanged = true;
+			fNetworkStatus->SetText("");
+			break;
+		case kMsgNetworkTest:
+		{
+			_SaveNetwork();
+			fNetworkStatus->SetText(B_TRANSLATE("Checking" B_UTF8_ELLIPSIS));
+			fNetworkTest->SetEnabled(false);
+			BMessage check(kMsgCheckUpload);
+			check.AddString("target", fNetworkFolder->Text());
+			check.AddString("user", fNetworkUser->Text());
+			check.AddString("password", fNetworkPassword->Text());
+			fTarget.SendMessage(&check);
+			break;
+		}
+		case kMsgUploadChecked:
+		{
+			fNetworkTest->SetEnabled(true);
+			if (message->GetBool("ok", false)) {
+				fNetworkStatus->SetText(B_TRANSLATE("The folder can be "
+					"written to."));
+			} else {
+				BString text(B_TRANSLATE("It does not work: %error%"));
+				text.ReplaceFirst("%error%", message->GetString("error", ""));
+				fNetworkStatus->SetText(text.String());
+			}
+			break;
+		}
 		case kMsgActivate:
 			Activate(true);
 			if (fKey->Text()[0] == '\0')

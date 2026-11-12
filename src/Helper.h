@@ -58,6 +58,13 @@ public:
 			void				Download(const char* id, const char* folder,
 									const char* provider = NULL);
 			void				Cancel(const char* id);
+			void				Upload(const char* id, const char* path,
+									const char* target, const char* user,
+									const char* password);
+									// kMsgUploadProgress, then kMsgUploaded
+			void				CheckUpload(const char* target,
+									const char* user, const char* password);
+									// answered with kMsgUploadChecked
 			void				CheckTmdb();
 									// answered with kMsgTmdbChecked
 									// NULL or empty: the default provider

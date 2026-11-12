@@ -1688,6 +1688,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 			break;
 		}
 		case kMsgShowSettings:
+			// from an alert: only its second button
+			if (message->GetInt32("which", 1) != 1)
+				break;
 			_ShowSettings();
 			break;
 		case kMsgShowAbout:
@@ -1992,6 +1995,37 @@ CinemaWindow::MessageReceived(BMessage* message)
 			break;
 		case kMsgTrash:
 			_Trash(message);
+			break;
+		case kMsgUpload:
+			_Upload(message);
+			break;
+		case kMsgUploadProgress:
+		{
+			BString path = message->GetString("id", "");
+			auto upload = fUploads.find(path);
+			if (upload == fUploads.end())
+				break;
+			BNotification notification(B_PROGRESS_NOTIFICATION);
+			notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
+			notification.SetTitle(upload->second.GetBool("move", false)
+				? B_TRANSLATE("Moving to the network folder")
+				: B_TRANSLATE("Copying to the network folder"));
+			notification.SetMessageID(BString("upload ") << path);
+			notification.SetContent(upload->second.GetString("title", ""));
+			notification.SetProgress(message->GetInt32("percent", 0) / 100.0f);
+			notification.Send();
+			break;
+		}
+		case kMsgUploaded:
+			_Uploaded(message);
+			break;
+		case kMsgCheckUpload:
+			fHelper->CheckUpload(message->GetString("target", ""),
+				message->GetString("user", ""),
+				message->GetString("password", ""));
+			break;
+		case kMsgUploadChecked:
+			fSettingsWindow.SendMessage(message);
 			break;
 
 		case kMsgPlay:
@@ -2806,6 +2840,14 @@ CinemaWindow::_Trash(BMessage* message)
 		(new BAlert("Cinema", text.String(), B_TRANSLATE("OK")))->Go(NULL);
 		return;
 	}
+	_Trashed(id);
+}
+
+
+/*!	A download gone to the Trash: no longer shown as downloaded. */
+void
+CinemaWindow::_Trashed(const BString& id)
+{
 	fHomeLoaded = false;
 	fDetail->SetDownloaded(id.String(), false);
 	fGrid->SetDownloaded(id.String(), false);
@@ -2818,6 +2860,80 @@ CinemaWindow::_Trash(BMessage* message)
 		// downloads without the one gone
 		_LoadHome();
 	}
+}
+
+
+/*!	A download copied, or moved, to the network folder of the settings
+	(an FTP folder, such as the disk of a FRITZ!Box), its progress in a
+	notification. Moved, it goes to the Trash only once the copy there is
+	whole.
+*/
+void
+CinemaWindow::_Upload(BMessage* message)
+{
+	BString path = message->GetString("path", "");
+	if (path.IsEmpty())
+		return;
+	fSettings = Settings::Load();
+	if (fSettings.networkFolder.IsEmpty()) {
+		BAlert* alert = new BAlert("Cinema", B_TRANSLATE("Choose the network "
+			"folder first, in the settings: an address such as "
+			"ftp://192.168.178.1/USB/Video, with its user and password."),
+			B_TRANSLATE("Cancel"), B_TRANSLATE("Settings" B_UTF8_ELLIPSIS));
+		alert->SetShortcut(0, B_ESCAPE);
+		alert->Go(new BInvoker(new BMessage(kMsgShowSettings), this));
+		return;
+	}
+	if (fUploads.find(path) != fUploads.end())
+		return;
+	fUploads[path] = *message;
+	fHelper->Upload(path.String(), path.String(),
+		fSettings.networkFolder.String(), fSettings.networkUser.String(),
+		Settings::NetworkPassword().String());
+
+	BNotification notification(B_PROGRESS_NOTIFICATION);
+	notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
+	notification.SetTitle(message->GetBool("move", false)
+		? B_TRANSLATE("Moving to the network folder")
+		: B_TRANSLATE("Copying to the network folder"));
+	notification.SetMessageID(BString("upload ") << path);
+	notification.SetContent(message->GetString("title", ""));
+	notification.SetProgress(0);
+	notification.Send();
+}
+
+
+void
+CinemaWindow::_Uploaded(BMessage* message)
+{
+	BString path = message->GetString("id", "");
+	auto upload = fUploads.find(path);
+	if (upload == fUploads.end())
+		return;
+	BMessage asked = upload->second;
+	fUploads.erase(upload);
+	bool move = asked.GetBool("move", false);
+	bool ok = message->GetBool("ok", false);
+
+	BNotification notification(ok ? B_INFORMATION_NOTIFICATION
+		: B_ERROR_NOTIFICATION);
+	notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
+	notification.SetMessageID(BString("upload ") << path);
+	BString content(asked.GetString("title", ""));
+	if (ok) {
+		notification.SetTitle(move
+			? B_TRANSLATE("Moved to the network folder")
+			: B_TRANSLATE("Copied to the network folder"));
+	} else {
+		notification.SetTitle(B_TRANSLATE("Not copied to the network folder"));
+		content << "\n" << message->GetString("error", "");
+	}
+	notification.SetContent(content);
+	notification.Send();
+
+	// moved: the file here goes once the one there is whole
+	if (ok && move && Downloads::MoveToTrash(path.String()) == B_OK)
+		_Trashed(asked.GetString("id", ""));
 }
 
 

@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	2008134928
+1	japanese	application/x-vnd.atomozero-Cinema	991436070
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -15,13 +15,14 @@ Video overlay:	Settings		ビデオオーバーレイ:
 Sound ready: %seconds% s	Player		準備済みの音声: %seconds% 秒
 Getting the video ready	Grid		動画を準備中
 today	Detail		今日
-Downloading…	Detail		ダウンロード中…
 Settings…	Window		設定…
+Downloading…	Detail		ダウンロード中…
 Decoding without the deblocking filter	Player		デブロッキングフィルターなしでデコード
 Add to the tabs	Grid		タブに追加
 No subtitles	Player		字幕なし
 Processor: Cinema %cinema%%, all %all%%	Player		プロセッサ: Cinema %cinema%%、全体 %all%%
 Not now	Window		後で
+Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		まず設定でネットワークフォルダーを選んでください: ftp://192.168.178.1/USB/Video のようなアドレスと、ユーザー、パスワード。
 Decoding the key frames only	Player		キーフレームのみデコード
 Yes	Player		はい
 Library	Settings		ライブラリ
@@ -30,16 +31,18 @@ BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent で
 From YouTube, through the helper	Player		YouTubeから、ヘルパー経由
 Cancel	Window		キャンセル
 Back	Detail		戻る
-Documentaries	Categories		ドキュメンタリー
 Live stream	Player		ライブ配信
+Documentaries	Categories		ドキュメンタリー
 TMDB does not accept this key.	Settings		TMDB はこのキーを受け付けません。
 Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer ではなく Cinema で動画を再生
 technology review	Categories		テクノロジー レビュー
+User:	Settings		ユーザー:
 Continue watching	Window		続きを見る
 Move to Trash	Window		ゴミ箱に移動
 Getting the video ready	Player		動画を準備中
 Follow	Grid		フォロー
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
+The password could not be kept in the keyring.	Settings		パスワードをキーリングに保存できませんでした。
 Watch now	Window		今すぐ見る
 %eta% left	Window		残り %eta%
 Add…	Settings		追加…
@@ -54,12 +57,14 @@ TMDB key:	Settings		TMDB キー:
 Getting the details…	Detail		詳細を取得中…
 Above 360p, YouTube takes longer to start.	Settings		360pを超えると、YouTubeの再生開始に時間がかかります。
 With a key, the library gets posters, plots and casts. It is free.	Settings		キーがあると、ライブラリにポスター、あらすじ、キャストが表示されます。無料です。
+Address:	Settings		アドレス:
+Copied to the network folder	Window		ネットワークフォルダーにコピーしました
 Downloading…	Grid		ダウンロード中…
 Stop the download	Grid		ダウンロードを停止
 No	Player		いいえ
 The highest quality already	Window		すでに最高画質です
-drawn by Cinema	Player		Cinemaが描画
 Decoding every picture	Player		すべてのフレームをデコード
+drawn by Cinema	Player		Cinemaが描画
 That quality could not be had	Window		その画質は取得できませんでした
 Search	Window		検索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# または 名前 = @iptv channel:<M3U リストのアドレス> でテレビチャンネル
@@ -68,6 +73,7 @@ official music video	Categories		公式ミュージックビデオ
 The video could not be downloaded	Window		動画をダウンロードできませんでした
 Classic films	Categories		名作映画
 video overlay	Player		ビデオオーバーレイ
+Downloaded videos can be copied or moved there, with a right click.	Settings		ダウンロードした動画は右クリックでそこへコピーまたは移動できます。
 # or name = channel:<id> for the latest videos of a channel	Categories		# または 名前 = channel:<id> でチャンネルの最新動画
 From the web	Player		Webから
 MediaPlayer could not be started: %error%	Window		MediaPlayer を起動できません: %error%
@@ -84,8 +90,10 @@ Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しま�
 Video ready	Window		動画の準備ができました
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
+Copy to the network folder	Grid		ネットワークフォルダーにコピー
 The key works.	Settings		キーは有効です。
 Music	Categories		音楽
+Test	Settings		テスト
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
 Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
@@ -97,6 +105,7 @@ Add	Settings		追加
 Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
 Always	Settings		常に
 Remove from the tabs	Categories		タブから削除
+The folder can be written to.	Settings		フォルダーに書き込めます。
 Choose…	Settings		選択…
 news today	Categories		今日のニュース
 Get a key…	Settings		キーを取得…
@@ -119,21 +128,26 @@ even volume %gain% dB	Player		音量の均一化 %gain% dB
 The lowest quality already	Window		すでに最低画質です
 %done% of %total%	Window		%done% / %total%
 forced	Subtitles		強制
+For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		FRITZ!Box の場合: ftp://192.168.178.1/ とディスクの名前。
 Already downloaded	Grid		すでにダウンロード済み
 Never	Settings		使わない
 Go on from where a video was left	Settings		動画を止めたところから再開
 Search	Settings		検索
+Not copied to the network folder	Window		ネットワークフォルダーにコピーできませんでした
 Type what to look for at the top right	Window		右上に探したいものを入力してください
 Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" をダウンロード中です。再生中の動画を閉じて今すぐ見ますか、それとも後でダウンロードから見ますか？
 Folders of the library	Settings		ライブラリのフォルダー
+Moving to the network folder	Window		ネットワークフォルダーへ移動中
 No videos found	Window		動画が見つかりません
 See all	Home		すべて表示
 Click to watch it	Window		クリックして見る
+Moved to the network folder	Window		ネットワークフォルダーへ移動しました
 Open the channel	Grid		チャンネルを開く
 Check	Settings		確認
 Playback	Settings		再生
 Subtitles	Subtitles		字幕
+It does not work: %error%	Settings		うまくいきません: %error%
 This video comes in one quality only	Window		この動画の画質は一つだけです
 science explained	Categories		科学 解説
 Download	Grid		ダウンロード
@@ -142,13 +156,17 @@ Movies	Window		映画
 Later	Window		後で
 Looking for the videos…	Window		動画を検索中…
 %count% subscribers	Detail		チャンネル登録者数 %count%人
+Password:	Settings		パスワード:
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容
+Move to the network folder	Grid		ネットワークフォルダーへ移動
 Following	Detail		フォロー中
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube などのソースには Python 3 と yt-dlp が必要ですが、このシステムにないか動作していません。
 Automatic	Settings		自動
 automatic	Player		自動生成
 No videos downloaded yet: right click a video, or press D	Window		ダウンロードした動画はまだありません: 動画を右クリックするか、D を押してください
+Copying to the network folder	Window		ネットワークフォルダーへコピー中
 From a file	Player		ファイルから
+Network folder	Settings		ネットワークフォルダー
 Favorites	Window		お気に入り
 Can you see the video?	Player		動画が見えますか?
 Install	Window		インストール

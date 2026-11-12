@@ -13,6 +13,8 @@
 #include <File.h>
 #include <FindDirectory.h>
 #include <Message.h>
+#include <Key.h>
+#include <KeyStore.h>
 #include <Path.h>
 
 
@@ -68,6 +70,8 @@ Settings::Load()
 	settings.tvOffered = archive.GetBool("tv offered", false);
 	settings.homeNetworkOffered = archive.GetBool("home network offered",
 		false);
+	settings.networkFolder = archive.GetString("network folder", "");
+	settings.networkUser = archive.GetString("network user", "");
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
 	settings.evenVolume = archive.GetBool("even volume", true);
@@ -97,6 +101,8 @@ Settings::Save() const
 	archive.AddInt32("video height", videoHeight);
 	archive.AddBool("tv offered", tvOffered);
 	archive.AddBool("home network offered", homeNetworkOffered);
+	archive.AddString("network folder", networkFolder);
+	archive.AddString("network user", networkUser);
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);
 	archive.AddBool("even volume", evenVolume);
@@ -125,6 +131,34 @@ Settings::TmdbKey()
 	fclose(file);
 	key.Trim();
 	return key;
+}
+
+
+static const char* kNetworkKey = "Cinema: network folder";
+
+
+BString
+Settings::NetworkPassword()
+{
+	BKeyStore store;
+	BPasswordKey key;
+	if (store.GetKey(B_KEY_TYPE_PASSWORD, kNetworkKey, key) != B_OK)
+		return "";
+	return key.Password();
+}
+
+
+status_t
+Settings::SetNetworkPassword(const char* password)
+{
+	BKeyStore store;
+	BPasswordKey old;
+	if (store.GetKey(B_KEY_TYPE_PASSWORD, kNetworkKey, old) == B_OK)
+		store.RemoveKey(old);
+	if (password == NULL || password[0] == '\0')
+		return B_OK;
+	BPasswordKey key(password, B_KEY_PURPOSE_NETWORK, kNetworkKey);
+	return store.AddKey(key);
 }
 
 

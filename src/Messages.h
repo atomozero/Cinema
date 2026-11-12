@@ -84,6 +84,13 @@ enum {
 									// "which" 0 of the alert, "packages"
 	kMsgHelperInstalled	= 'hind',	// its Terminal closed: try again
 	kMsgShowPlayer		= 'plsh',	// the video got ready behind: shown
+	kMsgUpload			= 'upld',	// "id", "path", "title", "move": a
+									// download to the network folder
+	kMsgUploadProgress	= 'uppr',	// "id", "percent"
+	kMsgUploaded		= 'upok',	// "id", "ok", "error"
+	kMsgCheckUpload		= 'upch',	// "target", "user", "password": the
+									// network folder of the settings tried
+	kMsgUploadChecked	= 'upck',	// "ok", "error"
 	kMsgWatchTorrent	= 'twat',	// "which" 0 of the alert: the torrent
 									// added while a video played, now
 	kMsgAskOverlay		= 'plaq',	// time to ask whether the video shows

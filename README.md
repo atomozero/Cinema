@@ -96,7 +96,13 @@ what you may share, such as the films of the Blender Foundation or the torrents
 of the Internet Archive. The video servers of the home network (DLNA, as a
 FRITZ!Box, a NAS, or Jellyfin and Plex with DLNA on) are found by themselves:
 a **Home network** tab, added the first time one answers, shows them, and their
-folders and videos, played from the server as they are. **S** or a right click gives a video or a channel a
+folders and videos, played from the server as they are, or downloaded from
+it. The other way, a downloaded video can be copied or moved, with a right
+click, to a network folder: an FTP address set in the settings, such as the
+disk of a FRITZ!Box, whose password stays in the keyring of Haiku; moved, the
+video goes to the Trash only once the copy there is whole. A video read from
+the network starts after a few seconds of it are there, and one too heavy
+for most processors (HEVC above 1080p) starts without the deblocking filter. **S** or a right click gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.
 
 The settings, in the **≡** menu or with Alt+,, hold the TMDB key, the folders

@@ -286,6 +286,34 @@ Helper::Download(const char* id, const char* folder, const char* provider)
 
 
 void
+Helper::Upload(const char* id, const char* path, const char* target,
+	const char* user, const char* password)
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "upload");
+	request.Set("id", id);
+	request.Set("path", path);
+	request.Set("target", target);
+	request.Set("user", user);
+	request.Set("password", password);
+	_Send(request);
+}
+
+
+void
+Helper::CheckUpload(const char* target, const char* user,
+	const char* password)
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "upload check");
+	request.Set("target", target);
+	request.Set("user", user);
+	request.Set("password", password);
+	_Send(request);
+}
+
+
+void
 Helper::CheckTmdb()
 {
 	Json request = Json::MakeObject();
@@ -528,6 +556,21 @@ Helper::_Handle(const BString& line)
 		return;
 	}
 
+	if (type == "uploading") {
+		BMessage progress(kMsgUploadProgress);
+		progress.AddString("id", answer.GetString("id", "").c_str());
+		progress.AddInt32("percent", answer.GetInt("percent", 0));
+		Deliver(fTarget, &progress, &fStopping);
+		return;
+	}
+	if (type == "uploaded" || type == "upload checked") {
+		BMessage done(type == "uploaded" ? kMsgUploaded : kMsgUploadChecked);
+		done.AddString("id", answer.GetString("id", "").c_str());
+		done.AddBool("ok", answer.GetBool("ok", false));
+		done.AddString("error", answer.GetString("error", "").c_str());
+		Deliver(fTarget, &done, &fStopping);
+		return;
+	}
 	if (type == "checked") {
 		BMessage checked(kMsgTmdbChecked);
 		checked.AddBool("ok", answer.GetBool("ok", false));

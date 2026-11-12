@@ -127,6 +127,9 @@ private:
 			void				_FindAtHeight(int32 height);
 			void				_HidePlayer();
 			void				_OfferHomeNetwork();
+			void				_Upload(BMessage* message);
+			void				_Uploaded(BMessage* message);
+			void				_Trashed(const BString& id);
 			void				_ShowHiddenPlayer();
 			void				_PlayerOpened();
 			void				_OfferInstall();
@@ -208,6 +211,8 @@ private:
 			// Esc while the video got ready: it goes on behind, muted, and
 			// paused once open, until its notification is clicked
 			bool				fPlayerHidden = false;
+			// downloads being copied to the network folder, by their path
+			std::map<BString, BMessage> fUploads;
 			float				fHiddenVolume = 1.0f;
 			BString				fPendingTorrent;	// once aria2c is there
 			bigtime_t			fHelperRestarted = 0;

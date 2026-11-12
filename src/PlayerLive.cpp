@@ -442,7 +442,18 @@ Player::_OpenLive()
 		BAutolock locker(fStatsLock);
 		fHasStats = false;
 	}
-	_LiveSkip(kSlowProcessor ? 1 : 0);
+	// a video heavier than most processors decode whole without help
+	// (HEVC above 1080p, anything above 1440p): without the deblocking
+	// filter from the start, rather than late pictures first
+	fLiveFloor = kSlowProcessor ? 1 : 0;
+	if (fLiveVideo != NULL) {
+		uint64 pixels = (uint64)fLiveVideo->width * fLiveVideo->height;
+		if ((fLiveVideo->codec_id == AV_CODEC_ID_HEVC
+				&& pixels > 1920ULL * 1080 * 11 / 10)
+			|| pixels > 2560ULL * 1440 * 11 / 10)
+			fLiveFloor = 1;
+	}
+	_LiveSkip(fLiveFloor);
 
 	// the pictures
 	if (fLiveVideo != NULL && !_SetUpBitmaps(fLiveVideo->width & ~1,
@@ -768,7 +779,7 @@ Player::_LiveLateness(bool late)
 {
 	if (_LiveClock() - fClockBase < kSettling)
 		return;
-	int base = kSlowProcessor ? 1 : 0;
+	int base = fLiveFloor;
 	if (late) {
 		// a late picture now and then, after the network held the stream
 		// a moment say, does not keep the decoding low with time to spare:
@@ -1243,6 +1254,31 @@ Player::_LiveLoop()
 		std::lock_guard<std::mutex> locker(readLock);
 		readEnded = true;
 	});
+
+	// a file read from the network (a server of the home network, the
+	// web): some seconds of it first, so that a network barely fast enough
+	// does not stop the pictures at once; not the relay or a torrent of
+	// the helper, which wait for their pieces themselves, nor live TV
+	if (!fLive && !fRelay && fAddress.IStartsWith("http")
+		&& !fAddress.StartsWith("http://localhost:")) {
+		double perSecond = audio >= 0 ? 50 : 0;
+		if (video >= 0) {
+			AVRational rate = format->streams[video]->avg_frame_rate;
+			perSecond += rate.num > 0 && rate.den > 0
+				? std::min(120.0, av_q2d(rate)) : 30;
+		}
+		size_t wanted = std::min((size_t)(perSecond * 5),
+			maxReadPackets * 9 / 10);
+		bigtime_t until = system_time() + 10000000;
+		while (!fQuit && system_time() < until) {
+			{
+				std::lock_guard<std::mutex> locker(readLock);
+				if (readEnded || read.size() >= wanted)
+					break;
+			}
+			snooze_until(system_time() + 50000, B_SYSTEM_TIMEBASE);
+		}
+	}
 
 	while (!fQuit && !failed) {
 		if (fPaused) {

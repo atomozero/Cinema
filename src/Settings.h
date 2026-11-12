@@ -29,6 +29,8 @@ struct Settings {
 	BString		searchSource;	// the provider searched first, or empty
 	int32		videoHeight;	// the highest picture wanted, 0 for what
 								// suits the machine
+	BString		networkFolder;	// ftp://host/folder: downloads copied there
+	BString		networkUser;
 	bool		homeNetworkOffered = false;
 								// the tab of the servers of the home
 								// network was added once
@@ -54,6 +56,9 @@ struct Settings {
 
 	static	BString		TmdbKey();
 	static	void		SetTmdbKey(const char* key);
+	static	BString		NetworkPassword();
+	static	status_t	SetNetworkPassword(const char* password);
+							// in the keyring of Haiku, not in a file
 };
 
 
