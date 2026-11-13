@@ -238,6 +238,14 @@ private:
 			void*				fLiveHwOpaque;
 			SwrContext*			fLiveResampler;
 			SwsContext*			fLiveScaler;
+			// what fLiveScaler was made for: made again when it changes;
+			// above 720p it converts in slices on several threads
+			int					fScalerFrom[3] = { 0, 0, -1 };
+			int					fScalerTo[3] = { 0, 0, -1 };
+			int					fScalerThreads = 0;
+			bool				fThreadedScaling = true;
+			SwsContext*			_LiveScaler(const AVFrame* frame, int width,
+									int height, int flags, int threads);
 			int					fLiveVideoIndex;
 			int					fLiveAudioIndex;
 			int					fLiveSkipLevel;

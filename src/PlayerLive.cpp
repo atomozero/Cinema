@@ -19,6 +19,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/channel_layout.h>
+#include <libavutil/cpu.h>
 #include <libavutil/hwcontext.h>
 #include <libavutil/mem.h>
 #include <libavutil/opt.h>
@@ -237,8 +238,11 @@ Player::_SetUpBitmaps(int32 width, int32 height)
 			scale = screenScale;
 	}
 	if (scale < 1.0f) {
-		width = std::max((int32)2,
-			((int32)(width * scale + 0.5f)) & ~1);
+		// a multiple of 8 wide: libswscale 6.1 converts other widths in
+		// slices with two grey pixels at the start of each slice, and the
+		// screen fits the bitmap to the window anyway
+		width = std::max((int32)8,
+			((int32)(width * scale + 0.5f)) & ~7);
 		height = std::max((int32)2, (int32)(height * scale + 0.5f));
 	}
 
@@ -823,6 +827,56 @@ Player::_LiveClock()
 }
 
 
+/*!	The scaler for this frame and the bitmap, made again only when they
+	change: with threads > 1 it converts in slices on that many threads
+	(sws_scale_frame()).
+*/
+SwsContext*
+Player::_LiveScaler(const AVFrame* frame, int width, int height, int flags,
+	int threads)
+{
+	if (fLiveScaler != NULL && fScalerFrom[0] == frame->width
+		&& fScalerFrom[1] == frame->height
+		&& fScalerFrom[2] == frame->format && fScalerTo[0] == width
+		&& fScalerTo[1] == height && fScalerTo[2] == fLivePixels
+		&& fScalerThreads == threads)
+		return fLiveScaler;
+	if (fLiveScaler != NULL)
+		sws_freeContext(fLiveScaler);
+	fLiveScaler = sws_alloc_context();
+	if (fLiveScaler == NULL)
+		return NULL;
+	av_opt_set_int(fLiveScaler, "srcw", frame->width, 0);
+	av_opt_set_int(fLiveScaler, "srch", frame->height, 0);
+	av_opt_set_int(fLiveScaler, "src_format", frame->format, 0);
+	av_opt_set_int(fLiveScaler, "dstw", width, 0);
+	av_opt_set_int(fLiveScaler, "dsth", height, 0);
+	av_opt_set_int(fLiveScaler, "dst_format", fLivePixels, 0);
+	av_opt_set_int(fLiveScaler, "sws_flags", flags, 0);
+	av_opt_set_int(fLiveScaler, "threads", threads, 0);
+	if (sws_init_context(fLiveScaler, NULL, NULL) < 0) {
+		sws_freeContext(fLiveScaler);
+		fLiveScaler = NULL;
+		return NULL;
+	}
+	fScalerFrom[0] = frame->width;
+	fScalerFrom[1] = frame->height;
+	fScalerFrom[2] = frame->format;
+	fScalerTo[0] = width;
+	fScalerTo[1] = height;
+	fScalerTo[2] = fLivePixels;
+	fScalerThreads = threads;
+	return fLiveScaler;
+}
+
+
+static void
+keep_bitmap_bits(void*, uint8_t*)
+{
+	// the bits are the bitmap's
+}
+
+
 bool
 Player::_LiveRender(AVFrame* frame)
 {
@@ -832,15 +886,46 @@ Player::_LiveRender(AVFrame* frame)
 	int height = fBack->Bounds().IntegerHeight() + 1;
 	int flags = frame->width == width && frame->height == height
 		? SWS_POINT : SWS_FAST_BILINEAR;
-	fLiveScaler = sws_getCachedContext(fLiveScaler, frame->width,
-		frame->height, (AVPixelFormat)frame->format, width, height,
-		(AVPixelFormat)fLivePixels, flags, NULL, NULL, NULL);
-	if (fLiveScaler == NULL)
+	// the colours of a large picture in slices, on the processors free
+	// of the decoding as much as they can be: the Sony drew 1536x2048 on
+	// one; a small one is quicker on one than waking the others
+	int threads = 1;
+	if (fThreadedScaling && width % 8 == 0
+		&& (int64)frame->width * frame->height > 1280LL * 720)
+		threads = std::max(1, std::min(4, av_cpu_count()));
+	if (_LiveScaler(frame, width, height, flags, threads) == NULL)
 		return false;
-	uint8_t* planes[4] = { (uint8_t*)fBack->Bits(), NULL, NULL, NULL };
-	int strides[4] = { (int)fBack->BytesPerRow(), 0, 0, 0 };
-	sws_scale(fLiveScaler, frame->data, frame->linesize, 0, frame->height,
-		planes, strides);
+	bool done = false;
+	if (threads > 1) {
+		// into the bitmap itself, through a frame that only points at it
+		AVFrame* target = av_frame_alloc();
+		AVBufferRef* bits = av_buffer_create((uint8_t*)fBack->Bits(),
+			fBack->BitsLength(), &keep_bitmap_bits, NULL, 0);
+		if (target != NULL && bits != NULL) {
+			target->buf[0] = bits;
+			bits = NULL;
+			target->data[0] = (uint8_t*)fBack->Bits();
+			target->linesize[0] = (int)fBack->BytesPerRow();
+			target->width = width;
+			target->height = height;
+			target->format = fLivePixels;
+			done = sws_scale_frame(fLiveScaler, target, frame) >= 0;
+		}
+		av_buffer_unref(&bits);
+		av_frame_free(&target);
+		if (!done) {
+			// not this scaler: as before, on one thread, from now on
+			fThreadedScaling = false;
+			if (_LiveScaler(frame, width, height, flags, 1) == NULL)
+				return false;
+		}
+	}
+	if (!done) {
+		uint8_t* planes[4] = { (uint8_t*)fBack->Bits(), NULL, NULL, NULL };
+		int strides[4] = { (int)fBack->BytesPerRow(), 0, 0, 0 };
+		sws_scale(fLiveScaler, frame->data, frame->linesize, 0, frame->height,
+			planes, strides);
+	}
 	_ShowFrame();
 	fShowNext = false;
 	if (!fFramePending.exchange(true)

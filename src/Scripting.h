@@ -34,7 +34,7 @@
 
 	An error is answered with "error" (B_ERROR) and "message".
 */
-static const char* kCinemaSuite = "suite/vnd.atomozero-Cinema";
+static const char* const kCinemaSuite = "suite/vnd.atomozero-Cinema";
 
 static const property_info kCinemaProperties[] = {
 	{ "Downloads", { B_GET_PROPERTY, 0 }, { B_DIRECT_SPECIFIER, 0 },
