@@ -164,6 +164,17 @@ yt-dlp loads in about three seconds instead of nine on the AC100. YouTube change
 often, and when videos stop being found a newer yt-dlp usually helps:
 `pkgman update`, or the same `curl` again.
 
+## Your YouTube account
+
+In the settings, **YouTube account** opens WebPositive on the page to sign in
+to YouTube; once signed in there, **I signed in** makes your Subscriptions,
+Watch later, Liked videos and History tabs of Cinema. Cinema keeps no
+password: the helper reads the cookies of YouTube and Google that WebPositive
+keeps (`~/config/settings/WebPositive/cookie.jar.db`), in a copy only you can
+read, and only for these pages; searching and playing stay anonymous. They
+last as long as the session of WebPositive; **Sign out** takes the tabs away
+and forgets the copy.
+
 ## Scripting
 
 Cinema answers scripting, with `hey` or an assistant through an MCP server

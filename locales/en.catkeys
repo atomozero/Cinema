@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	3501182019
+1	english	application/x-vnd.atomozero-Cinema	86757012
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -14,7 +14,11 @@ Play	Grid		Play
 Video downloaded	Window		Video downloaded
 Video overlay:	Settings		Video overlay:
 Sound ready: %seconds% s	Player		Sound ready: %seconds% s
+Sign out	Settings		Sign out
+Sign in with WebPositive…	Settings		Sign in with WebPositive…
 Getting the video ready	Grid		Getting the video ready
+1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".
+Subscriptions	Window		Subscriptions
 today	Detail		today
 Settings…	Window		Settings…
 Downloading…	Detail		Downloading…
@@ -40,8 +44,8 @@ Play the videos in Cinema, not in MediaPlayer	Settings		Play the videos in Cinem
 technology review	Categories		technology review
 User:	Settings		User:
 Continue watching	Window		Continue watching
-Move to Trash	Window		Move to Trash
 Getting the video ready	Player		Getting the video ready
+Move to Trash	Window		Move to Trash
 Follow	Grid		Follow
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# week ago} other{# weeks ago}}
 The password could not be kept in the keyring.	Settings		The password could not be kept in the keyring.
@@ -55,12 +59,15 @@ TV	Window		TV
 Decoding the reference pictures only	Player		Decoding the reference pictures only
 Videos	Window	the folder of the other videos downloaded, by channel	Videos
 TV %country%	Settings		TV %country%
+Not signed in.	Settings		Not signed in.
 TV channels	Settings		TV channels
 Technology	Categories		Technology
+Liked videos	Window		Liked videos
 TMDB key:	Settings		TMDB key:
 Getting the details…	Detail		Getting the details…
 Above 360p, YouTube takes longer to start.	Settings		Above 360p, YouTube takes longer to start.
 With a key, the library gets posters, plots and casts. It is free.	Settings		With a key, the library gets posters, plots and casts. It is free.
+Only these pages use the account; Cinema keeps no password.	Settings		Only these pages use the account; Cinema keeps no password.
 Address:	Settings		Address:
 Copied to the network folder	Window		Copied to the network folder
 Downloading…	Grid		Downloading…
@@ -90,11 +97,14 @@ Series	Window	the folder of the series downloaded	Series
 TV series	Window		TV series
 yesterday	Detail		yesterday
 Following	Grid		Following
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Subscriptions, Watch later, Liked videos and History become tabs.
 No subtitles available	Player		No subtitles available
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# month ago} other{# months ago}}
 Video ready	Window		Video ready
 Move \"%title%\" to the Trash?	Window		Move \"%title%\" to the Trash?
+YouTube account	Settings		YouTube account
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# year ago} other{# years ago}}
+Not signed in: %error%	Settings		Not signed in: %error%
 Show the latest videos	Grid		Show the latest videos
 Copy to the network folder	Grid		Copy to the network folder
 The key works.	Settings		The key works.
@@ -146,17 +156,20 @@ Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?
 Folders of the library	Settings		Folders of the library
 Moving to the network folder	Window		Moving to the network folder
+Watch later	Window		Watch later
 No videos found	Window		No videos found
 See all	Home		See all
 Click to watch it	Window		Click to watch it
 Moved to the network folder	Window		Moved to the network folder
 Open the channel	Grid		Open the channel
+I signed in	Settings		I signed in
 Check	Settings		Check
 Playback	Settings		Playback
 Subtitles	Subtitles		Subtitles
 It does not work: %error%	Settings		It does not work: %error%
 This video comes in one quality only	Window		This video comes in one quality only
 science explained	Categories		science explained
+Signed in: the tabs of the account are there.	Settings		Signed in: the tabs of the account are there.
 Download	Grid		Download
 Channel	Grid		Channel
 Movies	Window		Movies
@@ -169,6 +182,7 @@ Password:	Settings		Password:
 Move to the network folder	Grid		Move to the network folder
 Following	Detail		Following
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.
+History	Window		History
 Automatic	Settings		Automatic
 automatic	Player		automatic
 No videos downloaded yet: right click a video, or press D	Window		No videos downloaded yet: right click a video, or press D
@@ -180,6 +194,7 @@ Can you see the video?	Player		Can you see the video?
 Install	Window		Install
 Home	Categories		Home
 Checking…	Settings		Checking…
+Sign in in WebPositive, then press \"I signed in\".	Settings		Sign in in WebPositive, then press \"I signed in\".
 Changing to %height%p…	Window		Changing to %height%p…
 Subtitles	Player		Subtitles
 From a torrent, as it downloads	Player		From a torrent, as it downloads

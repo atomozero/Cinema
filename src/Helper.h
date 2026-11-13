@@ -72,6 +72,11 @@ public:
 									// "channel"; names: "movies", "series",
 									// "videos", "season" (with %d);
 									// answered with kMsgOrganized
+			void				SetYouTubeAccount(bool enabled);
+									// its pages read with the cookies of
+									// WebPositive; kept for a new helper
+			void				CheckYouTube();
+									// answered with kMsgYouTubeChecked
 			void				CheckTmdb();
 									// answered with kMsgTmdbChecked
 									// NULL or empty: the default provider
@@ -88,6 +93,7 @@ private:
 			BLocker				fLock;
 			BString				fProvider;	// "youtube" until it says
 			int32				fHeight;
+			bool				fYouTubeAccount = false;
 			int					fInput;		// its standard input
 			int					fOutput;	// its standard output
 			pid_t				fProcess;

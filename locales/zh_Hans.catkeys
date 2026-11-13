@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	3501182019
+1	chinese	application/x-vnd.atomozero-Cinema	86757012
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -14,7 +14,11 @@ Play	Grid		播放
 Video downloaded	Window		视频已下载
 Video overlay:	Settings		视频叠加层：
 Sound ready: %seconds% s	Player		已准备的声音：%seconds% 秒
+Sign out	Settings		退出
+Sign in with WebPositive…	Settings		用 WebPositive 登录…
 Getting the video ready	Grid		正在准备视频
+1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. 在 WebPositive 中登录 YouTube。  2. 回到这里点击“我已登录”。
+Subscriptions	Window		订阅
 today	Detail		今天
 Settings…	Window		设置…
 Downloading…	Detail		正在下载…
@@ -40,8 +44,8 @@ Play the videos in Cinema, not in MediaPlayer	Settings		在 Cinema 中播放视�
 technology review	Categories		科技评测
 User:	Settings		用户：
 Continue watching	Window		继续观看
-Move to Trash	Window		移到废纸篓
 Getting the video ready	Player		正在准备视频
+Move to Trash	Window		移到废纸篓
 Follow	Grid		关注
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#周前}}
 The password could not be kept in the keyring.	Settings		无法将密码保存在钥匙串中。
@@ -55,12 +59,15 @@ TV	Window		电视
 Decoding the reference pictures only	Player		仅解码参考帧
 Videos	Window	the folder of the other videos downloaded, by channel	视频
 TV %country%	Settings		%country%电视
+Not signed in.	Settings		未登录。
 TV channels	Settings		电视频道
 Technology	Categories		科技
+Liked videos	Window		赞过的视频
 TMDB key:	Settings		TMDB 密钥：
 Getting the details…	Detail		正在获取详细信息…
 Above 360p, YouTube takes longer to start.	Settings		高于 360p 时，YouTube 开始播放需要更久。
 With a key, the library gets posters, plots and casts. It is free.	Settings		有了密钥，媒体库会获取海报、剧情简介和演员表。它是免费的。
+Only these pages use the account; Cinema keeps no password.	Settings		只有这些页面使用账户；Cinema 不保存密码。
 Address:	Settings		地址：
 Copied to the network folder	Window		已复制到网络文件夹
 Downloading…	Grid		正在下载…
@@ -90,11 +97,14 @@ Series	Window	the folder of the series downloaded	剧集
 TV series	Window		电视剧
 yesterday	Detail		昨天
 Following	Grid		已关注
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		订阅、稍后观看、赞过的视频和观看记录将成为标签页。
 No subtitles available	Player		没有可用的字幕
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
 Video ready	Window		视频已就绪
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
+YouTube account	Settings		YouTube 账户
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
+Not signed in: %error%	Settings		未登录：%error%
 Show the latest videos	Grid		显示最新视频
 Copy to the network folder	Grid		复制到网络文件夹
 The key works.	Settings		密钥有效。
@@ -146,17 +156,20 @@ Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" 正在下载。现在观看（关闭正在播放的视频），还是稍后从下载中观看？
 Folders of the library	Settings		媒体库文件夹
 Moving to the network folder	Window		正在移动到网络文件夹
+Watch later	Window		稍后观看
 No videos found	Window		未找到视频
 See all	Home		查看全部
 Click to watch it	Window		点击观看
 Moved to the network folder	Window		已移动到网络文件夹
 Open the channel	Grid		打开频道
+I signed in	Settings		我已登录
 Check	Settings		检查
 Playback	Settings		播放
 Subtitles	Subtitles		字幕
 It does not work: %error%	Settings		无法使用：%error%
 This video comes in one quality only	Window		此视频只有一种画质
 science explained	Categories		科学解说
+Signed in: the tabs of the account are there.	Settings		已登录：账户的标签页已添加。
 Download	Grid		下载
 Channel	Grid		频道
 Movies	Window		电影
@@ -169,6 +182,7 @@ Password:	Settings		密码：
 Move to the network folder	Grid		移动到网络文件夹
 Following	Detail		已关注
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube 和其他来源需要 Python 3 和 yt-dlp，此系统上缺少它们或无法运行。
+History	Window		观看记录
 Automatic	Settings		自动
 automatic	Player		自动生成
 No videos downloaded yet: right click a video, or press D	Window		还没有下载的视频：右键点击视频，或按 D
@@ -180,6 +194,7 @@ Can you see the video?	Player		你能看到视频吗？
 Install	Window		安装
 Home	Categories		主页
 Checking…	Settings		正在检查…
+Sign in in WebPositive, then press \"I signed in\".	Settings		在 WebPositive 中登录后，点击“我已登录”。
 Changing to %height%p…	Window		正在切换到 %height%p…
 Subtitles	Player		字幕
 From a torrent, as it downloads	Player		来自种子，边下载边播放

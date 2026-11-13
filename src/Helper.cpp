@@ -161,6 +161,14 @@ Helper::Start(const char* script, const char* cache)
 		B_NORMAL_PRIORITY, this);
 	if (fReader < 0)
 		return fReader;
+	// the account of YouTube for this helper too, started again
+	bool account;
+	{
+		BAutolock locker(fLock);
+		account = fYouTubeAccount;
+	}
+	if (account)
+		SetYouTubeAccount(true);
 	return resume_thread(fReader);
 }
 
@@ -329,6 +337,29 @@ Helper::Organize(const char* id, const char* path, const char* root,
 			"podcasts" })
 		folders.Set(field, names.GetString(field, ""));
 	request.Set("names", folders);
+	_Send(request);
+}
+
+
+void
+Helper::SetYouTubeAccount(bool enabled)
+{
+	{
+		BAutolock locker(fLock);
+		fYouTubeAccount = enabled;
+	}
+	Json request = Json::MakeObject();
+	request.Set("type", "youtube account");
+	request.Set("enabled", enabled);
+	_Send(request);
+}
+
+
+void
+Helper::CheckYouTube()
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "youtube check");
 	_Send(request);
 }
 
@@ -588,6 +619,13 @@ Helper::_Handle(const BString& line)
 		progress.AddString("id", answer.GetString("id", "").c_str());
 		progress.AddInt32("percent", answer.GetInt("percent", 0));
 		Deliver(fTarget, &progress, &fStopping);
+		return;
+	}
+	if (type == "youtube checked") {
+		BMessage checked(kMsgYouTubeChecked);
+		checked.AddBool("ok", answer.GetBool("ok", false));
+		checked.AddString("error", answer.GetString("error", "").c_str());
+		Deliver(fTarget, &checked, &fStopping);
 		return;
 	}
 	if (type == "uploaded" || type == "upload checked") {

@@ -218,6 +218,9 @@ CinemaWindow::CinemaWindow()
 	// without changing the settings
 	const char* height = getenv("CINEMA_VIDEO_HEIGHT");
 	fHelper->SetHeight(height != NULL ? atoi(height) : fSettings.videoHeight);
+	// the pages of the account of YouTube, for the helper about to start
+	if (fSettings.youtubeAccount)
+		fHelper->SetYouTubeAccount(true);
 	fHelper->Start(script.Path(), fWorker->Cache());
 	Watchdog::Start(fWorker->Cache(), BMessenger(this));
 
@@ -956,7 +959,7 @@ CinemaWindow::_SetChannelHeader(const char* name, const char* id,
 	// favorites
 	if ((source != "youtube" && source != "peertube" && source != "archive"
 			&& source != "podcast")
-		|| strcmp(id, "series") == 0) {
+		|| strcmp(id, "series") == 0 || id[0] == ':') {
 		fGrid->ClearChannelHeader();
 		return;
 	}
@@ -2314,6 +2317,84 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgOrganized:
 			_Organized(message);
 			break;
+		case kMsgYouTubeSignIn:
+		{
+			// WebPositive keeps the cookies of the account, which the helper
+			// reads for its pages
+			const char* page = "https://accounts.google.com/ServiceLogin"
+				"?service=youtube&continue=https%3A%2F%2Fwww.youtube.com%2F";
+			const char* arguments[] = { page };
+			be_roster->Launch("application/x-vnd.Haiku-WebPositive", 1,
+				arguments);
+			break;
+		}
+		case kMsgCheckYouTube:
+			fHelper->CheckYouTube();
+			break;
+		case kMsgYouTubeChecked:
+		{
+			fSettingsWindow.SendMessage(message);
+			if (!message->GetBool("ok", false))
+				break;
+			fSettings = Settings::Load();
+			fSettings.youtubeAccount = true;
+			fSettings.Save();
+			fHelper->SetYouTubeAccount(true);
+			// its pages as tabs, those not there yet
+			static const struct { const char* id; const char* name; } kPages[]
+				= {
+				{ ":subscriptions", B_TRANSLATE_MARK("Subscriptions") },
+				{ ":watchlater", B_TRANSLATE_MARK("Watch later") },
+				{ ":liked", B_TRANSLATE_MARK("Liked videos") },
+				{ ":history", B_TRANSLATE_MARK("History") },
+			};
+			bool added = false;
+			for (const auto& page : kPages) {
+				bool there = false;
+				for (const Category& existing : fCategories) {
+					if (existing.provider == "youtube"
+						&& existing.channel == page.id)
+						there = true;
+				}
+				if (there)
+					continue;
+				Category category;
+				category.name = B_TRANSLATE_NOCOLLECT(page.name);
+				category.provider = "youtube";
+				category.channel = page.id;
+				fCategories.push_back(category);
+				added = true;
+			}
+			if (added) {
+				SaveCategories(fCategories);
+				fCategoryBar->SetCategories(fCategories);
+				fHomeLoaded = false;
+			}
+			break;
+		}
+		case kMsgYouTubeSignOut:
+		{
+			fSettings = Settings::Load();
+			fSettings.youtubeAccount = false;
+			fSettings.Save();
+			fHelper->SetYouTubeAccount(false);
+			// its tabs go
+			std::vector<Category> kept;
+			for (const Category& category : fCategories) {
+				if (!(category.provider == "youtube"
+						&& category.channel.StartsWith(":")))
+					kept.push_back(category);
+			}
+			if (kept.size() != fCategories.size()) {
+				fCategories = kept;
+				SaveCategories(fCategories);
+				fCategoryBar->SetCategories(fCategories);
+				fHomeLoaded = false;
+				if (fCard == 0 && fChannelId.IsEmpty())
+					_ShowHome();
+			}
+			break;
+		}
 		case kMsgOrganizeAll:
 		{
 			// the downloads there are, but not those still on their way or

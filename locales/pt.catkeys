@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	3501182019
+1	portuguese	application/x-vnd.atomozero-Cinema	86757012
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -14,7 +14,11 @@ Play	Grid		Reproduzir
 Video downloaded	Window		Vídeo baixado
 Video overlay:	Settings		Overlay de vídeo:
 Sound ready: %seconds% s	Player		Som pronto: %seconds% s
+Sign out	Settings		Sair
+Sign in with WebPositive…	Settings		Entrar com o WebPositive…
 Getting the video ready	Grid		Preparando o vídeo
+1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Entre no YouTube pelo WebPositive.  2. Volte e clique em \"Já entrei\".
+Subscriptions	Window		Inscrições
 today	Detail		hoje
 Settings…	Window		Configurações…
 Downloading…	Detail		Baixando…
@@ -40,8 +44,8 @@ Play the videos in Cinema, not in MediaPlayer	Settings		Reproduzir os vídeos no
 technology review	Categories		análise tecnologia
 User:	Settings		Usuário:
 Continue watching	Window		Continuar assistindo
-Move to Trash	Window		Mover para a lixeira
 Getting the video ready	Player		Preparando o vídeo
+Move to Trash	Window		Mover para a lixeira
 Follow	Grid		Seguir
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{há # semana} other{há # semanas}}
 The password could not be kept in the keyring.	Settings		Não foi possível guardar a senha no chaveiro.
@@ -55,12 +59,15 @@ TV	Window		TV
 Decoding the reference pictures only	Player		Decodificando só as imagens de referência
 Videos	Window	the folder of the other videos downloaded, by channel	Vídeos
 TV %country%	Settings		TV %country%
+Not signed in.	Settings		Não conectado.
 TV channels	Settings		Canais de TV
 Technology	Categories		Tecnologia
+Liked videos	Window		Vídeos marcados como gostei
 TMDB key:	Settings		Chave do TMDB:
 Getting the details…	Detail		Obtendo os detalhes…
 Above 360p, YouTube takes longer to start.	Settings		Acima de 360p, o YouTube demora mais a começar.
 With a key, the library gets posters, plots and casts. It is free.	Settings		Com uma chave, a biblioteca recebe pôsteres, sinopses e elencos. É gratuita.
+Only these pages use the account; Cinema keeps no password.	Settings		Só estas páginas usam a conta; o Cinema não guarda senhas.
 Address:	Settings		Endereço:
 Copied to the network folder	Window		Copiado para a pasta de rede
 Downloading…	Grid		Baixando…
@@ -90,11 +97,14 @@ Series	Window	the folder of the series downloaded	Séries
 TV series	Window		Séries
 yesterday	Detail		ontem
 Following	Grid		Seguindo
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Inscrições, Assistir mais tarde, Vídeos marcados como gostei e Histórico viram abas.
 No subtitles available	Player		Nenhuma legenda disponível
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{há # mês} other{há # meses}}
 Video ready	Window		Vídeo pronto
 Move \"%title%\" to the Trash?	Window		Mover "%title%" para a lixeira?
+YouTube account	Settings		Conta do YouTube
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{há # ano} other{há # anos}}
+Not signed in: %error%	Settings		Não conectado: %error%
 Show the latest videos	Grid		Mostrar os vídeos mais recentes
 Copy to the network folder	Grid		Copiar para a pasta de rede
 The key works.	Settings		A chave funciona.
@@ -146,17 +156,20 @@ Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" está sendo baixado. Ver agora, fechando o vídeo em reprodução, ou depois nos downloads?
 Folders of the library	Settings		Pastas da biblioteca
 Moving to the network folder	Window		Movendo para a pasta de rede
+Watch later	Window		Assistir mais tarde
 No videos found	Window		Nenhum vídeo encontrado
 See all	Home		Ver tudo
 Click to watch it	Window		Clique para assistir
 Moved to the network folder	Window		Movido para a pasta de rede
 Open the channel	Grid		Abrir o canal
+I signed in	Settings		Já entrei
 Check	Settings		Verificar
 Playback	Settings		Reprodução
 Subtitles	Subtitles		Legendas
 It does not work: %error%	Settings		Não funciona: %error%
 This video comes in one quality only	Window		Este vídeo só tem uma qualidade
 science explained	Categories		ciência explicada
+Signed in: the tabs of the account are there.	Settings		Conectado: as abas da conta estão aí.
 Download	Grid		Baixar
 Channel	Grid		Canal
 Movies	Window		Filmes
@@ -169,6 +182,7 @@ Password:	Settings		Senha:
 Move to the network folder	Grid		Mover para a pasta de rede
 Following	Detail		Seguindo
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		O YouTube e as outras fontes precisam do Python 3 e do yt-dlp, que faltam ou não funcionam neste sistema.
+History	Window		Histórico
 Automatic	Settings		Automática
 automatic	Player		automáticas
 No videos downloaded yet: right click a video, or press D	Window		Nenhum vídeo baixado ainda: clique com o botão direito em um vídeo, ou pressione D
@@ -180,6 +194,7 @@ Can you see the video?	Player		Vês o vídeo?
 Install	Window		Instalar
 Home	Categories		Início
 Checking…	Settings		Verificando…
+Sign in in WebPositive, then press \"I signed in\".	Settings		Entre no WebPositive e depois clique em \"Já entrei\".
 Changing to %height%p…	Window		Mudando para %height%p…
 Subtitles	Player		Legendas
 From a torrent, as it downloads	Player		De um torrent, enquanto baixa

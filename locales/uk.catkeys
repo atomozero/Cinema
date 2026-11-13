@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	3501182019
+1	ukrainian	application/x-vnd.atomozero-Cinema	86757012
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -14,7 +14,11 @@ Play	Grid		Відтворити
 Video downloaded	Window		Відео завантажено
 Video overlay:	Settings		Відеооверлей:
 Sound ready: %seconds% s	Player		Звук готовий: %seconds% с
+Sign out	Settings		Вийти
+Sign in with WebPositive…	Settings		Увійти через WebPositive…
 Getting the video ready	Grid		Підготовка відео
+1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Увійдіть у YouTube у WebPositive.  2. Поверніться й натисніть \"Я увійшов\".
+Subscriptions	Window		Підписки
 today	Detail		сьогодні
 Settings…	Window		Налаштування…
 Downloading…	Detail		Завантаження…
@@ -40,8 +44,8 @@ Play the videos in Cinema, not in MediaPlayer	Settings		Відтворювати
 technology review	Categories		огляд технологій
 User:	Settings		Користувач:
 Continue watching	Window		Продовжити перегляд
-Move to Trash	Window		Перемістити до смітника
 Getting the video ready	Player		Підготовка відео
+Move to Trash	Window		Перемістити до смітника
 Follow	Grid		Стежити
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# тиждень тому} few{# тижні тому} many{# тижнів тому} other{# тижня тому}}
 The password could not be kept in the keyring.	Settings		Не вдалося зберегти пароль у в'язці ключів.
@@ -55,12 +59,15 @@ TV	Window		ТБ
 Decoding the reference pictures only	Player		Декодування лише опорних кадрів
 Videos	Window	the folder of the other videos downloaded, by channel	Відео
 TV %country%	Settings		ТБ %country%
+Not signed in.	Settings		Вхід не виконано.
 TV channels	Settings		Телеканали
 Technology	Categories		Технології
+Liked videos	Window		Відео, що сподобалися
 TMDB key:	Settings		Ключ TMDB:
 Getting the details…	Detail		Отримання подробиць…
 Above 360p, YouTube takes longer to start.	Settings		Понад 360p YouTube запускається довше.
 With a key, the library gets posters, plots and casts. It is free.	Settings		З ключем бібліотека отримує постери, сюжети та акторський склад. Він безкоштовний.
+Only these pages use the account; Cinema keeps no password.	Settings		Лише ці сторінки використовують обліковий запис; Cinema не зберігає паролів.
 Address:	Settings		Адреса:
 Copied to the network folder	Window		Скопійовано в мережеву теку
 Downloading…	Grid		Завантаження…
@@ -90,11 +97,14 @@ Series	Window	the folder of the series downloaded	Серіали
 TV series	Window		Серіали
 yesterday	Detail		учора
 Following	Grid		Ви стежите
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Підписки, Переглянути пізніше, Відео, що сподобалися, та Історія стають вкладками.
 No subtitles available	Player		Немає доступних субтитрів
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
 Video ready	Window		Відео готове
 Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
+YouTube account	Settings		Обліковий запис YouTube
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
+Not signed in: %error%	Settings		Вхід не виконано: %error%
 Show the latest videos	Grid		Показати останні відео
 Copy to the network folder	Grid		Копіювати в мережеву теку
 The key works.	Settings		Ключ працює.
@@ -146,17 +156,20 @@ Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" завантажується. Дивитися зараз, закривши поточне відео, чи пізніше із завантажень?
 Folders of the library	Settings		Теки бібліотеки
 Moving to the network folder	Window		Переміщення в мережеву теку
+Watch later	Window		Переглянути пізніше
 No videos found	Window		Відео не знайдено
 See all	Home		Переглянути всі
 Click to watch it	Window		Натисніть, щоб дивитися
 Moved to the network folder	Window		Переміщено в мережеву теку
 Open the channel	Grid		Відкрити канал
+I signed in	Settings		Я увійшов
 Check	Settings		Перевірити
 Playback	Settings		Відтворення
 Subtitles	Subtitles		Субтитри
 It does not work: %error%	Settings		Не працює: %error%
 This video comes in one quality only	Window		Це відео має лише одну якість
 science explained	Categories		наука простими словами
+Signed in: the tabs of the account are there.	Settings		Вхід виконано: вкладки облікового запису на місці.
 Download	Grid		Завантажити
 Channel	Grid		Канал
 Movies	Window		Фільми
@@ -169,6 +182,7 @@ Password:	Settings		Пароль:
 Move to the network folder	Grid		Перемістити в мережеву теку
 Following	Detail		Ви стежите
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube та іншим джерелам потрібні Python 3 і yt-dlp, яких немає або які не працюють у цій системі.
+History	Window		Історія
 Automatic	Settings		Автоматично
 automatic	Player		автоматичні
 No videos downloaded yet: right click a video, or press D	Window		Ще немає завантажених відео: клацніть правою кнопкою на відео або натисніть D
@@ -180,6 +194,7 @@ Can you see the video?	Player		Ви бачите відео?
 Install	Window		Встановити
 Home	Categories		Головна
 Checking…	Settings		Перевірка…
+Sign in in WebPositive, then press \"I signed in\".	Settings		Увійдіть у WebPositive, потім натисніть \"Я увійшов\".
 Changing to %height%p…	Window		Перехід на %height%p…
 Subtitles	Player		Субтитри
 From a torrent, as it downloads	Player		З торента, поки завантажується

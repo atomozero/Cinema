@@ -72,6 +72,7 @@ Settings::Load()
 		false);
 	settings.networkFolder = archive.GetString("network folder", "");
 	settings.organizeDownloads = archive.GetBool("organize downloads", true);
+	settings.youtubeAccount = archive.GetBool("youtube account", false);
 	settings.networkUser = archive.GetString("network user", "");
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
@@ -104,6 +105,7 @@ Settings::Save() const
 	archive.AddBool("home network offered", homeNetworkOffered);
 	archive.AddString("network folder", networkFolder);
 	archive.AddBool("organize downloads", organizeDownloads);
+	archive.AddBool("youtube account", youtubeAccount);
 	archive.AddString("network user", networkUser);
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);

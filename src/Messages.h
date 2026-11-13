@@ -95,6 +95,10 @@ enum {
 	kMsgOrganized		= 'orgd',	// "id", "from", "path", "picture": a
 									// download put in order
 	kMsgOrganizeAll		= 'orga',	// the downloads there are, in order
+	kMsgYouTubeSignIn	= 'ytin',	// WebPositive on the page to sign in
+	kMsgCheckYouTube	= 'ytch',	// the account tried (settings)
+	kMsgYouTubeChecked	= 'ytck',	// "ok", "error": the account is there
+	kMsgYouTubeSignOut	= 'ytou',	// its pages no more
 	kMsgWatchTorrent	= 'twat',	// "which" 0 of the alert: the torrent
 									// added while a video played, now
 	kMsgAskOverlay		= 'plaq',	// time to ask whether the video shows

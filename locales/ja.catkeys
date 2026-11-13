@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	3501182019
+1	japanese	application/x-vnd.atomozero-Cinema	86757012
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
@@ -14,7 +14,11 @@ Play	Grid		再生
 Video downloaded	Window		動画をダウンロードしました
 Video overlay:	Settings		ビデオオーバーレイ:
 Sound ready: %seconds% s	Player		準備済みの音声: %seconds% 秒
+Sign out	Settings		ログアウト
+Sign in with WebPositive…	Settings		WebPositive でログイン…
 Getting the video ready	Grid		動画を準備中
+1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. WebPositive で YouTube にログインします。  2. 戻って「ログインした」を押します。
+Subscriptions	Window		登録チャンネル
 today	Detail		今日
 Settings…	Window		設定…
 Downloading…	Detail		ダウンロード中…
@@ -40,8 +44,8 @@ Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer ではなく
 technology review	Categories		テクノロジー レビュー
 User:	Settings		ユーザー:
 Continue watching	Window		続きを見る
-Move to Trash	Window		ゴミ箱に移動
 Getting the video ready	Player		動画を準備中
+Move to Trash	Window		ゴミ箱に移動
 Follow	Grid		フォロー
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
 The password could not be kept in the keyring.	Settings		パスワードをキーリングに保存できませんでした。
@@ -55,12 +59,15 @@ TV	Window		テレビ
 Decoding the reference pictures only	Player		参照フレームのみデコード
 Videos	Window	the folder of the other videos downloaded, by channel	動画
 TV %country%	Settings		%country%のテレビ
+Not signed in.	Settings		ログインしていません。
 TV channels	Settings		テレビチャンネル
 Technology	Categories		テクノロジー
+Liked videos	Window		高く評価した動画
 TMDB key:	Settings		TMDB キー:
 Getting the details…	Detail		詳細を取得中…
 Above 360p, YouTube takes longer to start.	Settings		360pを超えると、YouTubeの再生開始に時間がかかります。
 With a key, the library gets posters, plots and casts. It is free.	Settings		キーがあると、ライブラリにポスター、あらすじ、キャストが表示されます。無料です。
+Only these pages use the account; Cinema keeps no password.	Settings		アカウントを使うのはこれらのページだけで、Cinema はパスワードを保存しません。
 Address:	Settings		アドレス:
 Copied to the network folder	Window		ネットワークフォルダーにコピーしました
 Downloading…	Grid		ダウンロード中…
@@ -90,11 +97,14 @@ Series	Window	the folder of the series downloaded	シリーズ
 TV series	Window		テレビシリーズ
 yesterday	Detail		昨日
 Following	Grid		フォロー中
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		登録チャンネル、後で見る、高く評価した動画、履歴がタブになります。
 No subtitles available	Player		利用できる字幕がありません
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
 Video ready	Window		動画の準備ができました
 Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
+YouTube account	Settings		YouTube アカウント
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
+Not signed in: %error%	Settings		ログインしていません: %error%
 Show the latest videos	Grid		最新の動画を表示
 Copy to the network folder	Grid		ネットワークフォルダーにコピー
 The key works.	Settings		キーは有効です。
@@ -146,17 +156,20 @@ Cinema	System name		Cinema
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" をダウンロード中です。再生中の動画を閉じて今すぐ見ますか、それとも後でダウンロードから見ますか？
 Folders of the library	Settings		ライブラリのフォルダー
 Moving to the network folder	Window		ネットワークフォルダーへ移動中
+Watch later	Window		後で見る
 No videos found	Window		動画が見つかりません
 See all	Home		すべて表示
 Click to watch it	Window		クリックして見る
 Moved to the network folder	Window		ネットワークフォルダーへ移動しました
 Open the channel	Grid		チャンネルを開く
+I signed in	Settings		ログインした
 Check	Settings		確認
 Playback	Settings		再生
 Subtitles	Subtitles		字幕
 It does not work: %error%	Settings		うまくいきません: %error%
 This video comes in one quality only	Window		この動画の画質は一つだけです
 science explained	Categories		科学 解説
+Signed in: the tabs of the account are there.	Settings		ログイン済み: アカウントのタブがあります。
 Download	Grid		ダウンロード
 Channel	Grid		チャンネル
 Movies	Window		映画
@@ -169,6 +182,7 @@ Password:	Settings		パスワード:
 Move to the network folder	Grid		ネットワークフォルダーへ移動
 Following	Detail		フォロー中
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube などのソースには Python 3 と yt-dlp が必要ですが、このシステムにないか動作していません。
+History	Window		履歴
 Automatic	Settings		自動
 automatic	Player		自動生成
 No videos downloaded yet: right click a video, or press D	Window		ダウンロードした動画はまだありません: 動画を右クリックするか、D を押してください
@@ -180,6 +194,7 @@ Can you see the video?	Player		動画が見えますか?
 Install	Window		インストール
 Home	Categories		ホーム
 Checking…	Settings		確認中…
+Sign in in WebPositive, then press \"I signed in\".	Settings		WebPositive でログインしてから「ログインした」を押してください。
 Changing to %height%p…	Window		%height%p に切り替え中…
 Subtitles	Player		字幕
 From a torrent, as it downloads	Player		トレントから、ダウンロードしながら

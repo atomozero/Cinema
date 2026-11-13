@@ -294,6 +294,30 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		B_TRANSLATE("Put them all in order now"),
 		new BMessage(kMsgOrganizeNow));
 
+	// the account of YouTube: signed in with WebPositive, whose cookies of
+	// YouTube Cinema reads for the pages of the account
+	fYouTubeStatus = new BStringView("youtube status",
+		fSettings.youtubeAccount ? B_TRANSLATE("Signed in: the tabs of the "
+			"account are there.") : B_TRANSLATE("Not signed in."));
+	fYouTubeStatus->SetExplicitMinSize(BSize(Style::S(300), B_SIZE_UNSET));
+	BButton* youtubeSignIn = new BButton("youtube sign in",
+		B_TRANSLATE("Sign in with WebPositive" B_UTF8_ELLIPSIS),
+		new BMessage(kMsgYouTubeSignIn));
+	fYouTubeCheck = new BButton("youtube check",
+		B_TRANSLATE("I signed in"), new BMessage(kMsgCheckYouTube));
+	fYouTubeSignOut = new BButton("youtube sign out",
+		B_TRANSLATE("Sign out"), new BMessage(kMsgYouTubeSignOut));
+	fYouTubeSignOut->SetEnabled(fSettings.youtubeAccount);
+	BStringView* youtubeSteps = new BStringView("youtube steps",
+		B_TRANSLATE("1. Sign in to YouTube in WebPositive.  2. Come back and "
+			"press \"I signed in\"."));
+	BStringView* youtubeTabs = new BStringView("youtube tabs",
+		B_TRANSLATE("Subscriptions, Watch later, Liked videos and History "
+			"become tabs."));
+	BStringView* youtubeNote = new BStringView("youtube note",
+		B_TRANSLATE("Only these pages use the account; Cinema keeps no "
+			"password."));
+
 	// three tabs, so that the window fits a small screen such as the
 	// AC100's 1024x600: the library, the TV channels, how the videos play
 	BView* libraryTab = new BView(B_TRANSLATE("Library"), 0);
@@ -334,6 +358,21 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		.Add(search)
 		.AddGlue();
 
+	BView* youtubeTab = new BView(B_TRANSLATE("YouTube account"), 0);
+	BLayoutBuilder::Group<>(youtubeTab, B_VERTICAL, B_USE_SMALL_SPACING)
+		.SetInsets(B_USE_WINDOW_SPACING)
+		.Add(youtubeSteps)
+		.AddGroup(B_HORIZONTAL)
+			.Add(youtubeSignIn)
+			.Add(fYouTubeCheck)
+			.AddGlue()
+			.Add(fYouTubeSignOut)
+		.End()
+		.Add(fYouTubeStatus)
+		.Add(youtubeTabs)
+		.Add(youtubeNote)
+		.AddGlue();
+
 	BView* networkTab = new BView(B_TRANSLATE("Network folder"), 0);
 	BLayoutBuilder::Group<>(networkTab, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_WINDOW_SPACING)
@@ -353,7 +392,8 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 	BTabView* tabs = new BTabView("tabs", B_WIDTH_FROM_LABEL);
 	tabs->SetBorder(B_NO_BORDER);
 	// the tabs not shown are out of the window: scaled one by one
-	BView* pages[] = { libraryTab, tvTab, playbackTab, networkTab };
+	BView* pages[] = { libraryTab, tvTab, playbackTab, youtubeTab,
+		networkTab };
 	for (BView* page : pages) {
 		page->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
 		Style::ScaleView(page);
@@ -464,6 +504,36 @@ void
 SettingsWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
+		case kMsgYouTubeSignIn:
+			fTarget.SendMessage(kMsgYouTubeSignIn);
+			fYouTubeStatus->SetText(B_TRANSLATE("Sign in in WebPositive, "
+				"then press \"I signed in\"."));
+			break;
+		case kMsgCheckYouTube:
+			fYouTubeStatus->SetText(B_TRANSLATE("Checking" B_UTF8_ELLIPSIS));
+			fYouTubeCheck->SetEnabled(false);
+			fTarget.SendMessage(kMsgCheckYouTube);
+			break;
+		case kMsgYouTubeChecked:
+		{
+			fYouTubeCheck->SetEnabled(true);
+			bool ok = message->GetBool("ok", false);
+			fYouTubeSignOut->SetEnabled(ok);
+			if (ok) {
+				fYouTubeStatus->SetText(B_TRANSLATE("Signed in: the tabs of "
+					"the account are there."));
+			} else {
+				BString text(B_TRANSLATE("Not signed in: %error%"));
+				text.ReplaceFirst("%error%", message->GetString("error", ""));
+				fYouTubeStatus->SetText(text.String());
+			}
+			break;
+		}
+		case kMsgYouTubeSignOut:
+			fTarget.SendMessage(kMsgYouTubeSignOut);
+			fYouTubeSignOut->SetEnabled(false);
+			fYouTubeStatus->SetText(B_TRANSLATE("Not signed in."));
+			break;
 		case kMsgOrganize:
 		{
 			Settings saved = Settings::Load();

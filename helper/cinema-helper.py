@@ -17,6 +17,10 @@
 #   {"type": "subtitle", "id": "...", "provider": "youtube", "language": "it",
 #    "automatic": false}
 #   {"type": "download", "id": "...", "provider": "youtube", "folder": "/..."}
+#   {"type": "youtube account", "enabled": true}: the pages of the account
+#   (channels ":subscriptions", ":watchlater", ":liked", ":history",
+#   ":recommended") read with the cookies of WebPositive; "youtube check"
+#   tries them, answered {"type": "youtube checked", "ok", "error"}
 #   {"type": "organize", "id", "path", "root", "provider", "kind", "title",
 #    "channel", "names": {"movies", "series", "videos", "season"}}: a
 #   download put in order (organize), answered {"type": "organized", "id",
@@ -605,6 +609,81 @@ class Provider:
 		return None
 
 
+# the account of YouTube: the pages of the person signed in (subscriptions,
+# Watch later...), with the cookies WebPositive keeps after signing in there;
+# only for these pages, the rest stays anonymous
+ACCOUNT = {"enabled": False}
+YOUTUBE_FEEDS = {
+	":subscriptions": "https://www.youtube.com/feed/subscriptions",
+	":watchlater": "https://www.youtube.com/playlist?list=WL",
+	":liked": "https://www.youtube.com/playlist?list=LL",
+	":history": "https://www.youtube.com/feed/history",
+	":recommended": "https://www.youtube.com/",
+}
+WEBPOSITIVE_COOKIES = os.path.join(os.path.expanduser("~"), "config",
+	"settings", "WebPositive", "cookie.jar.db")
+
+
+def youtube_cookies():
+	"""The cookies of YouTube and Google that WebPositive keeps, as a
+	cookies file of Netscape for yt-dlp, readable only by its owner; None
+	without them or without the account on."""
+	if not ACCOUNT["enabled"] or not cache \
+			or not os.path.exists(WEBPOSITIVE_COOKIES):
+		return None
+	target = os.path.join(cache, "youtube-cookies.txt")
+	sources = [WEBPOSITIVE_COOKIES + ending for ending in ("", "-wal")
+		if os.path.exists(WEBPOSITIVE_COOKIES + ending)]
+	newest = max(os.path.getmtime(path) for path in sources)
+	if os.path.exists(target) and os.path.getmtime(target) >= newest:
+		return target
+	import sqlite3
+	import tempfile
+	# a copy, with its journal: WebPositive may be writing to it
+	with tempfile.TemporaryDirectory() as folder:
+		copy = os.path.join(folder, "cookies.db")
+		for path in sources:
+			shutil.copyfile(path, copy + path[len(WEBPOSITIVE_COOKIES):])
+		connection = sqlite3.connect(copy)
+		try:
+			columns = [row[1].lower() for row in
+				connection.execute("PRAGMA table_info(Cookie)")]
+			rows = connection.execute("SELECT * FROM Cookie").fetchall()
+		finally:
+			connection.close()
+	lines = ["# Netscape HTTP Cookie File"]
+	for row in rows:
+		cookie = dict(zip(columns, row))
+		domain = str(cookie.get("domain") or "")
+		if not domain.lstrip(".").endswith(("youtube.com", "google.com")):
+			continue
+		expires = as_int(cookie.get("expires"), 0)
+		if expires > 10 ** 11:
+			expires //= 1000
+		lines.append("\t".join([
+			("#HttpOnly_" if cookie.get("httponly") else "") + domain,
+			"TRUE" if domain.startswith(".") else "FALSE",
+			str(cookie.get("path") or "/"),
+			"TRUE" if cookie.get("secure") else "FALSE",
+			str(max(0, expires)), str(cookie.get("name") or ""),
+			str(cookie.get("value") or "")]))
+	temporary = target + ".part"
+	descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC,
+		0o600)
+	with os.fdopen(descriptor, "w", encoding="utf-8") as file:
+		file.write("\n".join(lines) + "\n")
+	os.replace(temporary, target)
+	return target
+
+
+def forget_youtube_cookies():
+	if cache:
+		try:
+			os.remove(os.path.join(cache, "youtube-cookies.txt"))
+		except OSError:
+			pass
+
+
 class YouTubeProvider(Provider):
 	id = "youtube"
 	name = "YouTube"
@@ -793,15 +872,22 @@ class YouTubeProvider(Provider):
 		info = self.video_info(media_id, False)
 		return self.full_item(info) if info else None
 
-	def videos_of(self, url, count, channel_name="", channel_id=""):
+	def videos_of(self, url, count, channel_name="", channel_id="",
+			cookies=None):
 		# approximate_date: the day of each video from "3 days ago" in the
 		# list, without opening its page
 		options = dict(self.OPTIONS, extract_flat="in_playlist",
 			playlistend=count, extractor_args={
 				"youtubetab": {"approximate_date": [""]},
 				"youtube": {"approximate_date": [""]}})
-		with self.borrowed(self, ("list", count), options) as ydl:
-			info = ydl.extract_info(url, download=False)
+		if cookies:
+			# the pages of the account: a YoutubeDL of their own, not lent
+			options["cookiefile"] = cookies
+			with yt_dlp.YoutubeDL(options) as ydl:
+				info = ydl.extract_info(url, download=False)
+		else:
+			with self.borrowed(self, ("list", count), options) as ydl:
+				info = ydl.extract_info(url, download=False)
 		if channel_id:
 			keep_about(self.id, channel_id, self.about(info))
 		videos = []
@@ -844,6 +930,13 @@ class YouTubeProvider(Provider):
 		return self.videos_of("ytsearch%d:%s" % (count, query), count)
 
 	def channel(self, channel_id, count):
+		# the pages of the account signed in
+		if channel_id in YOUTUBE_FEEDS:
+			cookies = youtube_cookies()
+			if not cookies:
+				return []
+			return self.videos_of(YOUTUBE_FEEDS[channel_id], count,
+				cookies=cookies)
 		# the videos of a channel only name it once, in the list
 		return self.videos_of(
 			"https://www.youtube.com/channel/%s/videos" % channel_id,
@@ -3500,6 +3593,33 @@ def job_organize(request):
 		"path": target, "picture": picture})
 
 
+def job_youtube_check():
+	"""Whether the account of YouTube is there: the subscriptions read
+	with the cookies of WebPositive."""
+	ACCOUNT["enabled"] = True
+	youtube = PROVIDERS.get("youtube")
+	error = ""
+	ok = False
+	try:
+		if youtube is None:
+			error = "yt-dlp is missing"
+		elif not os.path.exists(WEBPOSITIVE_COOKIES):
+			error = "no cookies of WebPositive"
+		else:
+			forget_youtube_cookies()
+			cookies = youtube_cookies()
+			youtube.videos_of(YOUTUBE_FEEDS[":subscriptions"], 3,
+				cookies=cookies)
+			ok = True
+	except Exception as failure:
+		error = str(failure).splitlines()[0][:200] if str(failure) else \
+			type(failure).__name__
+	if not ok:
+		ACCOUNT["enabled"] = False
+		forget_youtube_cookies()
+	answer({"type": "youtube checked", "ok": ok, "error": error})
+
+
 def job_check():
 	library = PROVIDERS.get("library")
 	ok = bool(library and library.check())
@@ -3514,6 +3634,14 @@ def work(request):
 		return
 	if request.get("type") == "check":
 		threading.Thread(target=job_check, daemon=True).start()
+		return
+	if request.get("type") == "youtube account":
+		ACCOUNT["enabled"] = bool(request.get("enabled"))
+		if not ACCOUNT["enabled"]:
+			forget_youtube_cookies()
+		return
+	if request.get("type") == "youtube check":
+		threading.Thread(target=job_youtube_check, daemon=True).start()
 		return
 	if request.get("type") == "organize":
 		threading.Thread(target=job_organize, args=(request,),
