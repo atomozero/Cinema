@@ -375,6 +375,28 @@ Helper::CheckTmdb()
 
 
 void
+Helper::Pause(const char* id)
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "pause");
+	request.Set("id", id);
+	_Send(request);
+}
+
+
+void
+Helper::Discard(const char* id, const char* folder, const char* provider)
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "discard");
+	request.Set("id", id);
+	request.Set("folder", folder);
+	request.Set("provider", provider);
+	_Send(request);
+}
+
+
+void
 Helper::Cancel(const char* id)
 {
 	Json request = Json::MakeObject();
@@ -643,6 +665,12 @@ Helper::_Handle(const BString& line)
 		return;
 	}
 
+	if (type == "paused") {
+		BMessage paused(kMsgDownloadPaused);
+		paused.AddString("id", answer.GetString("id", "").c_str());
+		Deliver(fTarget, &paused, &fStopping);
+		return;
+	}
 	if (type == "cancelled") {
 		BMessage cancelled(kMsgDownloadCancelled);
 		cancelled.AddString("id", answer.GetString("id", "").c_str());

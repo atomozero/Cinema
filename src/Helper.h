@@ -58,6 +58,11 @@ public:
 			void				Download(const char* id, const char* folder,
 									const char* provider = NULL);
 			void				Cancel(const char* id);
+			void				Pause(const char* id);
+									// answered with kMsgDownloadPaused
+			void				Discard(const char* id, const char* folder,
+									const char* provider);
+									// what a download paused had got
 			void				Upload(const char* id, const char* path,
 									const char* target, const char* user,
 									const char* password);

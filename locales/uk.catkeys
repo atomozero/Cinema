@@ -1,201 +1,206 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	86757012
+1	ukrainian	application/x-vnd.atomozero-Cinema	1283274811
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
-Put new downloads in Films, Series and Videos, with a picture	Settings		Класти нові завантаження у Фільми, Серіали й Відео, з обкладинкою
-YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube та іншим джерелам потрібен yt-dlp, якого Python не знаходить у цій системі.
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
-Search first in:	Settings		Спершу шукати в:
 full documentary	Categories		повний документальний фільм
-Add to favorites	Grid		Додати до обраного
-OK	Window		Гаразд
-Add this channel to the tabs	Categories		Додати цей канал до вкладок
-Play	Grid		Відтворити
+Search first in:	Settings		Спершу шукати в:
 Video downloaded	Window		Відео завантажено
-Video overlay:	Settings		Відеооверлей:
-Sound ready: %seconds% s	Player		Звук готовий: %seconds% с
-Sign out	Settings		Вийти
+Play	Grid		Відтворити
 Sign in with WebPositive…	Settings		Увійти через WebPositive…
+Sign out	Settings		Вийти
 Getting the video ready	Grid		Підготовка відео
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Увійдіть у YouTube у WebPositive.  2. Поверніться й натисніть \"Я увійшов\".
 Subscriptions	Window		Підписки
-today	Detail		сьогодні
 Settings…	Window		Налаштування…
-Downloading…	Detail		Завантаження…
 Decoding without the deblocking filter	Player		Декодування без фільтра деблокінгу
+Resume the download	Grid		Продовжити завантаження
 Add to the tabs	Grid		Додати до вкладок
-No subtitles	Player		Без субтитрів
 Processor: Cinema %cinema%%, all %all%%	Player		Процесор: Cinema %cinema%%, усього %all%%
-Not now	Window		Не зараз
-Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		Спершу виберіть мережеву теку в налаштуваннях: адреса на кшталт ftp://192.168.178.1/USB/Video, з користувачем і паролем.
 Decoding the key frames only	Player		Декодування лише ключових кадрів
+Cancel	Window		Скасувати
+Put them all in order now	Settings		Упорядкувати все зараз
+Documentaries	Categories		Документальні фільми
+Live stream	Player		Пряма трансляція
+TMDB does not accept this key.	Settings		TMDB не приймає цей ключ.
+Continue watching	Window		Продовжити перегляд
+User:	Settings		Користувач:
+Move to Trash	Window		Перемістити до смітника
+Getting the video ready	Player		Підготовка відео
+Not signed in.	Settings		Вхід не виконано.
+TV channels	Settings		Телеканали
+Getting the details…	Detail		Отримання подробиць…
+With a key, the library gets posters, plots and casts. It is free.	Settings		З ключем бібліотека отримує постери, сюжети та акторський склад. Він безкоштовний.
+Only these pages use the account; Cinema keeps no password.	Settings		Лише ці сторінки використовують обліковий запис; Cinema не зберігає паролів.
+No	Player		Ні
+Decoding every picture	Player		Декодування кожного кадру
+Search	Window		Пошук
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	Подкасти
+official music video	Categories		офіційний кліп
+The video could not be downloaded	Window		Не вдалося завантажити відео
+video overlay	Player		відеооверлей
+MediaPlayer could not be started: %error%	Window		Не вдалося запустити MediaPlayer: %error%
+Remove from favorites	Grid		Прибрати з обраного
+Downloaded	Categories		Завантажені
+yesterday	Detail		учора
+Following	Grid		Ви стежите
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Підписки, Переглянути пізніше, Відео, що сподобалися, та Історія стають вкладками.
+Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
+YouTube account	Settings		Обліковий запис YouTube
+Not signed in: %error%	Settings		Вхід не виконано: %error%
+Music	Categories		Музика
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
+Downloaded	Window		Завантажені
+Podcast	Window		Подкаст
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
+Always	Settings		Завжди
+Get a key…	Settings		Отримати ключ…
+%peers% sources	Window		%peers% джерел
+M3U list:	Settings		Список M3U:
+%views% views	Detail		%views% переглядів
+The address of a list of channels, or drop an .m3u file on Cinema.	Settings		Адреса списку каналів або перетягніть файл .m3u на Cinema.
+Play	Detail		Відтворити
+Free channels of:	Settings		Безкоштовні канали країни:
+Home network	Window		Домашня мережа
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
+%count% dropped	Player		пропущено: %count%
+even volume %gain% dB	Player		рівна гучність %gain% дБ
+%done% of %total%	Window		%done% з %total%
+For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		Для FRITZ!Box: ftp://192.168.178.1/ та назва його диска.
+forced	Subtitles		примусові
+Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
+Not copied to the network folder	Window		Не скопійовано в мережеву теку
+Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" завантажується. Дивитися зараз, закривши поточне відео, чи пізніше із завантажень?
+Cinema	System name		Cinema
+Folders of the library	Settings		Теки бібліотеки
+Moving to the network folder	Window		Переміщення в мережеву теку
+No videos found	Window		Відео не знайдено
+Watch later	Window		Переглянути пізніше
+See all	Home		Переглянути всі
+Click to watch it	Window		Натисніть, щоб дивитися
+Open the channel	Grid		Відкрити канал
+Check	Settings		Перевірити
+It does not work: %error%	Settings		Не працює: %error%
+science explained	Categories		наука простими словами
+Download	Grid		Завантажити
+Channel	Grid		Канал
+Movies	Window		Фільми
+Pausing…	Window		Призупинення…
+Season %d	Window	the folder of a season of a series downloaded	Сезон %d
+Looking for the videos…	Window		Пошук відео…
+automatic	Player		автоматичні
+Favorites	Window		Обране
+Can you see the video?	Player		Ви бачите відео?
+Home	Categories		Головна
+Install	Window		Встановити
+Checking…	Settings		Перевірка…
+About Cinema	Window		Про Cinema
+Subtitles	Player		Субтитри
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube та іншим джерелам потрібен yt-dlp, якого Python не знаходить у цій системі.
+Put new downloads in Films, Series and Videos, with a picture	Settings		Класти нові завантаження у Фільми, Серіали й Відео, з обкладинкою
+Add to favorites	Grid		Додати до обраного
+Add this channel to the tabs	Categories		Додати цей канал до вкладок
+OK	Window		Гаразд
+Video overlay:	Settings		Відеооверлей:
+Sound ready: %seconds% s	Player		Звук готовий: %seconds% с
+today	Detail		сьогодні
+Downloading…	Detail		Завантаження…
+Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		Спершу виберіть мережеву теку в налаштуваннях: адреса на кшталт ftp://192.168.178.1/USB/Video, з користувачем і паролем.
+Not now	Window		Не зараз
+No subtitles	Player		Без субтитрів
+Pause the download	Grid		Призупинити завантаження
 Yes	Player		Так
 Library	Settings		Бібліотека
 Cinema settings	Settings		Налаштування Cinema
-From YouTube, through the helper	Player		З YouTube, через помічника
 BitTorrent downloads need aria2c, which is not installed.	Window		Для завантажень BitTorrent потрібен aria2c, який не встановлено.
-Cancel	Window		Скасувати
-Put them all in order now	Settings		Упорядкувати все зараз
+From YouTube, through the helper	Player		З YouTube, через помічника
 Back	Detail		Назад
-Live stream	Player		Пряма трансляція
-Documentaries	Categories		Документальні фільми
-TMDB does not accept this key.	Settings		TMDB не приймає цей ключ.
 Play the videos in Cinema, not in MediaPlayer	Settings		Відтворювати відео в Cinema, а не в MediaPlayer
 technology review	Categories		огляд технологій
-User:	Settings		Користувач:
-Continue watching	Window		Продовжити перегляд
-Getting the video ready	Player		Підготовка відео
-Move to Trash	Window		Перемістити до смітника
 Follow	Grid		Стежити
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, one{# тиждень тому} few{# тижні тому} many{# тижнів тому} other{# тижня тому}}
-The password could not be kept in the keyring.	Settings		Не вдалося зберегти пароль у в'язці ключів.
-Watch now	Window		Дивитися зараз
 %eta% left	Window		лишилось %eta%
-Add…	Settings		Додати…
-The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
+Watch now	Window		Дивитися зараз
+The password could not be kept in the keyring.	Settings		Не вдалося зберегти пароль у в'язці ключів.
 Films	Window	the folder of the films downloaded	Фільми
+The video could not be moved to the Trash: %error%	Window		Не вдалося перемістити відео до смітника: %error%
+Add…	Settings		Додати…
 News	Categories		Новини
 TV	Window		ТБ
 Decoding the reference pictures only	Player		Декодування лише опорних кадрів
 Videos	Window	the folder of the other videos downloaded, by channel	Відео
 TV %country%	Settings		ТБ %country%
-Not signed in.	Settings		Вхід не виконано.
-TV channels	Settings		Телеканали
 Technology	Categories		Технології
 Liked videos	Window		Відео, що сподобалися
 TMDB key:	Settings		Ключ TMDB:
-Getting the details…	Detail		Отримання подробиць…
 Above 360p, YouTube takes longer to start.	Settings		Понад 360p YouTube запускається довше.
-With a key, the library gets posters, plots and casts. It is free.	Settings		З ключем бібліотека отримує постери, сюжети та акторський склад. Він безкоштовний.
-Only these pages use the account; Cinema keeps no password.	Settings		Лише ці сторінки використовують обліковий запис; Cinema не зберігає паролів.
 Address:	Settings		Адреса:
 Copied to the network folder	Window		Скопійовано в мережеву теку
 Downloading…	Grid		Завантаження…
-Stop the download	Grid		Зупинити завантаження
-No	Player		Ні
 The highest quality already	Window		Це вже найвища якість
-Decoding every picture	Player		Декодування кожного кадру
 drawn by Cinema	Player		малює Cinema
 That quality could not be had	Window		Не вдалося отримати цю якість
-Search	Window		Пошук
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# або назва = @iptv channel:<адреса списку M3U> для телеканалів
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
-official music video	Categories		офіційний кліп
-Podcasts	Window	the folder of the podcasts downloaded, by podcast	Подкасти
-The video could not be downloaded	Window		Не вдалося завантажити відео
 Classic films	Categories		Класичні фільми
-video overlay	Player		відеооверлей
 Downloaded videos can be copied or moved there, with a right click.	Settings		Завантажені відео можна скопіювати або перемістити туди правим клацанням.
-From the web	Player		З інтернету
 # or name = channel:<id> for the latest videos of a channel	Categories		# або назва = channel:<id> для останніх відео каналу
-MediaPlayer could not be started: %error%	Window		Не вдалося запустити MediaPlayer: %error%
+From the web	Player		З інтернету
 Move to Trash	Grid		Перемістити до смітника
-Remove from favorites	Grid		Прибрати з обраного
-Downloaded	Categories		Завантажені
-This video can't be played here, try another one.	Window		Це відео не можна відтворити тут, спробуйте інше.
+Waiting for its turn	Window		Чекає своєї черги
 Series	Window	the folder of the series downloaded	Серіали
+This video can't be played here, try another one.	Window		Це відео не можна відтворити тут, спробуйте інше.
 TV series	Window		Серіали
-yesterday	Detail		учора
-Following	Grid		Ви стежите
-Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Підписки, Переглянути пізніше, Відео, що сподобалися, та Історія стають вкладками.
-No subtitles available	Player		Немає доступних субтитрів
+Cancel the download and delete it	Grid		Скасувати завантаження й видалити
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, one{# місяць тому} few{# місяці тому} many{# місяців тому} other{# місяця тому}}
+No subtitles available	Player		Немає доступних субтитрів
 Video ready	Window		Відео готове
-Move \"%title%\" to the Trash?	Window		Перемістити «%title%» до смітника?
-YouTube account	Settings		Обліковий запис YouTube
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
-Not signed in: %error%	Settings		Вхід не виконано: %error%
 Show the latest videos	Grid		Показати останні відео
-Copy to the network folder	Grid		Копіювати в мережеву теку
 The key works.	Settings		Ключ працює.
-Music	Categories		Музика
-Test	Settings		Перевірити
+Copy to the network folder	Grid		Копіювати в мережеву теку
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
+Test	Settings		Перевірити
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч
 Even volume: films and TV as loud as music	Settings		Рівна гучність: фільми й ТБ гучні, як музика
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, one{# день тому} few{# дні тому} many{# днів тому} other{# дня тому}}
-Remove	Settings		Вилучити
 Download	Detail		Завантажити
-Downloaded	Window		Завантажені
+Remove	Settings		Вилучити
 Add	Settings		Додати
-Podcast	Window		Подкаст
-Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		Встановити зараз? pkgman спитає, перш ніж щось змінити, у вікні Терміналу.
-Always	Settings		Завжди
 Remove from the tabs	Categories		Вилучити з вкладок
 The folder can be written to.	Settings		У теку можна записувати.
 Choose…	Settings		Вибрати…
 news today	Categories		новини сьогодні
-Get a key…	Settings		Отримати ключ…
 Move to Trash	Detail		Перемістити до смітника
-%peers% sources	Window		%peers% джерел
-M3U list:	Settings		Список M3U:
-%views% views	Detail		%views% переглядів
-The address of a list of channels, or drop an .m3u file on Cinema.	Settings		Адреса списку каналів або перетягніть файл .m3u на Cinema.
 Science	Categories		Наука
 Classic cartoons	Categories		Класичні мультфільми
-Play	Detail		Відтворити
-Free channels of:	Settings		Безкоштовні канали країни:
 Follow	Detail		Стежити
 No statistics for this video	Player		Немає статистики для цього відео
-Home network	Window		Домашня мережа
 Details	Grid		Подробиці
-Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Покладіть однофайловий yt-dlp у ~/config/non-packaged/bin, як описано в README Cinema, і перезапустіть Cinema.
-even volume %gain% dB	Player		рівна гучність %gain% дБ
-%count% dropped	Player		пропущено: %count%
 The lowest quality already	Window		Це вже найнижча якість
-%done% of %total%	Window		%done% з %total%
-forced	Subtitles		примусові
-For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		Для FRITZ!Box: ftp://192.168.178.1/ та назва його диска.
-Already downloaded	Grid		Вже завантажено
 Never	Settings		Ніколи
-Go on from where a video was left	Settings		Продовжувати відео з місця зупинки
+Already downloaded	Grid		Вже завантажено
 Search	Settings		Пошук
-Not copied to the network folder	Window		Не скопійовано в мережеву теку
-Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
-Cinema	System name		Cinema
-\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" завантажується. Дивитися зараз, закривши поточне відео, чи пізніше із завантажень?
-Folders of the library	Settings		Теки бібліотеки
-Moving to the network folder	Window		Переміщення в мережеву теку
-Watch later	Window		Переглянути пізніше
-No videos found	Window		Відео не знайдено
-See all	Home		Переглянути всі
-Click to watch it	Window		Натисніть, щоб дивитися
 Moved to the network folder	Window		Переміщено в мережеву теку
-Open the channel	Grid		Відкрити канал
 I signed in	Settings		Я увійшов
-Check	Settings		Перевірити
 Playback	Settings		Відтворення
 Subtitles	Subtitles		Субтитри
-It does not work: %error%	Settings		Не працює: %error%
+Paused	Window		Призупинено
 This video comes in one quality only	Window		Це відео має лише одну якість
-science explained	Categories		наука простими словами
 Signed in: the tabs of the account are there.	Settings		Вхід виконано: вкладки облікового запису на місці.
-Download	Grid		Завантажити
-Channel	Grid		Канал
-Movies	Window		Фільми
-Season %d	Window	the folder of a season of a series downloaded	Сезон %d
 Later	Window		Пізніше
-Looking for the videos…	Window		Пошук відео…
 %count% subscribers	Detail		%count% підписників
-Password:	Settings		Пароль:
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube
+Password:	Settings		Пароль:
 Move to the network folder	Grid		Перемістити в мережеву теку
 Following	Detail		Ви стежите
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube та іншим джерелам потрібні Python 3 і yt-dlp, яких немає або які не працюють у цій системі.
 History	Window		Історія
 Automatic	Settings		Автоматично
-automatic	Player		автоматичні
 No videos downloaded yet: right click a video, or press D	Window		Ще немає завантажених відео: клацніть правою кнопкою на відео або натисніть D
 Copying to the network folder	Window		Копіювання в мережеву теку
 From a file	Player		З файлу
 Network folder	Settings		Мережева тека
-Favorites	Window		Обране
-Can you see the video?	Player		Ви бачите відео?
-Install	Window		Встановити
-Home	Categories		Головна
-Checking…	Settings		Перевірка…
-Sign in in WebPositive, then press \"I signed in\".	Settings		Увійдіть у WebPositive, потім натисніть \"Я увійшов\".
 Changing to %height%p…	Window		Перехід на %height%p…
-Subtitles	Player		Субтитри
+Sign in in WebPositive, then press \"I signed in\".	Settings		Увійдіть у WebPositive, потім натисніть \"Я увійшов\".
 From a torrent, as it downloads	Player		З торента, поки завантажується
-About Cinema	Window		Про Cinema

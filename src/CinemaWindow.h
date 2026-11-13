@@ -134,6 +134,10 @@ private:
 			void				_FindAtHeight(int32 height);
 			void				_HidePlayer();
 			void				_OfferHomeNetwork();
+			void				_StartDownloads();
+			void				_StartDownloadNow(const BString& id);
+			void				_ForgetDownload(const BString& id);
+			void				_DownloadChanged(const BString& id);
 			void				_AddPodcast(const char* address);
 			void				_Upload(BMessage* message);
 			void				_Uploaded(BMessage* message);
@@ -229,6 +233,9 @@ private:
 			bool				fPlayerHidden = false;
 			// downloads being copied to the network folder, by their path
 			std::map<BString, BMessage> fUploads;
+			// the downloads in the order they were asked: the next one to
+			// start, when fewer than kMostDownloads go
+			std::vector<BString> fDownloadOrder;
 			float				fHiddenVolume = 1.0f;
 			BString				fPendingTorrent;	// once aria2c is there
 			bigtime_t			fHelperRestarted = 0;

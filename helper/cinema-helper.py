@@ -48,6 +48,8 @@
 #   torrent: what of its video is there (torrent_map)
 #   {"type": "saved", "id": "...", "path": "/..."}
 #   {"type": "failed", "id": "..."}
+#   {"type": "paused", "id": "..."}: after {"type": "pause", "id"}, what it
+#   got kept; {"type": "discard", "id", "provider", "folder"} throws it away
 #   {"type": "uploading", "id": "...", "percent": 42}
 #   {"type": "uploaded", "id": "...", "ok": true, "error": ""}
 #   {"type": "upload checked", "ok": true, "error": ""}
@@ -527,6 +529,14 @@ def duration_text(seconds):
 
 class Cancelled(Exception):
 	pass
+
+
+class Paused(Exception):
+	"""A download paused: what it got is kept, to go on later."""
+
+
+# the downloads paused, stopping now
+PAUSED = set()
 
 
 # the downloads asked to stop, and the programs of those that run one
@@ -1115,7 +1125,7 @@ class YouTubeProvider(Provider):
 				if os.path.exists(path):
 					return path
 			except Exception:
-				if media_id in CANCELLED:
+				if media_id in CANCELLED or media_id in PAUSED:
 					raise
 		for attempt in range(2):
 			try:
@@ -1127,7 +1137,7 @@ class YouTubeProvider(Provider):
 				if os.path.exists(path):
 					return path
 			except Exception:
-				if media_id in CANCELLED:
+				if media_id in CANCELLED or media_id in PAUSED:
 					raise
 			# the web client, as find() does
 			options["extractor_args"] = {"youtube": {}}
@@ -2206,7 +2216,7 @@ class TorrentProvider(Provider):
 		try:
 			status = 1
 			for source in self.sources(media_id):
-				if media_id in CANCELLED:
+				if media_id in CANCELLED or media_id in PAUSED:
 					break
 				status, got = self.run(media_id, source, work, progress)
 				# done, or begun: the next source is for when this one
@@ -2243,6 +2253,13 @@ class TorrentProvider(Provider):
 			# was stopped on purpose
 			if complete or media_id in CANCELLED:
 				shutil.rmtree(work, ignore_errors=True)
+
+
+	def discard(self, media_id, folder):
+		"""What a download stopped for good had got."""
+		key = hashlib.sha1(media_id.encode()).hexdigest()[:12]
+		shutil.rmtree(os.path.join(folder, ".torrent-" + key),
+			ignore_errors=True)
 
 
 class LocalProvider(Provider):
@@ -3305,6 +3322,8 @@ def job_download(provider, media_id, folder):
 	def progress(percent, **details):
 		if media_id in CANCELLED:
 			raise Cancelled()
+		if media_id in PAUSED:
+			raise Paused()
 		# twice a second at most, or when the percent changes
 		now = time.time()
 		if percent == last[0] and now - last[1] < 0.5 \
@@ -3317,17 +3336,51 @@ def job_download(provider, media_id, folder):
 		answer(message)
 
 	CANCELLED.discard(media_id)
+	PAUSED.discard(media_id)
 	try:
 		path = provider.download(media_id, folder, progress)
 	except Exception:
 		path = None
 	if media_id in CANCELLED:
 		CANCELLED.discard(media_id)
+		PAUSED.discard(media_id)
 		answer({"type": "cancelled", "id": media_id})
+	elif media_id in PAUSED:
+		PAUSED.discard(media_id)
+		answer({"type": "paused", "id": media_id})
 	elif path:
 		answer({"type": "saved", "id": media_id, "path": path})
 	else:
 		answer({"type": "failed", "id": media_id})
+
+
+def pause(media_id):
+	"""A download stopped, what it got kept: "paused" once it is."""
+	PAUSED.add(media_id)
+	with CHILDREN_LOCK:
+		process = RUNNING.get(media_id)
+	if process is not None:
+		try:
+			process.terminate()
+		except OSError:
+			pass
+
+
+def discard(request):
+	"""What a download paused or waiting had got, thrown away."""
+	media_id = request.get("id", "")
+	folder = request.get("folder", "")
+	provider = PROVIDERS.get(request.get("provider") or "")
+	if provider is not None and hasattr(provider, "discard") and folder:
+		ignore_errors(lambda: provider.discard(media_id, folder))
+	# what yt-dlp and the others leave: "<name> [<id>].<ext>.part"
+	if folder and media_id and "/" not in media_id:
+		try:
+			for name in os.listdir(folder):
+				if name.endswith(".part") and ("[%s]" % media_id) in name:
+					os.remove(os.path.join(folder, name))
+		except OSError:
+			pass
 
 
 def cancel(media_id):
@@ -3631,6 +3684,12 @@ def work(request):
 		HEIGHT[0] = max(0, as_int(request.get("height"), 0))
 	if request.get("type") == "cancel":
 		cancel(request.get("id", ""))
+		return
+	if request.get("type") == "pause":
+		pause(request.get("id", ""))
+		return
+	if request.get("type") == "discard":
+		discard(request)
 		return
 	if request.get("type") == "check":
 		threading.Thread(target=job_check, daemon=True).start()

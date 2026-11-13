@@ -95,6 +95,9 @@ enum {
 	kMsgOrganized		= 'orgd',	// "id", "from", "path", "picture": a
 									// download put in order
 	kMsgOrganizeAll		= 'orga',	// the downloads there are, in order
+	kMsgPauseDownload	= 'dwps',	// "id": stopped, what it got kept
+	kMsgResumeDownload	= 'dwrs',	// "id": on again, when its turn comes
+	kMsgDownloadPaused	= 'dwpd',	// "id": the helper stopped it
 	kMsgYouTubeSignIn	= 'ytin',	// WebPositive on the page to sign in
 	kMsgCheckYouTube	= 'ytch',	// the account tried (settings)
 	kMsgYouTubeChecked	= 'ytck',	// "ok", "error": the account is there

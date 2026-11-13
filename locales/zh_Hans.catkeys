@@ -1,201 +1,206 @@
-1	chinese	application/x-vnd.atomozero-Cinema	86757012
+1	chinese	application/x-vnd.atomozero-Cinema	1283274811
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
-Put new downloads in Films, Series and Videos, with a picture	Settings		将新下载放入电影、剧集和视频，并配上图片
-YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube 和其他来源需要 yt-dlp，但此系统上的 Python 找不到它。
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自动模式会在不认识的显卡上询问一次是否能看到视频。播放时可按 O 切换。
-Search first in:	Settings		优先搜索：
 full documentary	Categories		完整纪录片
-Add to favorites	Grid		添加到收藏
-OK	Window		确定
-Add this channel to the tabs	Categories		将此频道添加到标签页
-Play	Grid		播放
+Search first in:	Settings		优先搜索：
 Video downloaded	Window		视频已下载
-Video overlay:	Settings		视频叠加层：
-Sound ready: %seconds% s	Player		已准备的声音：%seconds% 秒
-Sign out	Settings		退出
+Play	Grid		播放
 Sign in with WebPositive…	Settings		用 WebPositive 登录…
+Sign out	Settings		退出
 Getting the video ready	Grid		正在准备视频
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. 在 WebPositive 中登录 YouTube。  2. 回到这里点击“我已登录”。
 Subscriptions	Window		订阅
-today	Detail		今天
 Settings…	Window		设置…
-Downloading…	Detail		正在下载…
 Decoding without the deblocking filter	Player		解码时不使用去块滤波
+Resume the download	Grid		继续下载
 Add to the tabs	Grid		添加到标签页
-No subtitles	Player		无字幕
 Processor: Cinema %cinema%%, all %all%%	Player		处理器：Cinema %cinema%%，总计 %all%%
-Not now	Window		以后再说
-Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		请先在设置中选择网络文件夹：例如 ftp://192.168.178.1/USB/Video 这样的地址，以及用户和密码。
 Decoding the key frames only	Player		仅解码关键帧
+Cancel	Window		取消
+Put them all in order now	Settings		立即全部整理
+Documentaries	Categories		纪录片
+Live stream	Player		直播
+TMDB does not accept this key.	Settings		TMDB 不接受此密钥。
+Continue watching	Window		继续观看
+User:	Settings		用户：
+Move to Trash	Window		移到废纸篓
+Getting the video ready	Player		正在准备视频
+Not signed in.	Settings		未登录。
+TV channels	Settings		电视频道
+Getting the details…	Detail		正在获取详细信息…
+With a key, the library gets posters, plots and casts. It is free.	Settings		有了密钥，媒体库会获取海报、剧情简介和演员表。它是免费的。
+Only these pages use the account; Cinema keeps no password.	Settings		只有这些页面使用账户；Cinema 不保存密码。
+No	Player		否
+Decoding every picture	Player		解码每一帧
+Search	Window		搜索
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	播客
+official music video	Categories		官方音乐视频
+The video could not be downloaded	Window		无法下载该视频
+video overlay	Player		视频叠加层
+MediaPlayer could not be started: %error%	Window		无法启动 MediaPlayer：%error%
+Remove from favorites	Grid		从收藏中移除
+Downloaded	Categories		已下载
+yesterday	Detail		昨天
+Following	Grid		已关注
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		订阅、稍后观看、赞过的视频和观看记录将成为标签页。
+Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
+YouTube account	Settings		YouTube 账户
+Not signed in: %error%	Settings		未登录：%error%
+Music	Categories		音乐
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#天前}}
+Downloaded	Window		已下载
+Podcast	Window		播客
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		现在安装吗？pkgman 会在终端窗口中先询问再做任何更改。
+Always	Settings		始终
+Get a key…	Settings		获取密钥…
+%peers% sources	Window		%peers% 个来源
+M3U list:	Settings		M3U 列表：
+%views% views	Detail		%views% 次观看
+The address of a list of channels, or drop an .m3u file on Cinema.	Settings		频道列表的地址，或将 .m3u 文件拖放到 Cinema 上。
+Play	Detail		播放
+Free channels of:	Settings		免费频道所在国家：
+Home network	Window		家庭网络
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		按照 Cinema 的 README 所述，把单文件版 yt-dlp 放到 ~/config/non-packaged/bin，然后重新启动 Cinema。
+%count% dropped	Player		丢弃 %count% 帧
+even volume %gain% dB	Player		均衡音量 %gain% dB
+%done% of %total%	Window		%done% / %total%
+For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		对于 FRITZ!Box：ftp://192.168.178.1/ 加上其磁盘名称。
+forced	Subtitles		强制
+Go on from where a video was left	Settings		从上次停下的地方继续播放视频
+Not copied to the network folder	Window		未复制到网络文件夹
+Type what to look for at the top right	Window		在右上角输入要搜索的内容
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" 正在下载。现在观看（关闭正在播放的视频），还是稍后从下载中观看？
+Cinema	System name		Cinema
+Folders of the library	Settings		媒体库文件夹
+Moving to the network folder	Window		正在移动到网络文件夹
+No videos found	Window		未找到视频
+Watch later	Window		稍后观看
+See all	Home		查看全部
+Click to watch it	Window		点击观看
+Open the channel	Grid		打开频道
+Check	Settings		检查
+It does not work: %error%	Settings		无法使用：%error%
+science explained	Categories		科学解说
+Download	Grid		下载
+Channel	Grid		频道
+Movies	Window		电影
+Pausing…	Window		正在暂停…
+Season %d	Window	the folder of a season of a series downloaded	第 %d 季
+Looking for the videos…	Window		正在查找视频…
+automatic	Player		自动生成
+Favorites	Window		收藏
+Can you see the video?	Player		你能看到视频吗？
+Home	Categories		主页
+Install	Window		安装
+Checking…	Settings		正在检查…
+About Cinema	Window		关于 Cinema
+Subtitles	Player		字幕
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube 和其他来源需要 yt-dlp，但此系统上的 Python 找不到它。
+Put new downloads in Films, Series and Videos, with a picture	Settings		将新下载放入电影、剧集和视频，并配上图片
+Add to favorites	Grid		添加到收藏
+Add this channel to the tabs	Categories		将此频道添加到标签页
+OK	Window		确定
+Video overlay:	Settings		视频叠加层：
+Sound ready: %seconds% s	Player		已准备的声音：%seconds% 秒
+today	Detail		今天
+Downloading…	Detail		正在下载…
+Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		请先在设置中选择网络文件夹：例如 ftp://192.168.178.1/USB/Video 这样的地址，以及用户和密码。
+Not now	Window		以后再说
+No subtitles	Player		无字幕
+Pause the download	Grid		暂停下载
 Yes	Player		是
 Library	Settings		媒体库
 Cinema settings	Settings		Cinema 设置
-From YouTube, through the helper	Player		来自 YouTube，经由助手
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 下载需要 aria2c，但尚未安装。
-Cancel	Window		取消
-Put them all in order now	Settings		立即全部整理
+From YouTube, through the helper	Player		来自 YouTube，经由助手
 Back	Detail		返回
-Live stream	Player		直播
-Documentaries	Categories		纪录片
-TMDB does not accept this key.	Settings		TMDB 不接受此密钥。
 Play the videos in Cinema, not in MediaPlayer	Settings		在 Cinema 中播放视频，而不是在 MediaPlayer 中
 technology review	Categories		科技评测
-User:	Settings		用户：
-Continue watching	Window		继续观看
-Getting the video ready	Player		正在准备视频
-Move to Trash	Window		移到废纸篓
 Follow	Grid		关注
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#周前}}
-The password could not be kept in the keyring.	Settings		无法将密码保存在钥匙串中。
-Watch now	Window		立即观看
 %eta% left	Window		剩余 %eta%
-Add…	Settings		添加…
-The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
+Watch now	Window		立即观看
+The password could not be kept in the keyring.	Settings		无法将密码保存在钥匙串中。
 Films	Window	the folder of the films downloaded	电影
+The video could not be moved to the Trash: %error%	Window		无法将视频移到废纸篓：%error%
+Add…	Settings		添加…
 News	Categories		新闻
 TV	Window		电视
 Decoding the reference pictures only	Player		仅解码参考帧
 Videos	Window	the folder of the other videos downloaded, by channel	视频
 TV %country%	Settings		%country%电视
-Not signed in.	Settings		未登录。
-TV channels	Settings		电视频道
 Technology	Categories		科技
 Liked videos	Window		赞过的视频
 TMDB key:	Settings		TMDB 密钥：
-Getting the details…	Detail		正在获取详细信息…
 Above 360p, YouTube takes longer to start.	Settings		高于 360p 时，YouTube 开始播放需要更久。
-With a key, the library gets posters, plots and casts. It is free.	Settings		有了密钥，媒体库会获取海报、剧情简介和演员表。它是免费的。
-Only these pages use the account; Cinema keeps no password.	Settings		只有这些页面使用账户；Cinema 不保存密码。
 Address:	Settings		地址：
 Copied to the network folder	Window		已复制到网络文件夹
 Downloading…	Grid		正在下载…
-Stop the download	Grid		停止下载
-No	Player		否
 The highest quality already	Window		已经是最高画质
-Decoding every picture	Player		解码每一帧
 drawn by Cinema	Player		由 Cinema 绘制
 That quality could not be had	Window		无法获取该画质
-Search	Window		搜索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# 或 名称 = @iptv channel:<M3U 列表地址> 用于电视频道
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		现在安装吗？pkgman 会在终端窗口中先询问再做任何更改。
-official music video	Categories		官方音乐视频
-Podcasts	Window	the folder of the podcasts downloaded, by podcast	播客
-The video could not be downloaded	Window		无法下载该视频
 Classic films	Categories		经典电影
-video overlay	Player		视频叠加层
 Downloaded videos can be copied or moved there, with a right click.	Settings		下载的视频可以右键复制或移动到那里。
-From the web	Player		来自网络
 # or name = channel:<id> for the latest videos of a channel	Categories		# 或 名称 = channel:<id> 显示某个频道的最新视频
-MediaPlayer could not be started: %error%	Window		无法启动 MediaPlayer：%error%
+From the web	Player		来自网络
 Move to Trash	Grid		移到废纸篓
-Remove from favorites	Grid		从收藏中移除
-Downloaded	Categories		已下载
-This video can't be played here, try another one.	Window		此视频无法在这里播放，请换一个试试。
+Waiting for its turn	Window		排队等候
 Series	Window	the folder of the series downloaded	剧集
+This video can't be played here, try another one.	Window		此视频无法在这里播放，请换一个试试。
 TV series	Window		电视剧
-yesterday	Detail		昨天
-Following	Grid		已关注
-Subscriptions, Watch later, Liked videos and History become tabs.	Settings		订阅、稍后观看、赞过的视频和观看记录将成为标签页。
-No subtitles available	Player		没有可用的字幕
+Cancel the download and delete it	Grid		取消下载并删除
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#个月前}}
+No subtitles available	Player		没有可用的字幕
 Video ready	Window		视频已就绪
-Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
-YouTube account	Settings		YouTube 账户
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
-Not signed in: %error%	Settings		未登录：%error%
 Show the latest videos	Grid		显示最新视频
-Copy to the network folder	Grid		复制到网络文件夹
 The key works.	Settings		密钥有效。
-Music	Categories		音乐
-Test	Settings		测试
+Copy to the network folder	Grid		复制到网络文件夹
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema：适用于 Haiku 和 RenkuOS 的视频应用，来自 YouTube、Internet Archive、PeerTube、BitTorrent 以及你自己的文件夹。
+Test	Settings		测试
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema 需要 yt-dlp 和 python3，并且 cinema-helper.py 需在同一位置
 Even volume: films and TV as loud as music	Settings		音量均衡：电影和电视与音乐一样响亮
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#天前}}
-Remove	Settings		移除
 Download	Detail		下载
-Downloaded	Window		已下载
+Remove	Settings		移除
 Add	Settings		添加
-Podcast	Window		播客
-Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		现在安装吗？pkgman 会在终端窗口中先询问再做任何更改。
-Always	Settings		始终
 Remove from the tabs	Categories		从标签页中移除
 The folder can be written to.	Settings		可以写入该文件夹。
 Choose…	Settings		选择…
 news today	Categories		今日新闻
-Get a key…	Settings		获取密钥…
 Move to Trash	Detail		移到废纸篓
-%peers% sources	Window		%peers% 个来源
-M3U list:	Settings		M3U 列表：
-%views% views	Detail		%views% 次观看
-The address of a list of channels, or drop an .m3u file on Cinema.	Settings		频道列表的地址，或将 .m3u 文件拖放到 Cinema 上。
 Science	Categories		科学
 Classic cartoons	Categories		经典动画
-Play	Detail		播放
-Free channels of:	Settings		免费频道所在国家：
 Follow	Detail		关注
 No statistics for this video	Player		此视频没有统计信息
-Home network	Window		家庭网络
 Details	Grid		详细信息
-Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		按照 Cinema 的 README 所述，把单文件版 yt-dlp 放到 ~/config/non-packaged/bin，然后重新启动 Cinema。
-even volume %gain% dB	Player		均衡音量 %gain% dB
-%count% dropped	Player		丢弃 %count% 帧
 The lowest quality already	Window		已经是最低画质
-%done% of %total%	Window		%done% / %total%
-forced	Subtitles		强制
-For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		对于 FRITZ!Box：ftp://192.168.178.1/ 加上其磁盘名称。
-Already downloaded	Grid		已经下载
 Never	Settings		从不
-Go on from where a video was left	Settings		从上次停下的地方继续播放视频
+Already downloaded	Grid		已经下载
 Search	Settings		搜索
-Not copied to the network folder	Window		未复制到网络文件夹
-Type what to look for at the top right	Window		在右上角输入要搜索的内容
-Cinema	System name		Cinema
-\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" 正在下载。现在观看（关闭正在播放的视频），还是稍后从下载中观看？
-Folders of the library	Settings		媒体库文件夹
-Moving to the network folder	Window		正在移动到网络文件夹
-Watch later	Window		稍后观看
-No videos found	Window		未找到视频
-See all	Home		查看全部
-Click to watch it	Window		点击观看
 Moved to the network folder	Window		已移动到网络文件夹
-Open the channel	Grid		打开频道
 I signed in	Settings		我已登录
-Check	Settings		检查
 Playback	Settings		播放
 Subtitles	Subtitles		字幕
-It does not work: %error%	Settings		无法使用：%error%
+Paused	Window		已暂停
 This video comes in one quality only	Window		此视频只有一种画质
-science explained	Categories		科学解说
 Signed in: the tabs of the account are there.	Settings		已登录：账户的标签页已添加。
-Download	Grid		下载
-Channel	Grid		频道
-Movies	Window		电影
-Season %d	Window	the folder of a season of a series downloaded	第 %d 季
 Later	Window		稍后
-Looking for the videos…	Window		正在查找视频…
 %count% subscribers	Detail		%count% 位订阅者
-Password:	Settings		密码：
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 每行一个顶部栏标签：名称 = 要在 YouTube 上搜索的内容
+Password:	Settings		密码：
 Move to the network folder	Grid		移动到网络文件夹
 Following	Detail		已关注
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube 和其他来源需要 Python 3 和 yt-dlp，此系统上缺少它们或无法运行。
 History	Window		观看记录
 Automatic	Settings		自动
-automatic	Player		自动生成
 No videos downloaded yet: right click a video, or press D	Window		还没有下载的视频：右键点击视频，或按 D
 Copying to the network folder	Window		正在复制到网络文件夹
 From a file	Player		来自文件
 Network folder	Settings		网络文件夹
-Favorites	Window		收藏
-Can you see the video?	Player		你能看到视频吗？
-Install	Window		安装
-Home	Categories		主页
-Checking…	Settings		正在检查…
-Sign in in WebPositive, then press \"I signed in\".	Settings		在 WebPositive 中登录后，点击“我已登录”。
 Changing to %height%p…	Window		正在切换到 %height%p…
-Subtitles	Player		字幕
+Sign in in WebPositive, then press \"I signed in\".	Settings		在 WebPositive 中登录后，点击“我已登录”。
 From a torrent, as it downloads	Player		来自种子，边下载边播放
-About Cinema	Window		关于 Cinema

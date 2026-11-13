@@ -90,7 +90,11 @@ stop it. It plays while it downloads: its pieces come in order, and Cinema
 starts it as soon as the first ones are there (a link with `xs=`, the address
 of its `.torrent`, starts in a few seconds); over a video already playing it
 asks first, and the bar of the player shows, lighter, what of it is already
-downloaded. A stopped or interrupted download picks up where it was. Without
+downloaded. Downloads, torrents or not, go a few at a time (three, two on 32-bit ARM),
+the others waiting for their turn; a right click pauses one, keeping what it
+got, resumes it, or cancels it and deletes what it got. Those not finished,
+paused ones too, are there again when Cinema starts, and go on from where they
+were; a torrent asked for on the screen starts at once. Without
 `aria2c`, Cinema offers to install it on x86. Use it for
 what you may share, such as the films of the Blender Foundation or the torrents
 of the Internet Archive. The video servers of the home network (DLNA, as a

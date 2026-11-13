@@ -1,201 +1,206 @@
-1	japanese	application/x-vnd.atomozero-Cinema	86757012
+1	japanese	application/x-vnd.atomozero-Cinema	1283274811
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
-Put new downloads in Films, Series and Videos, with a picture	Settings		新しいダウンロードを映画・シリーズ・動画に分け、画像を付ける
-YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube などのソースには yt-dlp が必要ですが、このシステムの Python では見つかりません。
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
-Search first in:	Settings		最初に検索する場所:
 full documentary	Categories		ドキュメンタリー 全編
-Add to favorites	Grid		お気に入りに追加
-OK	Window		OK
-Add this channel to the tabs	Categories		このチャンネルをタブに追加
-Play	Grid		再生
+Search first in:	Settings		最初に検索する場所:
 Video downloaded	Window		動画をダウンロードしました
-Video overlay:	Settings		ビデオオーバーレイ:
-Sound ready: %seconds% s	Player		準備済みの音声: %seconds% 秒
-Sign out	Settings		ログアウト
+Play	Grid		再生
 Sign in with WebPositive…	Settings		WebPositive でログイン…
+Sign out	Settings		ログアウト
 Getting the video ready	Grid		動画を準備中
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. WebPositive で YouTube にログインします。  2. 戻って「ログインした」を押します。
 Subscriptions	Window		登録チャンネル
-today	Detail		今日
 Settings…	Window		設定…
-Downloading…	Detail		ダウンロード中…
 Decoding without the deblocking filter	Player		デブロッキングフィルターなしでデコード
+Resume the download	Grid		ダウンロードを再開
 Add to the tabs	Grid		タブに追加
-No subtitles	Player		字幕なし
 Processor: Cinema %cinema%%, all %all%%	Player		プロセッサ: Cinema %cinema%%、全体 %all%%
-Not now	Window		後で
-Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		まず設定でネットワークフォルダーを選んでください: ftp://192.168.178.1/USB/Video のようなアドレスと、ユーザー、パスワード。
 Decoding the key frames only	Player		キーフレームのみデコード
+Cancel	Window		キャンセル
+Put them all in order now	Settings		今すぐすべて整理
+Documentaries	Categories		ドキュメンタリー
+Live stream	Player		ライブ配信
+TMDB does not accept this key.	Settings		TMDB はこのキーを受け付けません。
+Continue watching	Window		続きを見る
+User:	Settings		ユーザー:
+Move to Trash	Window		ゴミ箱に移動
+Getting the video ready	Player		動画を準備中
+Not signed in.	Settings		ログインしていません。
+TV channels	Settings		テレビチャンネル
+Getting the details…	Detail		詳細を取得中…
+With a key, the library gets posters, plots and casts. It is free.	Settings		キーがあると、ライブラリにポスター、あらすじ、キャストが表示されます。無料です。
+Only these pages use the account; Cinema keeps no password.	Settings		アカウントを使うのはこれらのページだけで、Cinema はパスワードを保存しません。
+No	Player		いいえ
+Decoding every picture	Player		すべてのフレームをデコード
+Search	Window		検索
+Podcasts	Window	the folder of the podcasts downloaded, by podcast	ポッドキャスト
+official music video	Categories		公式ミュージックビデオ
+The video could not be downloaded	Window		動画をダウンロードできませんでした
+video overlay	Player		ビデオオーバーレイ
+MediaPlayer could not be started: %error%	Window		MediaPlayer を起動できません: %error%
+Remove from favorites	Grid		お気に入りから削除
+Downloaded	Categories		ダウンロード済み
+yesterday	Detail		昨日
+Following	Grid		フォロー中
+Subscriptions, Watch later, Liked videos and History become tabs.	Settings		登録チャンネル、後で見る、高く評価した動画、履歴がタブになります。
+Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
+YouTube account	Settings		YouTube アカウント
+Not signed in: %error%	Settings		ログインしていません: %error%
+Music	Categories		音楽
+{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#日前}}
+Downloaded	Window		ダウンロード済み
+Podcast	Window		ポッドキャスト
+Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
+Always	Settings		常に
+Get a key…	Settings		キーを取得…
+%peers% sources	Window		ソース %peers% 件
+M3U list:	Settings		M3U リスト:
+%views% views	Detail		%views% 回視聴
+The address of a list of channels, or drop an .m3u file on Cinema.	Settings		チャンネルリストのアドレス、または .m3u ファイルを Cinema にドロップします。
+Play	Detail		再生
+Free channels of:	Settings		無料チャンネルの国:
+Home network	Window		ホームネットワーク
+Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。
+%count% dropped	Player		%count% 枚破棄
+even volume %gain% dB	Player		音量の均一化 %gain% dB
+%done% of %total%	Window		%done% / %total%
+For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		FRITZ!Box の場合: ftp://192.168.178.1/ とディスクの名前。
+forced	Subtitles		強制
+Go on from where a video was left	Settings		動画を止めたところから再開
+Not copied to the network folder	Window		ネットワークフォルダーにコピーできませんでした
+Type what to look for at the top right	Window		右上に探したいものを入力してください
+\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" をダウンロード中です。再生中の動画を閉じて今すぐ見ますか、それとも後でダウンロードから見ますか？
+Cinema	System name		Cinema
+Folders of the library	Settings		ライブラリのフォルダー
+Moving to the network folder	Window		ネットワークフォルダーへ移動中
+No videos found	Window		動画が見つかりません
+Watch later	Window		後で見る
+See all	Home		すべて表示
+Click to watch it	Window		クリックして見る
+Open the channel	Grid		チャンネルを開く
+Check	Settings		確認
+It does not work: %error%	Settings		うまくいきません: %error%
+science explained	Categories		科学 解説
+Download	Grid		ダウンロード
+Channel	Grid		チャンネル
+Movies	Window		映画
+Pausing…	Window		一時停止中…
+Season %d	Window	the folder of a season of a series downloaded	シーズン %d
+Looking for the videos…	Window		動画を検索中…
+automatic	Player		自動生成
+Favorites	Window		お気に入り
+Can you see the video?	Player		動画が見えますか?
+Home	Categories		ホーム
+Install	Window		インストール
+Checking…	Settings		確認中…
+About Cinema	Window		Cinema について
+Subtitles	Player		字幕
+YouTube and the other sources need yt-dlp, which Python cannot find on this system.	Window		YouTube などのソースには yt-dlp が必要ですが、このシステムの Python では見つかりません。
+Put new downloads in Films, Series and Videos, with a picture	Settings		新しいダウンロードを映画・シリーズ・動画に分け、画像を付ける
+Add to favorites	Grid		お気に入りに追加
+Add this channel to the tabs	Categories		このチャンネルをタブに追加
+OK	Window		OK
+Video overlay:	Settings		ビデオオーバーレイ:
+Sound ready: %seconds% s	Player		準備済みの音声: %seconds% 秒
+today	Detail		今日
+Downloading…	Detail		ダウンロード中…
+Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		まず設定でネットワークフォルダーを選んでください: ftp://192.168.178.1/USB/Video のようなアドレスと、ユーザー、パスワード。
+Not now	Window		後で
+No subtitles	Player		字幕なし
+Pause the download	Grid		ダウンロードを一時停止
 Yes	Player		はい
 Library	Settings		ライブラリ
 Cinema settings	Settings		Cinema の設定
-From YouTube, through the helper	Player		YouTubeから、ヘルパー経由
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent でのダウンロードには aria2c が必要ですが、インストールされていません。
-Cancel	Window		キャンセル
-Put them all in order now	Settings		今すぐすべて整理
+From YouTube, through the helper	Player		YouTubeから、ヘルパー経由
 Back	Detail		戻る
-Live stream	Player		ライブ配信
-Documentaries	Categories		ドキュメンタリー
-TMDB does not accept this key.	Settings		TMDB はこのキーを受け付けません。
 Play the videos in Cinema, not in MediaPlayer	Settings		MediaPlayer ではなく Cinema で動画を再生
 technology review	Categories		テクノロジー レビュー
-User:	Settings		ユーザー:
-Continue watching	Window		続きを見る
-Getting the video ready	Player		動画を準備中
-Move to Trash	Window		ゴミ箱に移動
 Follow	Grid		フォロー
 {0, plural, one{# week ago} other{# weeks ago}}	Detail		{0, plural, other{#週間前}}
-The password could not be kept in the keyring.	Settings		パスワードをキーリングに保存できませんでした。
-Watch now	Window		今すぐ見る
 %eta% left	Window		残り %eta%
-Add…	Settings		追加…
-The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
+Watch now	Window		今すぐ見る
+The password could not be kept in the keyring.	Settings		パスワードをキーリングに保存できませんでした。
 Films	Window	the folder of the films downloaded	映画
+The video could not be moved to the Trash: %error%	Window		動画をゴミ箱に移動できませんでした: %error%
+Add…	Settings		追加…
 News	Categories		ニュース
 TV	Window		テレビ
 Decoding the reference pictures only	Player		参照フレームのみデコード
 Videos	Window	the folder of the other videos downloaded, by channel	動画
 TV %country%	Settings		%country%のテレビ
-Not signed in.	Settings		ログインしていません。
-TV channels	Settings		テレビチャンネル
 Technology	Categories		テクノロジー
 Liked videos	Window		高く評価した動画
 TMDB key:	Settings		TMDB キー:
-Getting the details…	Detail		詳細を取得中…
 Above 360p, YouTube takes longer to start.	Settings		360pを超えると、YouTubeの再生開始に時間がかかります。
-With a key, the library gets posters, plots and casts. It is free.	Settings		キーがあると、ライブラリにポスター、あらすじ、キャストが表示されます。無料です。
-Only these pages use the account; Cinema keeps no password.	Settings		アカウントを使うのはこれらのページだけで、Cinema はパスワードを保存しません。
 Address:	Settings		アドレス:
 Copied to the network folder	Window		ネットワークフォルダーにコピーしました
 Downloading…	Grid		ダウンロード中…
-Stop the download	Grid		ダウンロードを停止
-No	Player		いいえ
 The highest quality already	Window		すでに最高画質です
-Decoding every picture	Player		すべてのフレームをデコード
 drawn by Cinema	Player		Cinemaが描画
 That quality could not be had	Window		その画質は取得できませんでした
-Search	Window		検索
 # or name = @iptv channel:<address of an M3U list> for TV channels	Categories		# または 名前 = @iptv channel:<M3U リストのアドレス> でテレビチャンネル
 Install them now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
-official music video	Categories		公式ミュージックビデオ
-Podcasts	Window	the folder of the podcasts downloaded, by podcast	ポッドキャスト
-The video could not be downloaded	Window		動画をダウンロードできませんでした
 Classic films	Categories		名作映画
-video overlay	Player		ビデオオーバーレイ
 Downloaded videos can be copied or moved there, with a right click.	Settings		ダウンロードした動画は右クリックでそこへコピーまたは移動できます。
-From the web	Player		Webから
 # or name = channel:<id> for the latest videos of a channel	Categories		# または 名前 = channel:<id> でチャンネルの最新動画
-MediaPlayer could not be started: %error%	Window		MediaPlayer を起動できません: %error%
+From the web	Player		Webから
 Move to Trash	Grid		ゴミ箱に移動
-Remove from favorites	Grid		お気に入りから削除
-Downloaded	Categories		ダウンロード済み
-This video can't be played here, try another one.	Window		この動画はここでは再生できません。別の動画をお試しください。
+Waiting for its turn	Window		順番待ち
 Series	Window	the folder of the series downloaded	シリーズ
+This video can't be played here, try another one.	Window		この動画はここでは再生できません。別の動画をお試しください。
 TV series	Window		テレビシリーズ
-yesterday	Detail		昨日
-Following	Grid		フォロー中
-Subscriptions, Watch later, Liked videos and History become tabs.	Settings		登録チャンネル、後で見る、高く評価した動画、履歴がタブになります。
-No subtitles available	Player		利用できる字幕がありません
+Cancel the download and delete it	Grid		ダウンロードを中止して削除
 {0, plural, one{# month ago} other{# months ago}}	Detail		{0, plural, other{#か月前}}
+No subtitles available	Player		利用できる字幕がありません
 Video ready	Window		動画の準備ができました
-Move \"%title%\" to the Trash?	Window		「%title%」をゴミ箱に移動しますか?
-YouTube account	Settings		YouTube アカウント
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
-Not signed in: %error%	Settings		ログインしていません: %error%
 Show the latest videos	Grid		最新の動画を表示
-Copy to the network folder	Grid		ネットワークフォルダーにコピー
 The key works.	Settings		キーは有効です。
-Music	Categories		音楽
-Test	Settings		テスト
+Copy to the network folder	Grid		ネットワークフォルダーにコピー
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
+Test	Settings		テスト
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です
 Even volume: films and TV as loud as music	Settings		音量を均一に: 映画とテレビを音楽並みの音量で
-{0, plural, one{# day ago} other{# days ago}}	Detail		{0, plural, other{#日前}}
-Remove	Settings		削除
 Download	Detail		ダウンロード
-Downloaded	Window		ダウンロード済み
+Remove	Settings		削除
 Add	Settings		追加
-Podcast	Window		ポッドキャスト
-Install it now? pkgman asks before it changes anything, in a Terminal window.	Window		今すぐインストールしますか？pkgman はターミナルのウィンドウで、変更する前に確認します。
-Always	Settings		常に
 Remove from the tabs	Categories		タブから削除
 The folder can be written to.	Settings		フォルダーに書き込めます。
 Choose…	Settings		選択…
 news today	Categories		今日のニュース
-Get a key…	Settings		キーを取得…
 Move to Trash	Detail		ゴミ箱に移動
-%peers% sources	Window		ソース %peers% 件
-M3U list:	Settings		M3U リスト:
-%views% views	Detail		%views% 回視聴
-The address of a list of channels, or drop an .m3u file on Cinema.	Settings		チャンネルリストのアドレス、または .m3u ファイルを Cinema にドロップします。
 Science	Categories		科学
 Classic cartoons	Categories		名作アニメ
-Play	Detail		再生
-Free channels of:	Settings		無料チャンネルの国:
 Follow	Detail		フォロー
 No statistics for this video	Player		この動画の統計はありません
-Home network	Window		ホームネットワーク
 Details	Grid		詳細
-Put the single-file yt-dlp in ~/config/non-packaged/bin, as the README of Cinema says, then start Cinema again.	Window		Cinema の README にあるとおり、単一ファイル版の yt-dlp を ~/config/non-packaged/bin に置き、Cinema を再起動してください。
-even volume %gain% dB	Player		音量の均一化 %gain% dB
-%count% dropped	Player		%count% 枚破棄
 The lowest quality already	Window		すでに最低画質です
-%done% of %total%	Window		%done% / %total%
-forced	Subtitles		強制
-For a FRITZ!Box: ftp://192.168.178.1/ and the name of its disk.	Settings		FRITZ!Box の場合: ftp://192.168.178.1/ とディスクの名前。
-Already downloaded	Grid		すでにダウンロード済み
 Never	Settings		使わない
-Go on from where a video was left	Settings		動画を止めたところから再開
+Already downloaded	Grid		すでにダウンロード済み
 Search	Settings		検索
-Not copied to the network folder	Window		ネットワークフォルダーにコピーできませんでした
-Type what to look for at the top right	Window		右上に探したいものを入力してください
-Cinema	System name		Cinema
-\"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" をダウンロード中です。再生中の動画を閉じて今すぐ見ますか、それとも後でダウンロードから見ますか？
-Folders of the library	Settings		ライブラリのフォルダー
-Moving to the network folder	Window		ネットワークフォルダーへ移動中
-Watch later	Window		後で見る
-No videos found	Window		動画が見つかりません
-See all	Home		すべて表示
-Click to watch it	Window		クリックして見る
 Moved to the network folder	Window		ネットワークフォルダーへ移動しました
-Open the channel	Grid		チャンネルを開く
 I signed in	Settings		ログインした
-Check	Settings		確認
 Playback	Settings		再生
 Subtitles	Subtitles		字幕
-It does not work: %error%	Settings		うまくいきません: %error%
+Paused	Window		一時停止
 This video comes in one quality only	Window		この動画の画質は一つだけです
-science explained	Categories		科学 解説
 Signed in: the tabs of the account are there.	Settings		ログイン済み: アカウントのタブがあります。
-Download	Grid		ダウンロード
-Channel	Grid		チャンネル
-Movies	Window		映画
-Season %d	Window	the folder of a season of a series downloaded	シーズン %d
 Later	Window		後で
-Looking for the videos…	Window		動画を検索中…
 %count% subscribers	Detail		チャンネル登録者数 %count%人
-Password:	Settings		パスワード:
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容
+Password:	Settings		パスワード:
 Move to the network folder	Grid		ネットワークフォルダーへ移動
 Following	Detail		フォロー中
 YouTube and the other sources need Python 3 and yt-dlp, which are missing or not working on this system.	Window		YouTube などのソースには Python 3 と yt-dlp が必要ですが、このシステムにないか動作していません。
 History	Window		履歴
 Automatic	Settings		自動
-automatic	Player		自動生成
 No videos downloaded yet: right click a video, or press D	Window		ダウンロードした動画はまだありません: 動画を右クリックするか、D を押してください
 Copying to the network folder	Window		ネットワークフォルダーへコピー中
 From a file	Player		ファイルから
 Network folder	Settings		ネットワークフォルダー
-Favorites	Window		お気に入り
-Can you see the video?	Player		動画が見えますか?
-Install	Window		インストール
-Home	Categories		ホーム
-Checking…	Settings		確認中…
-Sign in in WebPositive, then press \"I signed in\".	Settings		WebPositive でログインしてから「ログインした」を押してください。
 Changing to %height%p…	Window		%height%p に切り替え中…
-Subtitles	Player		字幕
+Sign in in WebPositive, then press \"I signed in\".	Settings		WebPositive でログインしてから「ログインした」を押してください。
 From a torrent, as it downloads	Player		トレントから、ダウンロードしながら
-About Cinema	Window		Cinema について

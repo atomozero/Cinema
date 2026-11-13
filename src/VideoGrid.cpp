@@ -928,10 +928,20 @@ VideoGrid::_ShowMenu(int32 index, BPoint where)
 		item->SetEnabled(!video.downloaded && video.progress < 0);
 		menu->AddItem(item);
 		if (video.progress >= 0) {
+			// paused, it goes on; otherwise it can be paused
+			bool paused = video.downloadState == "paused";
+			BMessage* pause = new BMessage(paused ? kMsgResumeDownload
+				: kMsgPauseDownload);
+			pause->AddString("id", video.id);
+			BMenuItem* item = new BMenuItem(paused
+				? B_TRANSLATE("Resume the download")
+				: B_TRANSLATE("Pause the download"), pause);
+			item->SetEnabled(video.downloadState != "pausing");
+			menu->AddItem(item);
 			BMessage* stop = new BMessage(kMsgCancelDownload);
 			stop->AddString("id", video.id);
-			menu->AddItem(new BMenuItem(B_TRANSLATE("Stop the download"),
-				stop));
+			menu->AddItem(new BMenuItem(B_TRANSLATE("Cancel the download "
+				"and delete it"), stop));
 		}
 	} else if (!video.path.IsEmpty()) {
 		BMessage* trash = new BMessage(kMsgTrash);
