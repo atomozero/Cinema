@@ -929,7 +929,8 @@ VideoGrid::_ShowMenu(int32 index, BPoint where)
 		menu->AddItem(item);
 		if (video.progress >= 0) {
 			// paused, it goes on; otherwise it can be paused
-			bool paused = video.downloadState == "paused";
+			bool paused = video.downloadState == "paused"
+				|| video.downloadState == "pause later";
 			BMessage* pause = new BMessage(paused ? kMsgResumeDownload
 				: kMsgPauseDownload);
 			pause->AddString("id", video.id);

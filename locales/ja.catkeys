@@ -1,8 +1,9 @@
-1	japanese	application/x-vnd.atomozero-Cinema	1283274811
+1	japanese	application/x-vnd.atomozero-Cinema	2155634246
 YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
+Pauses when you stop watching it	Window		見終わると一時停止します
 full documentary	Categories		ドキュメンタリー 全編
 Search first in:	Settings		最初に検索する場所:
 Video downloaded	Window		動画をダウンロードしました
@@ -158,8 +159,8 @@ No subtitles available	Player		利用できる字幕がありません
 Video ready	Window		動画の準備ができました
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#年前}}
 Show the latest videos	Grid		最新の動画を表示
-The key works.	Settings		キーは有効です。
 Copy to the network folder	Grid		ネットワークフォルダーにコピー
+The key works.	Settings		キーは有効です。
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube、Internet Archive、PeerTube、BitTorrent、そして自分のフォルダーの動画を見る Haiku と RenkuOS 用のアプリ。
 Test	Settings		テスト
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema には yt-dlp と python3、そして同じ場所に cinema-helper.py が必要です

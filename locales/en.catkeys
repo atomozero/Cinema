@@ -1,8 +1,9 @@
-1	english	application/x-vnd.atomozero-Cinema	1283274811
+1	english	application/x-vnd.atomozero-Cinema	2155634246
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.
+Pauses when you stop watching it	Window		Pauses when you stop watching it
 full documentary	Categories		full documentary
 Search first in:	Settings		Search first in:
 Video downloaded	Window		Video downloaded
@@ -158,8 +159,8 @@ No subtitles available	Player		No subtitles available
 Video ready	Window		Video ready
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# year ago} other{# years ago}}
 Show the latest videos	Grid		Show the latest videos
-The key works.	Settings		The key works.
 Copy to the network folder	Grid		Copy to the network folder
+The key works.	Settings		The key works.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.
 Test	Settings		Test
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema needs yt-dlp and python3, and cinema-helper.py next to it

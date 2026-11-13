@@ -1,8 +1,9 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	1283274811
+1	ukrainian	application/x-vnd.atomozero-Cinema	2155634246
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
+Pauses when you stop watching it	Window		Призупиниться, коли ви перестанете дивитися
 full documentary	Categories		повний документальний фільм
 Search first in:	Settings		Спершу шукати в:
 Video downloaded	Window		Відео завантажено
@@ -158,8 +159,8 @@ No subtitles available	Player		Немає доступних субтитрів
 Video ready	Window		Відео готове
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, one{# рік тому} few{# роки тому} many{# років тому} other{# року тому}}
 Show the latest videos	Grid		Показати останні відео
-The key works.	Settings		Ключ працює.
 Copy to the network folder	Grid		Копіювати в мережеву теку
+The key works.	Settings		Ключ працює.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: відео для Haiku та RenkuOS з YouTube, Internet Archive, PeerTube, BitTorrent і ваших власних тек.
 Test	Settings		Перевірити
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Для Cinema потрібні yt-dlp і python3, а також cinema-helper.py поруч

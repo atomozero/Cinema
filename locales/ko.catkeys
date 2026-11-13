@@ -1,8 +1,9 @@
-1	korean	application/x-vnd.atomozero-Cinema	1283274811
+1	korean	application/x-vnd.atomozero-Cinema	2155634246
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
+Pauses when you stop watching it	Window		시청을 멈추면 일시 정지됩니다
 full documentary	Categories		다큐멘터리 전편
 Search first in:	Settings		먼저 검색할 곳:
 Video downloaded	Window		동영상 다운로드 완료
@@ -158,8 +159,8 @@ No subtitles available	Player		사용 가능한 자막 없음
 Video ready	Window		동영상 준비됨
 {0, plural, one{# year ago} other{# years ago}}	Detail		{0, plural, other{#년 전}}
 Show the latest videos	Grid		최신 동영상 보기
-The key works.	Settings		키가 작동합니다.
 Copy to the network folder	Grid		네트워크 폴더에 복사
+The key works.	Settings		키가 작동합니다.
 Cinema: videos for Haiku and RenkuOS, from YouTube, the Internet Archive, PeerTube, BitTorrent and your own folders.	Window		Cinema: YouTube, Internet Archive, PeerTube, BitTorrent 및 내 폴더의 동영상을 보는 Haiku와 RenkuOS용 앱.
 Test	Settings		테스트
 Cinema needs yt-dlp and python3, and cinema-helper.py next to it	Window		Cinema를 사용하려면 yt-dlp와 python3, 그리고 같은 위치의 cinema-helper.py가 필요합니다
