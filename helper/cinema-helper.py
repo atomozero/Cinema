@@ -1109,16 +1109,26 @@ class YouTubeProvider(Provider):
 		last = [-1]
 
 		def report(status):
+			# paused or cancelled at the next piece, whatever is known of
+			# its size: some files say none, and were never stopped
+			if media_id in CANCELLED:
+				raise Cancelled()
+			if media_id in PAUSED:
+				raise Paused()
 			if progress is None or status.get("status") != "downloading":
 				return
+			done = status.get("downloaded_bytes", 0) or 0
 			total = status.get("total_bytes") or \
 				status.get("total_bytes_estimate")
 			if not total:
+				# how much, without a percent
+				progress(max(0, last[0]), done=size_text(done), total="")
 				return
-			percent = int(100 * status.get("downloaded_bytes", 0) / total)
+			percent = int(100 * done / total)
 			if percent != last[0]:
 				last[0] = percent
-				progress(percent)
+				progress(percent, done=size_text(done),
+					total=size_text(total))
 
 		# a single file with sound and picture, as played: nothing to merge
 		options = dict(self.OPTIONS, format=self.FORMAT,
