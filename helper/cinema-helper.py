@@ -993,7 +993,84 @@ class YouTubeProvider(Provider):
 		videos.sort(key=lambda video: -(video.get("timestamp") or 0))
 		return videos[:max(count, 24)]
 
+	RSS = "https://www.youtube.com/feeds/videos.xml?channel_id=%s"
+	ATOM = {"a": "http://www.w3.org/2005/Atom",
+		"yt": "http://www.youtube.com/xml/schemas/2015",
+		"media": "http://search.yahoo.com/mrss/"}
+
+	def feed_of(self, channel):
+		"""The latest videos of a channel from its RSS feed: their original
+		titles (yt-dlp gets them translated into English), the second each
+		came out, its views; no shorts. Light and quick, without yt-dlp;
+		their length is not in it."""
+		import xml.etree.ElementTree as tree
+		import calendar
+		request = urllib.request.Request(self.RSS % channel,
+			headers={"User-Agent": USER_AGENT})
+		with urllib.request.urlopen(request, timeout=20) as response:
+			root = tree.fromstring(response.read(2 * 1024 * 1024))
+		names = self.ATOM
+		videos = []
+		for entry in root.findall("a:entry", names):
+			video_id = entry.findtext("yt:videoId", "", names)
+			link = entry.find("a:link", names)
+			address = link.get("href") if link is not None else ""
+			if not video_id or "/shorts/" in address:
+				continue
+			published = entry.findtext("a:published", "", names)
+			try:
+				stamp = calendar.timegm(time.strptime(published[:19],
+					"%Y-%m-%dT%H:%M:%S"))
+			except ValueError:
+				stamp = 0
+			statistics = entry.find("media:group/media:community/"
+				"media:statistics", names)
+			videos.append({"provider": self.id, "kind": "video",
+				"id": video_id,
+				"title": clean(entry.findtext("a:title", "", names)),
+				"description": clean(entry.findtext(
+					"media:group/media:description", "", names)),
+				"channel": clean(entry.findtext("a:author/a:name", "",
+					names)),
+				"channel_id": channel, "duration": 0,
+				"year": as_int(published[:4], 0), "date": published[:10],
+				"views": as_int(statistics.get("views")
+					if statistics is not None else 0, 0),
+				"rating": 0.0, "poster": "", "thumbnail": "", "season": 0,
+				"episode": 0, "timestamp": stamp})
+		return videos
+
+	def news(self, channels, count):
+		"""The latest videos of news channels together, the newest first,
+		from their RSS feeds (yt-dlp for one whose feed fails). A few
+		channels at a time."""
+		ids = [channel for channel in channels.split(",")
+			if re.fullmatch(r"UC[\w-]{22}", channel)]
+		videos = []
+		lock = threading.Lock()
+
+		def fetch(channel):
+			try:
+				found = self.feed_of(channel)
+			except Exception:
+				try:
+					found = self.videos_of("https://www.youtube.com/channel/"
+						"%s/videos" % channel, 8, channel_id=channel)
+				except Exception:
+					return
+			with lock:
+				videos.extend(found)
+
+		from concurrent.futures import ThreadPoolExecutor
+		with ThreadPoolExecutor(4) as pool:
+			list(pool.map(fetch, ids))
+		videos.sort(key=lambda video: -(video.get("timestamp") or 0))
+		return videos[:max(count, 60)]
+
 	def channel(self, channel_id, count):
+		# the news of a few channels together, the newest first
+		if channel_id.startswith(":news:"):
+			return self.news(channel_id[len(":news:"):], count)
 		# the pages of the account signed in
 		if channel_id in YOUTUBE_FEEDS:
 			cookies = youtube_cookies()
@@ -3339,7 +3416,12 @@ def job_channel(provider, tag, count, channel_id):
 		salt = getattr(provider, "cache_salt", None)
 		if salt is not None:
 			name += " " + salt()
-		if getattr(provider, "cache_channels", True):
+		if channel_id.startswith(":news:"):
+			# the news: looked for again after ten minutes, never shown
+			# more than an hour old
+			items = cached(name, lambda: (wait_for_play(),
+				provider.channel(channel_id, count))[1], 10 * 60, 60 * 60)
+		elif getattr(provider, "cache_channels", True):
 			items = cached(name, lambda: (wait_for_play(),
 				provider.channel(channel_id, count))[1])
 		else:

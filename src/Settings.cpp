@@ -73,6 +73,11 @@ Settings::Load()
 	settings.networkFolder = archive.GetString("network folder", "");
 	settings.organizeDownloads = archive.GetBool("organize downloads", true);
 	settings.youtubeAccount = archive.GetBool("youtube account", false);
+	settings.newsChannelsSet = archive.GetBool("news channels set", false);
+	const char* channel;
+	for (int32 i = 0; archive.FindString("news channel", i, &channel) == B_OK;
+			i++)
+		settings.newsChannels.push_back(channel);
 	settings.networkUser = archive.GetString("network user", "");
 	settings.volume = archive.GetFloat("volume", 1.0f);
 	settings.subtitleLanguage = archive.GetString("subtitle language", "");
@@ -106,6 +111,9 @@ Settings::Save() const
 	archive.AddString("network folder", networkFolder);
 	archive.AddBool("organize downloads", organizeDownloads);
 	archive.AddBool("youtube account", youtubeAccount);
+	archive.AddBool("news channels set", newsChannelsSet);
+	for (const BString& channel : newsChannels)
+		archive.AddString("news channel", channel);
 	archive.AddString("network user", networkUser);
 	archive.AddFloat("volume", volume);
 	archive.AddString("subtitle language", subtitleLanguage);

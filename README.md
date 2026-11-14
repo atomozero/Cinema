@@ -118,7 +118,12 @@ the feed of a podcast in the search field, or drop it on the window, and a
 tab named after the podcast shows its episodes, the latest on the home too:
 they play with the picture of the episode when there is only sound, go on from
 where they were left, and download to `Podcasts/Name`. A right click on a tab that searches chooses the order of its videos, the
-newest first or the most relevant first; the news come the newest first. **S** or a right click
+newest first or the most relevant first. The **News** tab is made of the
+latest videos of news channels, the newest first, from their feeds of YouTube
+(with their own titles and the minute they came out): TG La7, Sky TG24,
+RaiNews, Tgcom24, ANSA and Fanpage.it on a system in Italian, La Repubblica and
+Il Fatto Quotidiano to add, in the News tab of the settings; with none, it
+searches YouTube, the newest first. **S** or a right click
 gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.
 

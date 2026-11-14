@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	1416101763
+1	portuguese	application/x-vnd.atomozero-Cinema	3057549031
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -44,6 +44,7 @@ MediaPlayer could not be started: %error%	Window		Não foi possível abrir o Med
 Remove from favorites	Grid		Remover dos favoritos
 Downloaded	Categories		Baixados
 yesterday	Detail		ontem
+News	Settings		Notícias
 Following	Grid		Seguindo
 Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Inscrições, Assistir mais tarde, Vídeos marcados como gostei e Histórico viram abas.
 Move \"%title%\" to the Trash?	Window		Mover "%title%" para a lixeira?
@@ -109,6 +110,7 @@ Video overlay:	Settings		Overlay de vídeo:
 Sound ready: %seconds% s	Player		Som pronto: %seconds% s
 today	Detail		hoje
 Downloading…	Detail		Baixando…
+None chosen: the tab searches YouTube instead.	Settings		Nenhum escolhido: a aba pesquisa no YouTube.
 Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		Primeiro escolha a pasta de rede nas configurações: um endereço como ftp://192.168.178.1/USB/Video, com usuário e senha.
 Not now	Window		Agora não
 No subtitles	Player		Sem legendas
@@ -185,6 +187,7 @@ The lowest quality already	Window		Já é a qualidade mais baixa
 Never	Settings		Nunca
 Already downloaded	Grid		Já baixado
 Search	Settings		Pesquisa
+The News tab shows the latest videos of these channels, the newest first:	Settings		A aba Notícias mostra os últimos vídeos destes canais, os mais recentes primeiro:
 Moved to the network folder	Window		Movido para a pasta de rede
 I signed in	Settings		Já entrei
 Playback	Settings		Reprodução

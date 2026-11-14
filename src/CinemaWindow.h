@@ -136,6 +136,7 @@ private:
 			void				_HidePlayer();
 			void				_OfferHomeNetwork();
 			void				_StartDownloads();
+			BString				_NewsChannel();
 			void				_SetCategoryOrder(int32 index,
 									const char* order);
 			void				_RequeueDownloads();

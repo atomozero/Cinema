@@ -18,6 +18,8 @@
 #include <MenuField.h>
 #include <MenuItem.h>
 #include <MessageRunner.h>
+#include <SpaceLayoutItem.h>
+#include <GroupLayout.h>
 #include <Path.h>
 #include <PopUpMenu.h>
 #include <ScrollView.h>
@@ -27,6 +29,7 @@
 #include <Url.h>
 
 #include "Messages.h"
+#include "NewsChannels.h"
 #include "Style.h"
 #include "TvLists.h"
 #include "VideoLimits.h"
@@ -59,6 +62,7 @@ static const uint32 kMsgTvCountry = 'stvc';
 static const uint32 kMsgActivate = kMsgSettingsActivate;
 static const uint32 kMsgNetworkChanged = 'snet';
 static const uint32 kMsgOrganize = 'sorg';
+static const uint32 kMsgNews = 'snws';
 static const uint32 kMsgOrganizeNow = 'sorn';
 static const uint32 kMsgPasswordChanged = 'snpw';
 static const uint32 kMsgNetworkTest = 'sntt';
@@ -358,6 +362,28 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 		.Add(search)
 		.AddGlue();
 
+	// the news: the channels the News tab is made of
+	std::vector<BString> chosen = fSettings.newsChannelsSet
+		? fSettings.newsChannels : DefaultNewsChannels();
+	BView* newsTab = new BView(B_TRANSLATE("News"), 0);
+	BGroupLayout* newsLayout = BLayoutBuilder::Group<>(newsTab, B_VERTICAL,
+		B_USE_SMALL_SPACING)
+		.SetInsets(B_USE_WINDOW_SPACING)
+		.Add(new BStringView("news note", B_TRANSLATE("The News tab shows the "
+			"latest videos of these channels, the newest first:")))
+		.Layout();
+	for (const NewsChannel& channel : kNewsChannels) {
+		BMessage* message = new BMessage(kMsgNews);
+		BCheckBox* box = new BCheckBox(channel.id, channel.name, message);
+		box->SetValue(std::find(chosen.begin(), chosen.end(),
+			BString(channel.id)) != chosen.end());
+		fNews.push_back(box);
+		newsLayout->AddView(box);
+	}
+	newsLayout->AddView(new BStringView("news none", B_TRANSLATE("None "
+		"chosen: the tab searches YouTube instead.")));
+	newsLayout->AddItem(BSpaceLayoutItem::CreateGlue());
+
 	BView* youtubeTab = new BView(B_TRANSLATE("YouTube account"), 0);
 	BLayoutBuilder::Group<>(youtubeTab, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_WINDOW_SPACING)
@@ -392,7 +418,7 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 	BTabView* tabs = new BTabView("tabs", B_WIDTH_FROM_LABEL);
 	tabs->SetBorder(B_NO_BORDER);
 	// the tabs not shown are out of the window: scaled one by one
-	BView* pages[] = { libraryTab, tvTab, playbackTab, youtubeTab,
+	BView* pages[] = { libraryTab, tvTab, playbackTab, newsTab, youtubeTab,
 		networkTab };
 	for (BView* page : pages) {
 		page->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
@@ -536,6 +562,21 @@ SettingsWindow::MessageReceived(BMessage* message)
 			fYouTubeSignOut->SetEnabled(false);
 			fYouTubeStatus->SetText(B_TRANSLATE("Not signed in."));
 			break;
+		case kMsgNews:
+		{
+			Settings saved = Settings::Load();
+			saved.newsChannels.clear();
+			for (BCheckBox* box : fNews) {
+				if (box->Value() == B_CONTROL_ON)
+					saved.newsChannels.push_back(box->Name());
+			}
+			saved.newsChannelsSet = true;
+			saved.Save();
+			fSettings.newsChannels = saved.newsChannels;
+			fSettings.newsChannelsSet = true;
+			fTarget.SendMessage(kMsgSettingsChanged);
+			break;
+		}
 		case kMsgOrganize:
 		{
 			Settings saved = Settings::Load();

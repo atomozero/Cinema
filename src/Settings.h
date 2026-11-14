@@ -29,6 +29,11 @@ struct Settings {
 	BString		searchSource;	// the provider searched first, or empty
 	int32		videoHeight;	// the highest picture wanted, 0 for what
 								// suits the machine
+	std::vector<BString> newsChannels;
+								// the News tab made of their latest
+								// videos (NewsChannels.h)
+	bool		newsChannelsSet = false;
+								// chosen; until then the default ones
 	bool		youtubeAccount = false;
 								// the pages of the account of YouTube,
 								// with the cookies of WebPositive

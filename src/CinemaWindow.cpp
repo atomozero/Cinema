@@ -53,6 +53,7 @@
 #include "Scripting.h"
 #include "History.h"
 #include "LiveAddress.h"
+#include "NewsChannels.h"
 #include "VideoLimits.h"
 #include "HomeView.h"
 #include "Player.h"
@@ -444,7 +445,15 @@ CinemaWindow::_ShowCategory(int32 index)
 	fCategoryBar->SetSelected(fCategoryBar->CategoryTab(index));
 	fChannelId = "";
 	const Category& category = fCategories[index];
-	if (category.IsChannel()) {
+	// the news, made of the latest videos of news channels
+	BString news = category.news ? _NewsChannel() : BString();
+	if (!news.IsEmpty()) {
+		fGeneration++;
+		fGrid->ClearChannelHeader();
+		fGrid->SetMessage(B_TRANSLATE("Looking for the videos"
+			B_UTF8_ELLIPSIS));
+		fHelper->Channel(fGeneration, kResultCount, news, "youtube");
+	} else if (category.IsChannel()) {
 		fGeneration++;
 		_SetChannelHeader(category.name.String(), category.channel.String(),
 			category.provider.String());
@@ -1296,7 +1305,11 @@ CinemaWindow::_StartHomeRequests()
 			|| request.category >= (int32)fCategories.size())
 			continue;
 		const Category& category = fCategories[request.category];
-		if (category.IsChannel())
+		BString news = category.news ? _NewsChannel() : BString();
+		if (!news.IsEmpty())
+			fHelper->Channel(request.generation, kResultCount, news,
+				"youtube");
+		else if (category.IsChannel())
 			fHelper->Channel(request.generation, kResultCount,
 				category.channel, category.provider.String());
 		else
@@ -2057,6 +2070,17 @@ CinemaWindow::MessageReceived(BMessage* message)
 				// the files found before are of the other size
 				fHelper->SetHeight(fSettings.videoHeight);
 				fStreams.clear();
+			}
+			// the news channels chosen, say: the home and the News tab
+			// shown again
+			fHomeLoaded = false;
+			{
+				int32 index = fCategoryBar->Selected()
+					- fCategoryBar->CategoryTab(0);
+				if (fCard == 0 && fChannelId.IsEmpty() && index >= 0
+					&& index < (int32)fCategories.size()
+					&& fCategories[index].news)
+					_ShowCategory(index);
 			}
 			break;
 		}
@@ -3322,6 +3346,28 @@ CinemaWindow::_RequeueDownloads()
 	}
 	_StartDownloads();
 	_SavePending();
+}
+
+
+/*!	The channel the helper makes of the news channels chosen in the
+	settings (or the default ones): ":news:<id>,<id>..."; empty for none,
+	and the News tab searches then.
+*/
+BString
+CinemaWindow::_NewsChannel()
+{
+	Settings settings = Settings::Load();
+	std::vector<BString> channels = settings.newsChannelsSet
+		? settings.newsChannels : DefaultNewsChannels();
+	if (channels.empty())
+		return "";
+	BString channel(":news:");
+	for (size_t i = 0; i < channels.size(); i++) {
+		if (i > 0)
+			channel << ",";
+		channel << channels[i];
+	}
+	return channel;
 }
 
 

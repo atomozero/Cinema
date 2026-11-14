@@ -138,9 +138,11 @@ localize_defaults(std::vector<Category>& categories)
 		if (matched[i] < 0)
 			continue;
 		// the news: the latest first, unless chosen otherwise
-		if (strcmp(kDefaultCategories[matched[i]].name, "News") == 0
-			&& categories[i].order.IsEmpty())
-			categories[i].order = "newest";
+		if (strcmp(kDefaultCategories[matched[i]].name, "News") == 0) {
+			categories[i].news = true;
+			if (categories[i].order.IsEmpty())
+				categories[i].order = "newest";
+		}
 		categories[i].name = B_TRANSLATE(kDefaultCategories[matched[i]].name);
 		categories[i].query = B_TRANSLATE(
 			kDefaultCategories[matched[i]].query);

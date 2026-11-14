@@ -1,4 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	1416101763
+1	english	application/x-vnd.atomozero-Cinema	3057549031
 YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
@@ -44,6 +44,7 @@ MediaPlayer could not be started: %error%	Window		MediaPlayer could not be start
 Remove from favorites	Grid		Remove from favorites
 Downloaded	Categories		Downloaded
 yesterday	Detail		yesterday
+News	Settings		News
 Following	Grid		Following
 Subscriptions, Watch later, Liked videos and History become tabs.	Settings		Subscriptions, Watch later, Liked videos and History become tabs.
 Move \"%title%\" to the Trash?	Window		Move \"%title%\" to the Trash?
@@ -109,6 +110,7 @@ Video overlay:	Settings		Video overlay:
 Sound ready: %seconds% s	Player		Sound ready: %seconds% s
 today	Detail		today
 Downloading…	Detail		Downloading…
+None chosen: the tab searches YouTube instead.	Settings		None chosen: the tab searches YouTube instead.
 Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.
 Not now	Window		Not now
 No subtitles	Player		No subtitles
@@ -185,6 +187,7 @@ The lowest quality already	Window		The lowest quality already
 Never	Settings		Never
 Already downloaded	Grid		Already downloaded
 Search	Settings		Search
+The News tab shows the latest videos of these channels, the newest first:	Settings		The News tab shows the latest videos of these channels, the newest first:
 Moved to the network folder	Window		Moved to the network folder
 I signed in	Settings		I signed in
 Playback	Settings		Playback

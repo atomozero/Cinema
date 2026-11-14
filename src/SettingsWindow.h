@@ -77,6 +77,7 @@ private:
 			BButton*			fNetworkTest;
 			BStringView*		fNetworkStatus;
 			bool				fPasswordChanged = false;
+			std::vector<BCheckBox*> fNews;
 			BStringView*		fYouTubeStatus;
 			BButton*			fYouTubeCheck;
 			BButton*			fYouTubeSignOut;

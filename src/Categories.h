@@ -17,6 +17,8 @@ struct Category {
 	BString	query;		// searched on YouTube
 	BString	channel;	// or the id of a channel, whose latest videos are
 						// shown
+	bool	news = false;	// the News tab of the examples: made of news
+						// channels when some are chosen (NewsChannels.h)
 	BString	order;		// of a search: "newest" first, "relevant" first,
 						// or "" as the source gives it (the news newest)
 

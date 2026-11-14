@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	1416101763
+1	chinese	application/x-vnd.atomozero-Cinema	3057549031
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -44,6 +44,7 @@ MediaPlayer could not be started: %error%	Window		无法启动 MediaPlayer：%er
 Remove from favorites	Grid		从收藏中移除
 Downloaded	Categories		已下载
 yesterday	Detail		昨天
+News	Settings		新闻
 Following	Grid		已关注
 Subscriptions, Watch later, Liked videos and History become tabs.	Settings		订阅、稍后观看、赞过的视频和观看记录将成为标签页。
 Move \"%title%\" to the Trash?	Window		将“%title%”移到废纸篓？
@@ -109,6 +110,7 @@ Video overlay:	Settings		视频叠加层：
 Sound ready: %seconds% s	Player		已准备的声音：%seconds% 秒
 today	Detail		今天
 Downloading…	Detail		正在下载…
+None chosen: the tab searches YouTube instead.	Settings		未选择：该标签页改为在 YouTube 上搜索。
 Choose the network folder first, in the settings: an address such as ftp://192.168.178.1/USB/Video, with its user and password.	Window		请先在设置中选择网络文件夹：例如 ftp://192.168.178.1/USB/Video 这样的地址，以及用户和密码。
 Not now	Window		以后再说
 No subtitles	Player		无字幕
@@ -185,6 +187,7 @@ The lowest quality already	Window		已经是最低画质
 Never	Settings		从不
 Already downloaded	Grid		已经下载
 Search	Settings		搜索
+The News tab shows the latest videos of these channels, the newest first:	Settings		新闻标签页按最新顺序显示这些频道的最新视频：
 Moved to the network folder	Window		已移动到网络文件夹
 I signed in	Settings		我已登录
 Playback	Settings		播放
