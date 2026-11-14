@@ -927,6 +927,9 @@ class YouTubeProvider(Provider):
 				channel_name=info.get("channel") or channel_name,
 				channel_id=info.get("channel_id") or channel_id)
 			if video is not None:
+				# when it came out, to put them in order (Cinema reads the
+				# date)
+				video["timestamp"] = as_int(entry.get("timestamp"), 0)
 				videos.append(video)
 		return videos
 
@@ -958,9 +961,20 @@ class YouTubeProvider(Provider):
 		}
 
 	def search(self, query, count, order=""):
-		# ytsearchdate: the same search, the latest uploaded first
-		prefix = "ytsearchdate" if order == "newest" else "ytsearch"
-		return self.videos_of("%s%d:%s" % (prefix, count, query), count)
+		if order != "newest":
+			return self.videos_of("ytsearch%d:%s" % (count, query), count)
+		# the latest first: YouTube no longer sorts a search by date (and
+		# yt-dlp has no ytsearchdate any more), so the videos of this week,
+		# put in order by the day each says it came out ("3 hours ago"),
+		# YouTube's order kept within a day; all of them if the week has
+		# too few
+		week = "https://www.youtube.com/results?search_query=%s" \
+			"&sp=EgIIAw%%3D%%3D" % urllib.parse.quote_plus(query)
+		videos = self.videos_of(week, count)
+		if len(videos) < min(8, count):
+			videos = self.videos_of("ytsearch%d:%s" % (count, query), count)
+		videos.sort(key=lambda video: -(video.get("timestamp") or 0))
+		return videos
 
 	def channel(self, channel_id, count):
 		# the pages of the account signed in
