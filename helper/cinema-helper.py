@@ -968,13 +968,30 @@ class YouTubeProvider(Provider):
 		# put in order by the day each says it came out ("3 hours ago"),
 		# YouTube's order kept within a day; all of them if the week has
 		# too few
-		week = "https://www.youtube.com/results?search_query=%s" \
-			"&sp=EgIIAw%%3D%%3D" % urllib.parse.quote_plus(query)
-		videos = self.videos_of(week, count)
+		# today's first (YouTube's choice among a day is its most relevant
+		# ones, which may leave today out of the week's), then the week's;
+		# not the shorts, under a minute, which are seldom news
+		address = "https://www.youtube.com/results?search_query=%s&sp=%s"
+		quoted = urllib.parse.quote_plus(query)
+		videos = []
+		seen = set()
+		for period in ("EgIIAg%3D%3D", "EgIIAw%3D%3D"):
+			try:
+				found = self.videos_of(address % (quoted, period), count)
+			except Exception:
+				found = []
+			for video in found:
+				if video["id"] not in seen and video.get("duration", 0) > 60:
+					seen.add(video["id"])
+					videos.append(video)
 		if len(videos) < min(8, count):
-			videos = self.videos_of("ytsearch%d:%s" % (count, query), count)
+			for video in self.videos_of("ytsearch%d:%s" % (count, query),
+					count):
+				if video["id"] not in seen:
+					seen.add(video["id"])
+					videos.append(video)
 		videos.sort(key=lambda video: -(video.get("timestamp") or 0))
-		return videos
+		return videos[:max(count, 24)]
 
 	def channel(self, channel_id, count):
 		# the pages of the account signed in
