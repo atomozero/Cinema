@@ -17,6 +17,8 @@ struct Category {
 	BString	query;		// searched on YouTube
 	BString	channel;	// or the id of a channel, whose latest videos are
 						// shown
+	BString	order;		// of a search: "newest" first, "relevant" first,
+						// or "" as the source gives it (the news newest)
 
 	bool	IsChannel() const { return !channel.IsEmpty(); }
 };
@@ -26,7 +28,8 @@ struct Category {
 	(Cinema/categories), one per line: "Name = search", or
 	"Name = channel:<id>" for a channel. "@provider " before them takes
 	another source than the default one, as in
-	"Films = @archive channel:feature_films". The file is written with a few
+	"Films = @archive channel:feature_films". A search may end with
+	"[newest]" or "[relevant]", its order. The file is written with a few
 	examples the first time.
 */
 std::vector<Category>	LoadCategories();

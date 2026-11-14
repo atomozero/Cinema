@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	2155634246
+1	korean	application/x-vnd.atomozero-Cinema	1416101763
 YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
@@ -74,6 +74,7 @@ Not copied to the network folder	Window		네트워크 폴더에 복사되지 않
 Type what to look for at the top right	Window		오른쪽 위에 찾을 내용을 입력하세요
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\"을(를) 다운로드하는 중입니다. 재생 중인 동영상을 닫고 지금 볼까요, 나중에 다운로드에서 볼까요?
 Cinema	System name		Cinema
+The video could not be got ready	Window		The video could not be got ready
 Folders of the library	Settings		라이브러리 폴더
 Moving to the network folder	Window		네트워크 폴더로 옮기는 중
 No videos found	Window		동영상을 찾을 수 없습니다
@@ -82,6 +83,7 @@ See all	Home		모두 보기
 Click to watch it	Window		클릭하여 보기
 Open the channel	Grid		채널 열기
 Check	Settings		확인
+Most relevant first	Categories		관련성순
 It does not work: %error%	Settings		작동하지 않습니다: %error%
 science explained	Categories		과학 설명
 Download	Grid		다운로드
@@ -169,6 +171,7 @@ Download	Detail		다운로드
 Remove	Settings		제거
 Add	Settings		추가
 Remove from the tabs	Categories		탭에서 제거
+Newest first	Categories		최신순
 The folder can be written to.	Settings		폴더에 쓸 수 있습니다.
 Choose…	Settings		선택…
 news today	Categories		오늘의 뉴스

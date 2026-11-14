@@ -206,7 +206,7 @@ Helper::_Provider(const char* provider)
 
 void
 Helper::Search(int32 generation, int32 count, const char* query,
-	const char* provider)
+	const char* provider, const char* order)
 {
 	Json request = Json::MakeObject();
 	request.Set("type", "search");
@@ -214,6 +214,8 @@ Helper::Search(int32 generation, int32 count, const char* query,
 	request.Set("provider", _Provider(provider).String());
 	request.Set("count", (int)count);
 	request.Set("query", query);
+	if (order != NULL && order[0] != '\0')
+		request.Set("order", order);
 	_Send(request);
 }
 

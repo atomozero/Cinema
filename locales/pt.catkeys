@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	2155634246
+1	portuguese	application/x-vnd.atomozero-Cinema	1416101763
 YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
@@ -74,6 +74,7 @@ Not copied to the network folder	Window		Não copiado para a pasta de rede
 Type what to look for at the top right	Window		Digite no canto superior direito o que procurar
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" está sendo baixado. Ver agora, fechando o vídeo em reprodução, ou depois nos downloads?
 Cinema	System name		Cinema
+The video could not be got ready	Window		The video could not be got ready
 Folders of the library	Settings		Pastas da biblioteca
 Moving to the network folder	Window		Movendo para a pasta de rede
 No videos found	Window		Nenhum vídeo encontrado
@@ -82,6 +83,7 @@ See all	Home		Ver tudo
 Click to watch it	Window		Clique para assistir
 Open the channel	Grid		Abrir o canal
 Check	Settings		Verificar
+Most relevant first	Categories		Mais relevantes primeiro
 It does not work: %error%	Settings		Não funciona: %error%
 science explained	Categories		ciência explicada
 Download	Grid		Baixar
@@ -169,6 +171,7 @@ Download	Detail		Baixar
 Remove	Settings		Remover
 Add	Settings		Adicionar
 Remove from the tabs	Categories		Remover das abas
+Newest first	Categories		Mais recentes primeiro
 The folder can be written to.	Settings		É possível gravar na pasta.
 Choose…	Settings		Escolher…
 news today	Categories		notícias de hoje

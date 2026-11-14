@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	2155634246
+1	ukrainian	application/x-vnd.atomozero-Cinema	1416101763
 YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
@@ -74,6 +74,7 @@ Not copied to the network folder	Window		Не скопійовано в мере
 Type what to look for at the top right	Window		Введіть угорі праворуч, що шукати
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" завантажується. Дивитися зараз, закривши поточне відео, чи пізніше із завантажень?
 Cinema	System name		Cinema
+The video could not be got ready	Window		The video could not be got ready
 Folders of the library	Settings		Теки бібліотеки
 Moving to the network folder	Window		Переміщення в мережеву теку
 No videos found	Window		Відео не знайдено
@@ -82,6 +83,7 @@ See all	Home		Переглянути всі
 Click to watch it	Window		Натисніть, щоб дивитися
 Open the channel	Grid		Відкрити канал
 Check	Settings		Перевірити
+Most relevant first	Categories		Спершу найрелевантніші
 It does not work: %error%	Settings		Не працює: %error%
 science explained	Categories		наука простими словами
 Download	Grid		Завантажити
@@ -169,6 +171,7 @@ Download	Detail		Завантажити
 Remove	Settings		Вилучити
 Add	Settings		Додати
 Remove from the tabs	Categories		Вилучити з вкладок
+Newest first	Categories		Спершу найновіші
 The folder can be written to.	Settings		У теку можна записувати.
 Choose…	Settings		Вибрати…
 news today	Categories		новини сьогодні

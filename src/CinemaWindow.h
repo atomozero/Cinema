@@ -69,7 +69,8 @@ private:
 	};
 
 			void				_Search(const char* query,
-									const char* provider = NULL);
+									const char* provider = NULL,
+									const char* order = NULL);
 			BString				_ProviderOf(const BString& id) const;
 			void				_UpdateSources();
 			void				_AddTorrent(const char* source);
@@ -135,6 +136,8 @@ private:
 			void				_HidePlayer();
 			void				_OfferHomeNetwork();
 			void				_StartDownloads();
+			void				_SetCategoryOrder(int32 index,
+									const char* order);
 			void				_RequeueDownloads();
 			void				_StartDownloadNow(const BString& id);
 			void				_ForgetDownload(const BString& id);

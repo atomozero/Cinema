@@ -40,7 +40,10 @@ public:
 									// next, 0 for what suits the machine
 			void				Search(int32 generation, int32 count,
 									const char* query,
-									const char* provider = NULL);
+									const char* provider = NULL,
+									const char* order = NULL);
+									// order: "newest" first, or as the
+									// source gives them
 			void				Channel(int32 generation, int32 count,
 									const char* id,
 									const char* provider = NULL);

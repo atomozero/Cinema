@@ -137,6 +137,10 @@ localize_defaults(std::vector<Category>& categories)
 	for (size_t i = 0; i < categories.size(); i++) {
 		if (matched[i] < 0)
 			continue;
+		// the news: the latest first, unless chosen otherwise
+		if (strcmp(kDefaultCategories[matched[i]].name, "News") == 0
+			&& categories[i].order.IsEmpty())
+			categories[i].order = "newest";
 		categories[i].name = B_TRANSLATE(kDefaultCategories[matched[i]].name);
 		categories[i].query = B_TRANSLATE(
 			kDefaultCategories[matched[i]].query);
@@ -191,6 +195,17 @@ LoadCategories()
 		text.CopyInto(category.query, equals + 1, text.Length() - equals - 1);
 		category.name.Trim();
 		category.query.Trim();
+		// the order of a search, at the end
+		for (const char* order : { "newest", "relevant" }) {
+			BString mark;
+			mark << "[" << order << "]";
+			if (category.query.EndsWith(mark)) {
+				category.order = order;
+				category.query.Truncate(category.query.Length()
+					- mark.Length());
+				category.query.Trim();
+			}
+		}
 		if (category.query.ByteAt(0) == '@') {
 			// "@archive channel:feature_films": the provider first
 			int32 space = category.query.FindFirst(' ');
@@ -264,8 +279,11 @@ SaveCategories(const std::vector<Category>& categories)
 			fprintf(file, "%s = %s%s%s\n", name.String(), provider.String(),
 				kChannelPrefix, channel.String());
 		} else {
-			fprintf(file, "%s = %s%s\n", name.String(), provider.String(),
-				query.String());
+			BString order;
+			if (!category.order.IsEmpty())
+				order << " [" << category.order << "]";
+			fprintf(file, "%s = %s%s%s\n", name.String(), provider.String(),
+				query.String(), order.String());
 		}
 	}
 	// on the disk before it takes the place of the old one: a power cut

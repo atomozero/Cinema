@@ -117,7 +117,8 @@ for most processors (HEVC above 1080p) starts without the deblocking filter. Pas
 the feed of a podcast in the search field, or drop it on the window, and a
 tab named after the podcast shows its episodes, the latest on the home too:
 they play with the picture of the episode when there is only sound, go on from
-where they were left, and download to `Podcasts/Name`. **S** or a right click
+where they were left, and download to `Podcasts/Name`. A right click on a tab that searches chooses the order of its videos, the
+newest first or the most relevant first; the news come the newest first. **S** or a right click
 gives a video or a channel a
 star, and the stars have a **Favorites** tab of their own.
 

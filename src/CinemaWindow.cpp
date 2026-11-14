@@ -332,7 +332,8 @@ CinemaWindow::QuitRequested()
 
 
 void
-CinemaWindow::_Search(const char* query, const char* provider)
+CinemaWindow::_Search(const char* query, const char* provider,
+	const char* order)
 {
 	_CloseDetails();
 	fCards->SetVisibleItem((int32)0);
@@ -340,7 +341,7 @@ CinemaWindow::_Search(const char* query, const char* provider)
 	fGeneration++;
 	fGrid->ClearChannelHeader();
 	fGrid->SetMessage(B_TRANSLATE("Looking for the videos" B_UTF8_ELLIPSIS));
-	fHelper->Search(fGeneration, kResultCount, query, provider);
+	fHelper->Search(fGeneration, kResultCount, query, provider, order);
 }
 
 
@@ -452,7 +453,8 @@ CinemaWindow::_ShowCategory(int32 index)
 		fHelper->Channel(fGeneration, kResultCount, category.channel,
 			category.provider.String());
 	} else
-		_Search(category.query.String(), category.provider.String());
+		_Search(category.query.String(), category.provider.String(),
+			category.order.String());
 	fGrid->MakeFocus(true);
 }
 
@@ -1299,7 +1301,8 @@ CinemaWindow::_StartHomeRequests()
 				category.channel, category.provider.String());
 		else
 			fHelper->Search(request.generation, kResultCount,
-				category.query, category.provider.String());
+				category.query, category.provider.String(),
+				category.order.String());
 		fHomeActive++;
 	}
 }
@@ -1809,6 +1812,10 @@ CinemaWindow::MessageReceived(BMessage* message)
 		}
 		case kMsgAddTorrent:
 			_AddTorrent(message->GetString("source", ""));
+			break;
+		case kMsgCategoryOrder:
+			_SetCategoryOrder(message->GetInt32("index", -1),
+				message->GetString("order", ""));
 			break;
 		case kMsgAddPodcast:
 			if (IsMinimized())
@@ -3315,6 +3322,24 @@ CinemaWindow::_RequeueDownloads()
 	}
 	_StartDownloads();
 	_SavePending();
+}
+
+
+/*!	The order of a tab that searches, from its menu: "newest" first or
+	"relevant" first; kept in the file of the tabs, and shown at once.
+*/
+void
+CinemaWindow::_SetCategoryOrder(int32 index, const char* order)
+{
+	if (index < 0 || index >= (int32)fCategories.size()
+		|| fCategories[index].IsChannel())
+		return;
+	fCategories[index].order = order;
+	SaveCategories(fCategories);
+	fCategoryBar->SetCategories(fCategories);
+	fHomeLoaded = false;
+	if (fCategoryBar->Selected() == fCategoryBar->CategoryTab(index))
+		_ShowCategory(index);
 }
 
 

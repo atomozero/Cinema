@@ -1,4 +1,4 @@
-1	chinese	application/x-vnd.atomozero-Cinema	2155634246
+1	chinese	application/x-vnd.atomozero-Cinema	1416101763
 YouTube could not be reached: is the network on?	Window		无法连接到 YouTube：网络是否已开启？
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
@@ -74,6 +74,7 @@ Not copied to the network folder	Window		未复制到网络文件夹
 Type what to look for at the top right	Window		在右上角输入要搜索的内容
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" 正在下载。现在观看（关闭正在播放的视频），还是稍后从下载中观看？
 Cinema	System name		Cinema
+The video could not be got ready	Window		The video could not be got ready
 Folders of the library	Settings		媒体库文件夹
 Moving to the network folder	Window		正在移动到网络文件夹
 No videos found	Window		未找到视频
@@ -82,6 +83,7 @@ See all	Home		查看全部
 Click to watch it	Window		点击观看
 Open the channel	Grid		打开频道
 Check	Settings		检查
+Most relevant first	Categories		最相关优先
 It does not work: %error%	Settings		无法使用：%error%
 science explained	Categories		科学解说
 Download	Grid		下载
@@ -169,6 +171,7 @@ Download	Detail		下载
 Remove	Settings		移除
 Add	Settings		添加
 Remove from the tabs	Categories		从标签页中移除
+Newest first	Categories		最新优先
 The folder can be written to.	Settings		可以写入该文件夹。
 Choose…	Settings		选择…
 news today	Categories		今日新闻

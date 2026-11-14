@@ -12,6 +12,8 @@
 #include <PopUpMenu.h>
 #include <Window.h>
 
+#include <string.h>
+
 #include "Messages.h"
 #include "Style.h"
 
@@ -402,6 +404,28 @@ void
 CategoryBar::_ShowMenu(int32 index, BPoint where)
 {
 	BPopUpMenu* menu = new BPopUpMenu("tab", false, false);
+	// a search: in which order its videos come
+	if (index >= 0 && index < (int32)fCategories.size()
+		&& !fCategories[index].IsChannel()) {
+		const BString& order = fCategories[index].order;
+		static const struct { const char* order; const char* label; } kOrders[]
+			= {
+			{ "newest", B_TRANSLATE_MARK("Newest first") },
+			{ "relevant", B_TRANSLATE_MARK("Most relevant first") },
+		};
+		for (const auto& choice : kOrders) {
+			BMessage* message = new BMessage(kMsgCategoryOrder);
+			message->AddInt32("index", index);
+			message->AddString("order", choice.order);
+			BMenuItem* item = new BMenuItem(
+				B_TRANSLATE_NOCOLLECT(choice.label), message);
+			// as the source gives them is the most relevant first
+			item->SetMarked(order == choice.order || (order.IsEmpty()
+				&& strcmp(choice.order, "relevant") == 0));
+			menu->AddItem(item);
+		}
+		menu->AddSeparatorItem();
+	}
 	BMessage* message = new BMessage(kMsgRemoveCategory);
 	message->AddInt32("index", index);
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Remove from the tabs"),

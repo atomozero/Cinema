@@ -1,4 +1,4 @@
-1	spanish	application/x-vnd.atomozero-Cinema	2155634246
+1	spanish	application/x-vnd.atomozero-Cinema	1416101763
 YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
@@ -74,6 +74,7 @@ Not copied to the network folder	Window		No copiado en la carpeta de red
 Type what to look for at the top right	Window		Escribe arriba a la derecha qué buscar
 \"%title%\" is downloading. Watch it now, closing the video playing, or later from the downloads?	Window		\"%title%\" se está descargando. ¿Verlo ahora, cerrando el vídeo en curso, o más tarde desde las descargas?
 Cinema	System name		Cinema
+The video could not be got ready	Window		The video could not be got ready
 Folders of the library	Settings		Carpetas de la biblioteca
 Moving to the network folder	Window		Moviendo a la carpeta de red
 No videos found	Window		No se encontraron vídeos
@@ -82,6 +83,7 @@ See all	Home		Ver todo
 Click to watch it	Window		Haz clic para verlo
 Open the channel	Grid		Abrir el canal
 Check	Settings		Comprobar
+Most relevant first	Categories		Primero los más relevantes
 It does not work: %error%	Settings		No funciona: %error%
 science explained	Categories		ciencia explicada
 Download	Grid		Descargar
@@ -169,6 +171,7 @@ Download	Detail		Descargar
 Remove	Settings		Quitar
 Add	Settings		Añadir
 Remove from the tabs	Categories		Quitar de las pestañas
+Newest first	Categories		Primero los más recientes
 The folder can be written to.	Settings		Se puede escribir en la carpeta.
 Choose…	Settings		Elegir…
 news today	Categories		noticias de hoy

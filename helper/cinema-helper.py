@@ -8,7 +8,7 @@
 # A request names a provider and what it wants:
 #
 #   {"type": "search",   "tag": 1, "provider": "youtube", "count": 24,
-#    "query": "..."}
+#    "query": "...", "order": "newest"}  (order optional: the latest first)
 #   {"type": "channel",  "tag": 1, "provider": "youtube", "count": 24,
 #    "channel": "UC..."}
 #   {"type": "details",  "provider": "youtube", "id": "...", "kind": "video"}
@@ -296,21 +296,23 @@ def store_videos(path, videos):
 		pass
 
 
-def cached(name, fetch):
+def cached(name, fetch, fresh=None, stale=None):
 	"""The videos fetch() gives, from the cache when it is recent enough.
 	Older than CACHE_TIME but not than STALE_TIME, they are given at once
 	all the same, and fetched again in the background for the next time:
 	the shelves of the home show without waiting for yt-dlp."""
+	fresh = CACHE_TIME if fresh is None else fresh
+	stale = STALE_TIME if stale is None else stale
 	path = None
 	if cache:
 		key = hashlib.sha1(name.encode()).hexdigest()
 		path = os.path.join(cache, "videos-%s.json" % key[:16])
 		try:
 			age = time.time() - os.path.getmtime(path)
-			if age < STALE_TIME:
+			if age < stale:
 				with open(path, encoding="utf-8") as file:
 					videos = [json.loads(line) for line in file if line.strip()]
-				if videos and age >= CACHE_TIME:
+				if videos and age >= fresh:
 					refresh_later(path, fetch)
 				if videos:
 					return videos
@@ -955,8 +957,10 @@ class YouTubeProvider(Provider):
 			"avatar": avatar,
 		}
 
-	def search(self, query, count):
-		return self.videos_of("ytsearch%d:%s" % (count, query), count)
+	def search(self, query, count, order=""):
+		# ytsearchdate: the same search, the latest uploaded first
+		prefix = "ytsearchdate" if order == "newest" else "ytsearch"
+		return self.videos_of("%s%d:%s" % (prefix, count, query), count)
 
 	def channel(self, channel_id, count):
 		# the pages of the account signed in
@@ -3270,11 +3274,27 @@ class LibraryProvider(Provider):
 register(LibraryProvider)
 
 
-def job_search(provider, tag, count, query):
+def job_search(provider, tag, count, query, order=""):
+	def search():
+		wait_for_play()
+		# the newest first, where the source can give them so
+		if order == "newest":
+			try:
+				return provider.search(query, count, order)
+			except TypeError:
+				pass
+		return provider.search(query, count)
+
 	try:
 		name = "%s search %d %s" % (provider.id, count, query)
-		items = cached(name,
-			lambda: (wait_for_play(), provider.search(query, count))[1])
+		if order:
+			name += " " + order
+		# the latest: looked for again after ten minutes, and never shown
+		# more than an hour old
+		if order == "newest":
+			items = cached(name, search, 10 * 60, 60 * 60)
+		else:
+			items = cached(name, search)
 		answer({"type": "results", "tag": tag, "items": items})
 	except Exception:
 		answer({"type": "nothing", "tag": tag})
@@ -3787,7 +3807,8 @@ def work(request):
 
 	if kind == "search":
 		thread = (job_search,
-			(provider, tag, count, request.get("query", "")))
+			(provider, tag, count, request.get("query", ""),
+				request.get("order", "")))
 	elif kind == "channel":
 		thread = (job_channel,
 			(provider, tag, count, request.get("channel", "")))
