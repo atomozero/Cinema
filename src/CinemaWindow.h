@@ -135,6 +135,7 @@ private:
 			void				_HidePlayer();
 			void				_OfferHomeNetwork();
 			void				_StartDownloads();
+			void				_RequeueDownloads();
 			void				_StartDownloadNow(const BString& id);
 			void				_ForgetDownload(const BString& id);
 			void				_DownloadChanged(const BString& id);

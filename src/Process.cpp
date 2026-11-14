@@ -35,6 +35,10 @@ RunProgram(const std::vector<BString>& arguments, BString* output)
 			dup2(null, STDERR_FILENO);
 		close(pipes[0]);
 		close(pipes[1]);
+		// none of Cinema's other descriptors: a pipe kept open by this
+		// program would make another reader wait for its end for ever
+		for (int fd = 3, last = getdtablesize(); fd < last; fd++)
+			close(fd);
 		execvp(argv[0], (char* const*)argv.data());
 		_exit(127);
 	}

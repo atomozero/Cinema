@@ -2684,12 +2684,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 				fHelperRestarts++;
 				fHelperRestarted = now;
 				fHelper->SetHeight(fSettings.videoHeight);
-				// the downloads go on from where they were
-				BString folder = Downloads::Folder();
-				for (const auto& entry : fDownloading)
-					fHelper->Download(entry.first.String(), folder.String(),
-						entry.second.GetString("provider",
-							_ProviderOf(entry.first).String()));
+				// the downloads go on from where they were, in their turn;
+				// the paused ones stay paused
+				_RequeueDownloads();
 				if (!fWaiting.IsEmpty())
 					_Find(fWaiting);
 				fHomeLoaded = false;
@@ -2746,12 +2743,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 			}
 			if (fHelper->Restart() == B_OK) {
 				fHelper->SetHeight(fSettings.videoHeight);
-				// the downloads go on from where they were
-				BString folder = Downloads::Folder();
-				for (const auto& entry : fDownloading)
-					fHelper->Download(entry.first.String(), folder.String(),
-						entry.second.GetString("provider",
-							_ProviderOf(entry.first).String()));
+				// the downloads go on from where they were, in their turn;
+				// the paused ones stay paused
+				_RequeueDownloads();
 				fHomeLoaded = false;
 				if (fCard == 2)
 					_LoadHome();
@@ -3263,6 +3257,26 @@ CinemaWindow::_StartDownloads()
 		going++;
 		_DownloadChanged(id);
 	}
+}
+
+
+/*!	A new helper: what the one before was downloading waits for its turn
+	again (a paused one stays paused, one to pause later pauses), then the
+	first ones start.
+*/
+void
+CinemaWindow::_RequeueDownloads()
+{
+	for (auto& entry : fDownloading) {
+		BString state = entry.second.GetString("state", "");
+		if (state == "active")
+			entry.second.SetString("state", "queued");
+		else if (state == "pausing" || state == "pause later")
+			entry.second.SetString("state", "paused");
+		_DownloadChanged(entry.first);
+	}
+	_StartDownloads();
+	_SavePending();
 }
 
 

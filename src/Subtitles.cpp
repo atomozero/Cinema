@@ -311,6 +311,9 @@ clean_text(const char* text)
 
 	BString out;
 	bool tag = false;
+	// once no "}" follows, none is looked for again: a text of many "{"
+	// would be searched to its end for each
+	bool closes = true;
 	for (int32 i = 0; i < in.Length(); i++) {
 		char c = in[i];
 		if (c == '<') {
@@ -321,12 +324,13 @@ clean_text(const char* text)
 			tag = false;
 			continue;
 		}
-		if (c == '{') {
+		if (c == '{' && closes) {
 			int32 end = in.FindFirst('}', i);
 			if (end > i) {
 				i = end;
 				continue;
 			}
+			closes = false;
 		}
 		if (c == '\\' && i + 1 < in.Length()) {
 			char next = in[i + 1];

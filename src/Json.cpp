@@ -19,7 +19,8 @@ namespace {
 class Parser {
 public:
 								Parser(const std::string& text)
-									: fText(text), fPosition(0), fOk(true) {}
+									: fText(text), fPosition(0), fOk(true),
+									  fDepth(0) {}
 
 			Json				Parse();
 
@@ -41,6 +42,8 @@ private:
 			const std::string&	fText;
 			size_t				fPosition;
 			bool				fOk;
+			int					fDepth;	// of arrays and objects: a limit, not
+											// the end of the stack
 };
 
 
@@ -82,9 +85,17 @@ Parser::_ParseValue(Json& value)
 	char c = fText[fPosition];
 	switch (c) {
 		case '{':
-			return _ParseObject(value);
 		case '[':
-			return _ParseArray(value);
+		{
+			// what Cinema reads is a few levels deep: thousands would
+			// overflow the stack of the thread
+			if (fDepth >= 64)
+				return false;
+			fDepth++;
+			bool ok = c == '{' ? _ParseObject(value) : _ParseArray(value);
+			fDepth--;
+			return ok;
+		}
 		case '"':
 		{
 			std::string text;

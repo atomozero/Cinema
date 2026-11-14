@@ -73,6 +73,17 @@ Worker::MessageReceived(BMessage* message)
 static const char* kSourceAttribute = "Cinema:source";
 
 
+/*!	An address curl may be given: one starting with "-" would be taken for
+	an option of it.
+*/
+static bool
+fetchable(const BString& url)
+{
+	return url.StartsWith("http://") || url.StartsWith("https://")
+		|| url.StartsWith("file://");
+}
+
+
 /*!	Whether the picture kept at path is still the one at url: the address
 	it came from is kept in an attribute. One kept before that, of a film
 	or a series of the library (its id a path or "series:..."), may be a
@@ -109,7 +120,9 @@ Worker::_Get(const char* url, const char* path)
 {
 	BString temporary(path);
 	temporary << ".part";
-	if (RunProgram({ "curl", "-sfL", "--max-time", "30", "-o", temporary,
+	// a picture: never more than 10 MB
+	if (!fetchable(url) || RunProgram({ "curl", "-sfL", "--max-time", "30",
+			"--max-filesize", "10M", "-o", temporary,
 			url }) != 0 || BEntry(temporary.String()).Rename(path, true)
 				!= B_OK) {
 		BEntry(temporary.String()).Remove();
@@ -154,7 +167,8 @@ Worker::_Thumbnails(BMessage* message)
 		int32 last = std::min(count, first + kBatch);
 		std::vector<BString> paths;
 		std::vector<BString> sources;
-		std::vector<BString> arguments = { "curl", "-sfL", "--max-time", "60" };
+		std::vector<BString> arguments = { "curl", "-sfL", "--max-time", "60",
+			"--max-filesize", "10M" };
 		for (int32 i = first; i < last; i++) {
 			const char* id = message->GetString("id", i, "");
 			BString path(fCache);
@@ -170,13 +184,15 @@ Worker::_Thumbnails(BMessage* message)
 			}
 			if (url.IsEmpty())
 				url.SetToFormat("https://i.ytimg.com/vi/%s/mqdefault.jpg", id);
+			if (!fetchable(url))
+				continue;
 			BString temporary(path);
 			temporary << ".part";
 			arguments.push_back("-o");
 			arguments.push_back(temporary);
 			arguments.push_back(url);
 		}
-		if (arguments.size() > 4) {
+		if (arguments.size() > 6) {
 			// curl goes on after a picture that fails: each is looked at.
 			// Out of time, the last may be half there: none is kept then.
 			bool late = RunProgram(arguments) == 28;
@@ -268,6 +284,7 @@ Worker::_Follow(BMessage* message)
 	BString final;
 	// the relay of the helper starts a stream for each request
 	if (url.StartsWith("http") && !url.StartsWith("http://127.0.0.1:")
+		&& fetchable(url)
 		&& RunProgram({ "curl", "-s", "-o", "/dev/null", "-L", "-r", "0-0",
 			"--max-time", "20", "-w", "%{url_effective}", url }, &final) == 0
 		&& final.StartsWith("http"))

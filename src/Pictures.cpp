@@ -14,6 +14,7 @@
 #include <TranslatorRoster.h>
 
 #include <algorithm>
+#include <new>
 #include <math.h>
 #include <string.h>
 
@@ -69,13 +70,37 @@ shrink(const BBitmap* from, BBitmap* to)
 	BTranslationUtils::GetBitmap(), whose BBitmapStream makes a bitmap of
 	app_server.
 */
+/*!	Memory for what a translator writes, up to a limit: a small file can
+	be a huge picture (a "decompression bomb" from a feed), which would take
+	all the memory of a small machine.
+*/
+class LimitedIO : public BMallocIO {
+public:
+	static const off_t kLimit = 64 * 1024 * 1024;
+
+	virtual ssize_t WriteAt(off_t position, const void* buffer, size_t size)
+	{
+		if (position < 0 || position + (off_t)size > kLimit)
+			return B_NO_MEMORY;
+		return BMallocIO::WriteAt(position, buffer, size);
+	}
+
+	virtual status_t SetSize(off_t size)
+	{
+		if (size > kLimit)
+			return B_NO_MEMORY;
+		return BMallocIO::SetSize(size);
+	}
+};
+
+
 static BBitmap*
 decode(const char* path)
 {
 	BFile file(path, B_READ_ONLY);
 	if (file.InitCheck() != B_OK)
 		return NULL;
-	BMallocIO data;
+	LimitedIO data;
 	if (BTranslatorRoster::Default()->Translate(&file, NULL, NULL, &data,
 			B_TRANSLATOR_BITMAP) != B_OK
 		|| data.BufferLength() < sizeof(TranslatorBitmap))
@@ -88,14 +113,24 @@ decode(const char* path)
 		|| header.magic != B_TRANSLATOR_BITMAP)
 		return NULL;
 	BRect bounds = header.bounds;
+	// sizes a picture can have, rows as long as their pixels
+	if (!bounds.IsValid() || bounds.left != 0 || bounds.top != 0
+		|| bounds.Width() >= 16384 || bounds.Height() >= 16384)
+		return NULL;
 	int32 rows = bounds.IntegerHeight() + 1;
-	if (!bounds.IsValid() || header.rowBytes == 0
+	int32 columns = bounds.IntegerWidth() + 1;
+	int32 bytesPerPixel = header.colors == B_RGB32 || header.colors == B_RGBA32
+		|| header.colors == B_RGB32_BIG || header.colors == B_RGBA32_BIG ? 4 : 1;
+	if (header.rowBytes == 0
+		|| header.rowBytes < (uint32)columns * bytesPerPixel
 		|| (size_t)header.rowBytes * rows
 			> data.BufferLength() - sizeof(header))
 		return NULL;
 
-	BBitmap* picture = new BBitmap(bounds, B_BITMAP_NO_SERVER_LINK,
-		header.colors, header.rowBytes);
+	BBitmap* picture = new(std::nothrow) BBitmap(bounds,
+		B_BITMAP_NO_SERVER_LINK, header.colors, header.rowBytes);
+	if (picture == NULL)
+		return NULL;
 	if (picture->InitCheck() != B_OK) {
 		delete picture;
 		return NULL;
@@ -122,9 +157,9 @@ Pictures::Read(const char* path, float largest)
 	// in 32 bits, should the translator have given something else
 	color_space space = picture->ColorSpace();
 	if (space != B_RGBA32 && space != B_RGB32) {
-		BBitmap* converted = new BBitmap(picture->Bounds(),
+		BBitmap* converted = new(std::nothrow) BBitmap(picture->Bounds(),
 			B_BITMAP_NO_SERVER_LINK, B_RGBA32);
-		if (converted->InitCheck() != B_OK
+		if (converted == NULL || converted->InitCheck() != B_OK
 			|| converted->ImportBits(picture) != B_OK) {
 			delete converted;
 			delete picture;
@@ -144,7 +179,10 @@ Pictures::Read(const char* path, float largest)
 	float scale = std::min(limit / width, limit / height);
 	BRect bounds(0, 0, std::max(1.0f, floorf(width * scale + 0.5f)) - 1,
 		std::max(1.0f, floorf(height * scale + 0.5f)) - 1);
-	BBitmap* small = new BBitmap(bounds, B_BITMAP_NO_SERVER_LINK, space);
+	BBitmap* small = new(std::nothrow) BBitmap(bounds,
+		B_BITMAP_NO_SERVER_LINK, space);
+	if (small == NULL)
+		return picture;
 	if (small->InitCheck() != B_OK) {
 		delete small;
 		return picture;
@@ -160,7 +198,12 @@ Pictures::ForScreen(BBitmap* read)
 {
 	if (read == NULL)
 		return NULL;
-	BBitmap* shown = new BBitmap(read->Bounds(), read->ColorSpace());
+	BBitmap* shown = new(std::nothrow) BBitmap(read->Bounds(),
+		read->ColorSpace());
+	if (shown == NULL) {
+		delete read;
+		return NULL;
+	}
 	if (shown->InitCheck() != B_OK) {
 		delete shown;
 		delete read;

@@ -141,6 +141,10 @@ Helper::Start(const char* script, const char* cache)
 		close(toHelper[1]);
 		close(fromHelper[0]);
 		close(fromHelper[1]);
+		// none of Cinema's other descriptors, such as the pipe of a curl of
+		// the worker: it would never see the end of it while the helper runs
+		for (int fd = 3, last = getdtablesize(); fd < last; fd++)
+			close(fd);
 		execlp("python3", "python3", script, cache, language.String(),
 			(char*)NULL);
 		_exit(127);
@@ -428,8 +432,14 @@ Helper::_ReaderEntry(void* data)
 void
 Helper::_Read()
 {
+	// a line of the helper can be long (the text of subtitles): only what
+	// was just read is searched for its end, and one beyond any sense is
+	// dropped rather than kept growing
+	static const int32 kLongestLine = 64 * 1024 * 1024;
 	BString pending;
-	char buffer[4096];
+	int32 searched = 0;
+	bool dropping = false;
+	char buffer[16384];
 	ssize_t bytes;
 	while ((bytes = read(fOutput, buffer, sizeof(buffer))) > 0
 		|| (bytes < 0 && errno == EINTR)) {
@@ -437,11 +447,22 @@ Helper::_Read()
 			continue;
 		pending.Append(buffer, bytes);
 		int32 end;
-		while ((end = pending.FindFirst('\n')) >= 0) {
+		while ((end = pending.FindFirst('\n', searched)) >= 0) {
 			BString line;
 			pending.MoveInto(line, 0, end + 1);
+			searched = 0;
+			if (dropping) {
+				dropping = false;
+				continue;
+			}
 			line.RemoveLast("\n");
 			_Handle(line);
+		}
+		searched = pending.Length();
+		if (pending.Length() > kLongestLine) {
+			pending.Truncate(0);
+			searched = 0;
+			dropping = true;
 		}
 	}
 	// it is gone: nothing more will be found
