@@ -237,6 +237,7 @@ Player::_Close(bool keepSubtitles)
 	fOverlay = NULL;
 	fHasFrame = false;
 	fOpened = false;
+	fHasVideo = false;
 	fDuration = 0;
 	{
 		BAutolock locker(fStatsLock);
@@ -787,6 +788,11 @@ Player::_AudioLoop()
 {
 
 	size_t size = std::max((size_t)fSound.buffer_size, (size_t)65536);
+	// never more than half the ring: a sound of 8 to 16 kHz in mono has
+	// less than 64 KB in its two seconds, and would wait for room for ever
+	size = std::max((size_t)std::max((size_t)1, fFrameSize),
+		std::min(size, fRing.size() / 2));
+	size -= size % std::max((size_t)1, fFrameSize);
 	uint8* buffer = (uint8*)malloc(size * 2);
 	if (buffer == NULL)
 		return;
@@ -856,6 +862,8 @@ Player::_FillSound(void* buffer, size_t size)
 		_NoteFill(size, 0);
 		return;
 	}
+	bool over;
+	{
 	BAutolock ring(fRingLock);
 	size_t bytes = std::min(size, fRingFill);
 	bytes -= bytes % std::max((size_t)1, fFrameSize);
@@ -875,7 +883,11 @@ Player::_FillSound(void* buffer, size_t size)
 	fFillTime = (bigtime_t)(size / std::max((size_t)1, fFrameSize)) * 1000000LL
 		/ (int64)std::max(1.0f, fSound.frame_rate);
 	fLastFill = system_time();
-	if (fRingFill == 0 && fAudioEnded) {
+	over = fRingFill == 0 && fAudioEnded;
+	}
+	// without the lock: telling the window may wait for it, and the
+	// thread of the sound must not hold the others meanwhile
+	if (over) {
 		_FreeClock();
 		_CheckEnded();
 	}

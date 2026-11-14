@@ -248,6 +248,11 @@ private:
 									int height, int flags, int threads);
 			int					fLiveVideoIndex;
 			int					fLiveAudioIndex;
+			// copied when it opens: the thread that reads may add streams,
+			// moving FFmpeg's list of them while the others look at it
+			int					fLiveVideoBase[2] = { 1, 1000000 };
+			int					fLiveAudioBase[2] = { 1, 1000000 };
+			int					fLiveVideoRate[2] = { 0, 1 };
 			int					fLiveSkipLevel;
 			int					fLiveFloor = 0;	// the lowest skip level: 1 for a
 												// video too heavy to decode whole

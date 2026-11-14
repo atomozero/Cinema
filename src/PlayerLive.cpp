@@ -427,6 +427,17 @@ Player::_OpenLive()
 		fLiveAudioIndex = -1;
 	// an HLS stream shows all its sizes at once, and every one not left
 	// alone would be downloaded all along
+	if (fLiveVideoIndex >= 0) {
+		const AVStream* stream = format->streams[fLiveVideoIndex];
+		fLiveVideoBase[0] = stream->time_base.num;
+		fLiveVideoBase[1] = stream->time_base.den;
+		fLiveVideoRate[0] = stream->avg_frame_rate.num;
+		fLiveVideoRate[1] = stream->avg_frame_rate.den;
+	}
+	if (fLiveAudioIndex >= 0) {
+		fLiveAudioBase[0] = format->streams[fLiveAudioIndex]->time_base.num;
+		fLiveAudioBase[1] = format->streams[fLiveAudioIndex]->time_base.den;
+	}
 	for (unsigned i = 0; i < format->nb_streams; i++) {
 		format->streams[i]->discard = (int)i == fLiveVideoIndex
 			|| (int)i == fLiveAudioIndex ? AVDISCARD_DEFAULT : AVDISCARD_ALL;
@@ -692,7 +703,15 @@ Player::_LiveVideoStream(int32 maxHeight)
 			chosenRate = rate;
 		}
 	}
-	return candidates > 1 && chosen >= 0 ? chosen : best;
+	if (candidates > 1 && chosen >= 0)
+		return chosen;
+	// the picture of an album or a podcast is no video: only sound, shown
+	// with its picture by the window (a single frame at time 0 would be
+	// dropped after a seek, leaving the screen black)
+	if (best >= 0 && (format->streams[best]->disposition
+			& AV_DISPOSITION_ATTACHED_PIC) != 0)
+		return chosen >= 0 ? chosen : -1;
+	return best;
 }
 
 
@@ -812,7 +831,9 @@ Player::_LiveFrameMicros(int index, const AVFrame* frame) const
 	int64 pts = frame->best_effort_timestamp;
 	if (pts == AV_NOPTS_VALUE)
 		return AV_NOPTS_VALUE;
-	return av_rescale_q(pts, fLiveFormat->streams[index]->time_base,
+	const int* base = index == fLiveVideoIndex ? fLiveVideoBase
+		: fLiveAudioBase;
+	return av_rescale_q(pts, AVRational{ base[0], base[1] },
 		AVRational{ 1, 1000000 });
 }
 
@@ -1053,7 +1074,8 @@ Player::_LiveLoop()
 	std::deque<AVPacket*> packets;
 	std::deque<AVFrame*> frames;
 	bool started = false;
-	bool failed = false;
+	// out of memory: ended at once, with an error rather than a crash
+	bool failed = packet == NULL || frame == NULL;
 	const int video = fLiveVideoIndex;
 	const int audio = fLiveAudioIndex;
 
@@ -1113,7 +1135,8 @@ Player::_LiveLoop()
 		int64 time = p->dts != AV_NOPTS_VALUE ? p->dts : p->pts;
 		if (time == AV_NOPTS_VALUE)
 			return AV_NOPTS_VALUE;
-		return av_rescale_q(time, format->streams[video]->time_base,
+		return av_rescale_q(time,
+			AVRational{ fLiveVideoBase[0], fLiveVideoBase[1] },
 			AVRational{ 1, 1000000 });
 	};
 	// when the last sound was read: a file whose sound ends before its
@@ -1304,9 +1327,9 @@ Player::_LiveLoop()
 	// the network failed, rather than the video ending
 	bool readFailed = false;
 	fLiveStopRead = false;
-	std::thread reader([&]() {
+	auto readAll = [&]() {
 		AVPacket* got = av_packet_alloc();
-		while (!fQuit && !fLiveStopRead) {
+		while (got != NULL && !fQuit && !fLiveStopRead) {
 			bool full;
 			{
 				std::lock_guard<std::mutex> locker(readLock);
@@ -1330,6 +1353,12 @@ Player::_LiveLoop()
 				continue;
 			}
 			AVPacket* copy = av_packet_alloc();
+			if (copy == NULL) {
+				av_packet_unref(got);
+				std::lock_guard<std::mutex> locker(readLock);
+				readFailed = true;
+				break;
+			}
 			av_packet_move_ref(copy, got);
 			if (copy->stream_index == audio)
 				soundQueued++;
@@ -1337,9 +1366,25 @@ Player::_LiveLoop()
 			read.push_back(copy);
 		}
 		av_packet_free(&got);
-		std::lock_guard<std::mutex> locker(readLock);
+	};
+	// no thread, or no memory for the queue: the video ends with an error
+	// rather than Cinema
+	std::thread reader;
+	try {
+		reader = std::thread([&]() {
+			try {
+				readAll();
+			} catch (...) {
+				std::lock_guard<std::mutex> locker(readLock);
+				readFailed = true;
+			}
+			std::lock_guard<std::mutex> locker(readLock);
+			readEnded = true;
+		});
+	} catch (...) {
+		failed = true;
 		readEnded = true;
-	});
+	}
 
 	// a file read from the network (a server of the home network, the
 	// web): some seconds of it first, so that a network barely fast enough
@@ -1349,7 +1394,7 @@ Player::_LiveLoop()
 		&& !fAddress.StartsWith("http://localhost:")) {
 		double perSecond = audio >= 0 ? 50 : 0;
 		if (video >= 0) {
-			AVRational rate = format->streams[video]->avg_frame_rate;
+			AVRational rate = { fLiveVideoRate[0], fLiveVideoRate[1] };
 			perSecond += rate.num > 0 && rate.den > 0
 				? std::min(120.0, av_q2d(rate)) : 30;
 		}
@@ -1552,7 +1597,8 @@ Player::_LiveLoop()
 	}
 
 	fLiveStopRead = true;
-	reader.join();
+	if (reader.joinable())
+		reader.join();
 	for (AVPacket* queued : read)
 		av_packet_free(&queued);
 	for (AVPacket* queued : packets)

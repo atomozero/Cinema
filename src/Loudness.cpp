@@ -8,6 +8,8 @@
 
 #include <math.h>
 
+#include <cmath>
+
 #include <algorithm>
 
 
@@ -132,6 +134,9 @@ Loudness::_Block(const float* in, int16* out, int32 frames, int32 channels,
 		for (int32 i = 0; i < samples; i++)
 			sum += in[i] * in[i];
 		float power = sum / samples;
+		// a broken sample (NaN, infinite) would hold the level for good
+		if (!std::isfinite(power))
+			power = fPower;
 		if (!fPrimed) {
 			fPower = power;
 			fPrimed = true;

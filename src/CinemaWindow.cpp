@@ -852,7 +852,11 @@ CinemaWindow::_ApplyOverlay()
 	fAskOverlay = decision == 2;
 	if (!fAskOverlay)
 		fPlayerView->SetOverlayQuestion(NULL);
-	if (!allowed && fPlayer->Overlay() != NULL)
+	// the view lets go of the overlay first, in every case: the player
+	// may make another one and delete the one the view had
+	if (fPlayer->Overlay() != NULL && allowed != fPlayer->IsOverlayAllowed())
+		fPlayerView->ClearOverlay();
+	else if (!allowed && fPlayer->Overlay() != NULL)
 		fPlayerView->ClearOverlay();
 	fPlayer->SetOverlayAllowed(allowed);
 }
