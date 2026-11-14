@@ -56,7 +56,7 @@ static const uint32 kMsgTvAddress = 'stva';
 static const uint32 kMsgTvAdd = 'stv+';
 static const uint32 kMsgTvRemove = 'stv-';
 static const uint32 kMsgTvCountry = 'stvc';
-static const uint32 kMsgActivate = 'sact';
+static const uint32 kMsgActivate = kMsgSettingsActivate;
 static const uint32 kMsgNetworkChanged = 'snet';
 static const uint32 kMsgOrganize = 'sorg';
 static const uint32 kMsgOrganizeNow = 'sorn';
@@ -438,7 +438,9 @@ SettingsWindow::QuitRequested()
 	// the key as it is, even without Enter
 	Settings::SetTmdbKey(fKey->Text());
 	_SaveNetwork();
-	fTarget.SendMessage(kMsgSettingsClosed);
+	BMessage closed(kMsgSettingsClosed);
+	closed.AddMessenger("window", BMessenger(this));
+	fTarget.SendMessage(&closed);
 	return true;
 }
 

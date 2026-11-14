@@ -95,6 +95,7 @@ enum {
 	kMsgOrganized		= 'orgd',	// "id", "from", "path", "picture": a
 									// download put in order
 	kMsgOrganizeAll		= 'orga',	// the downloads there are, in order
+	kMsgSettingsActivate = 'sact',	// the settings window to the front
 	kMsgPauseDownload	= 'dwps',	// "id": stopped, what it got kept
 	kMsgResumeDownload	= 'dwrs',	// "id": on again, when its turn comes
 	kMsgDownloadPaused	= 'dwpd',	// "id": the helper stopped it

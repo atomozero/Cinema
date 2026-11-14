@@ -765,12 +765,17 @@ CinemaWindow::_Install(const char* packages)
 			arguments, &team) != B_OK || team < 0)
 		return;
 	BMessenger window(this);
-	std::thread([team, window]() {
-		team_info info;
-		while (get_team_info(team, &info) == B_OK)
-			snooze(500000);
-		window.SendMessage(kMsgHelperInstalled);
-	}).detach();
+	try {
+		std::thread([team, window]() {
+			team_info info;
+			while (get_team_info(team, &info) == B_OK)
+				snooze(500000);
+			window.SendMessage(kMsgHelperInstalled);
+		}).detach();
+	} catch (...) {
+		// no thread to wait with: the helper is tried again at once
+		PostMessage(kMsgHelperInstalled);
+	}
 }
 
 
@@ -1627,6 +1632,13 @@ CinemaWindow::_MoveDownload(const char* from, const char* to, BString& moved,
 			target << "/";
 		target << BPath(source.String()).Leaf();
 	}
+	// its folder made first: a path is made normal only when its folders
+	// are there
+	int32 slash = target.FindLast('/');
+	if (slash > 0) {
+		BString folder(target.String(), slash);
+		create_directory(folder.String(), 0755);
+	}
 	BPath path(target.String(), NULL, true);
 	if (path.InitCheck() != B_OK) {
 		error = "a bad path";
@@ -2016,8 +2028,14 @@ CinemaWindow::MessageReceived(BMessage* message)
 			_ShowAbout();
 			break;
 		case kMsgSettingsClosed:
-			fSettingsWindow = BMessenger();
+		{
+			// of the window open now, not of one closed before it
+			BMessenger window;
+			if (message->FindMessenger("window", &window) != B_OK
+				|| window == fSettingsWindow)
+				fSettingsWindow = BMessenger();
 			break;
+		}
 		case kMsgSettingsChanged:
 		{
 			int32 height = fSettings.videoHeight;
@@ -2268,6 +2286,20 @@ CinemaWindow::MessageReceived(BMessage* message)
 			// of a video closed since: nothing to do with this one
 			if (message->GetInt32("session", -1) != fPlayer->Session())
 				break;
+			// sent behind with Esc: closed quietly, and said so, rather
+			// than coming back over what is being browsed
+			if (fPlayerHidden) {
+				BString title = fPlayingTitle;
+				_ClosePlayer(false);
+				BNotification notification(B_ERROR_NOTIFICATION);
+				notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
+				notification.SetTitle(B_TRANSLATE("The video could not be "
+					"got ready"));
+				notification.SetMessageID("ready");
+				notification.SetContent(title);
+				notification.Send();
+				break;
+			}
 			BString address = fPlayingAddress;
 			BString title = fPlayingTitle;
 			BString id = fPlayingId;
@@ -2294,6 +2326,9 @@ CinemaWindow::MessageReceived(BMessage* message)
 		}
 		case kMsgPlayInMediaPlayer:
 		{
+			// only the video playing: not the one before it
+			if (!fPlayerShown)
+				break;
 			BString address = fPlayingAddress;
 			BString title = fPlayingTitle;
 			_ClosePlayer();
@@ -2474,7 +2509,10 @@ CinemaWindow::MessageReceived(BMessage* message)
 				SaveCategories(fCategories);
 				fCategoryBar->SetCategories(fCategories);
 				fHomeLoaded = false;
-				if (fCard == 0 && fChannelId.IsEmpty())
+				// the tab chosen may have been one of them, or after them:
+				// the home, rather than the wrong tab
+				if (fCategoryBar->Selected() >= fCategoryBar->CategoryTab(0)
+					|| (fCard == 0 && fChannelId.IsEmpty()))
 					_ShowHome();
 			}
 			break;
@@ -4122,17 +4160,11 @@ CinemaWindow::_RequestSelectedSubtitle()
 void
 CinemaWindow::_ShowSettings()
 {
-	if (fSettingsWindow.IsValid()) {
-		// open already: to the front
-		BLooper* looper = NULL;
-		fSettingsWindow.Target(&looper);
-		BWindow* window = dynamic_cast<BWindow*>(looper);
-		if (window != NULL && window->Lock()) {
-			window->Activate();
-			window->Unlock();
-		}
+	// open already: to the front, by a message (a pointer to it could be
+	// to a window closing meanwhile); one that went is opened again
+	if (fSettingsWindow.IsValid()
+		&& fSettingsWindow.SendMessage(kMsgSettingsActivate) == B_OK)
 		return;
-	}
 	std::vector<BString> folders;
 	for (const Category& category : fCategories) {
 		if (category.provider == "local")

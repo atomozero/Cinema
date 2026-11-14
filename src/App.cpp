@@ -35,7 +35,7 @@ public:
 		for (int32 i = 1; i < argc; i++) {
 			// the notification of a video got ready behind, clicked
 			if (strcmp(argv[i], "--show-player") == 0) {
-				_Window()->PostMessage(kMsgShowPlayer);
+				_Post(kMsgShowPlayer);
 				continue;
 			}
 			BString id = YouTubeVideoId(argv[i]);
@@ -43,7 +43,7 @@ public:
 				BMessage play(kMsgPlay);
 				play.AddString("id", id);
 				play.AddString("title", argv[i]);
-				_Window()->PostMessage(&play);
+				_Post(&play);
 				continue;
 			}
 			BString address(argv[i]);
@@ -53,7 +53,7 @@ public:
 				|| address.IEndsWith(".torrent")) {
 				BMessage torrent(kMsgAddTorrent);
 				torrent.AddString("source", address);
-				_Window()->PostMessage(&torrent);
+				_Post(&torrent);
 				continue;
 			}
 			// the feed of a podcast: a tab of its episodes
@@ -65,7 +65,7 @@ public:
 						|| lower.FindFirst("/rss") >= 0))) {
 				BMessage podcast(kMsgAddPodcast);
 				podcast.AddString("address", address);
-				_Window()->PostMessage(&podcast);
+				_Post(&podcast);
 				continue;
 			}
 			// a live address too, which plays with FFmpeg: a file such as
@@ -84,7 +84,7 @@ public:
 				// a folder: to the library
 				BMessage add(kMsgAddFolder);
 				add.AddString("path", path.Path());
-				_Window()->PostMessage(&add);
+				_Post(&add);
 			} else if (entry.IsFile())
 				_PlayAddress(path.Path(), path.Leaf());
 		}
@@ -102,7 +102,7 @@ public:
 			if (BString(path.Leaf()).IEndsWith(".torrent")) {
 				BMessage torrent(kMsgAddTorrent);
 				torrent.AddString("source", path.Path());
-				_Window()->PostMessage(&torrent);
+				_Post(&torrent);
 			} else
 				_PlayAddress(path.Path(), path.Leaf());
 		}
@@ -125,7 +125,8 @@ public:
 			|| message->what == B_EXECUTE_PROPERTY) {
 			CinemaWindow* window = _Window();
 			bool handled = false;
-			if (window != NULL && window->Lock()) {
+			// locked through its messenger: only while it is there
+			if (fWindowMessenger.LockTarget()) {
 				handled = window->Scripting(message);
 				window->Unlock();
 			}
@@ -193,17 +194,34 @@ private:
 		play.AddString("title", title);
 		play.AddString("provider", "local");
 		play.AddString("path", address);
-		_Window()->PostMessage(&play);
+		_Post(&play);
 	}
 
 	CinemaWindow* _Window()
 	{
-		if (fWindow == NULL)
+		if (fWindow == NULL) {
 			fWindow = new CinemaWindow;
+			fWindowMessenger = BMessenger(fWindow);
+		}
 		return fWindow;
 	}
 
+	// to the window through its messenger: once it quit, nothing, rather
+	// than a deleted window
+	void _Post(BMessage* message)
+	{
+		_Window();
+		fWindowMessenger.SendMessage(message);
+	}
+
+	void _Post(uint32 what)
+	{
+		BMessage message(what);
+		_Post(&message);
+	}
+
 	CinemaWindow*	fWindow = NULL;
+	BMessenger		fWindowMessenger;
 };
 
 

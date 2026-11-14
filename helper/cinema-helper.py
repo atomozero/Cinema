@@ -176,8 +176,27 @@ INFO_CACHE_TIME = 30 * 60
 INFO_CACHE_SIZE = 8
 
 
+def finite(value):
+	"""value with its NaN and infinities as 0: Cinema's JSON has no words
+	for them, and would drop the whole answer."""
+	if isinstance(value, float):
+		return value if value == value and value not in (float("inf"),
+			float("-inf")) else 0
+	if isinstance(value, dict):
+		return {key: finite(item) for key, item in value.items()}
+	if isinstance(value, (list, tuple)):
+		return [finite(item) for item in value]
+	return value
+
+
 def answer(message):
-	line = json.dumps(message, ensure_ascii=False)
+	# always a line: what cannot be written is written as text, and an
+	# answer is never lost to a value json does not take
+	try:
+		line = json.dumps(message, ensure_ascii=False, allow_nan=False,
+			default=str)
+	except (TypeError, ValueError):
+		line = json.dumps(finite(message), ensure_ascii=False, default=str)
 	with output:
 		try:
 			sys.stdout.write(line + "\n")
@@ -1146,7 +1165,12 @@ class YouTubeProvider(Provider):
 
 
 def register(provider_class):
-	provider = provider_class()
+	# a source that cannot start (a broken file of its cache, say) is left
+	# out: the others, and the helper, go on
+	try:
+		provider = provider_class()
+	except Exception:
+		return provider_class
 	PROVIDERS[provider.id] = provider
 	return provider_class
 
@@ -2284,8 +2308,11 @@ class LocalProvider(Provider):
 		try:
 			with open(self.path, encoding="utf-8") as file:
 				self.known = json.load(file)
-		except (OSError, ValueError, TypeError):
-			pass
+			if not isinstance(self.known, dict):
+				self.known = {}
+		except (OSError, ValueError, TypeError, RecursionError):
+			# broken: made again
+			self.known = {}
 
 	def save(self):
 		if not self.path:
@@ -3725,6 +3752,23 @@ def work(request):
 	if provider is None:
 		provider = PROVIDERS.get(DEFAULT_PROVIDER)
 	if provider is None:
+		# no source at all: an answer still, or Cinema would wait for it
+		kind = request.get("type")
+		media_id = request.get("id", "")
+		tag = as_int(request.get("tag"), -1)
+		if kind in ("search", "channel"):
+			answer({"type": "nothing", "tag": tag})
+		elif kind == "details":
+			answer({"type": "details", "id": media_id, "item": None})
+		elif kind == "find":
+			answer({"type": "lost", "id": media_id})
+		elif kind == "subtitles":
+			answer({"type": "subtitles", "id": media_id, "tracks": []})
+		elif kind == "subtitle":
+			answer({"type": "subtitle", "id": media_id,
+				"language": request.get("language", ""),
+				"automatic": bool(request.get("automatic")), "text": "",
+				"failed": True})
 		return
 
 	kind = request.get("type")
