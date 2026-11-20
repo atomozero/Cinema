@@ -37,6 +37,7 @@
 #include <Path.h>
 #include <Roster.h>
 #include <Screen.h>
+#include <WindowScreen.h>
 #include <ScrollView.h>
 #include <TextControl.h>
 #include <TranslationUtils.h>
@@ -1219,6 +1220,27 @@ CinemaWindow::_ToggleCategoryFocus()
 }
 
 
+/*!	While a video plays, the screen saver does not start: Haiku has no way
+	to hold it, and like MediaPlayer the pointer is put back where it is,
+	which the input server takes for a move. Not while a button is down
+	(a drag), the window hidden or minimized, or the sound alone plays.
+*/
+void
+CinemaWindow::_KeepScreenAwake()
+{
+	if (!fPlayerShown || fPlayerHidden || fPlayer->IsPaused()
+		|| !fPlayer->HasVideo() || IsHidden() || IsMinimized())
+		return;
+	BPoint where;
+	uint32 buttons;
+	fPlayerView->GetMouse(&where, &buttons, false);
+	if (buttons != 0)
+		return;
+	fPlayerView->ConvertToScreen(&where);
+	set_mouse_position((int32)where.x, (int32)where.y);
+}
+
+
 static void
 invalidate_all(BView* view)
 {
@@ -2345,6 +2367,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 		}
 		case kMsgPlayerSave:
 			_SavePosition();
+			_KeepScreenAwake();
 			break;
 		case kMsgPlayerEnded:
 		{

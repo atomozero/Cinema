@@ -138,6 +138,7 @@ private:
 			void				_StartDownloads();
 			BString				_NewsChannel();
 			void				_Retranslate();
+			void				_KeepScreenAwake();
 			void				_SetCategoryOrder(int32 index,
 									const char* order);
 			void				_RequeueDownloads();
