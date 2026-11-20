@@ -52,6 +52,8 @@ private:
 
 			BMessenger			fTarget;
 			Settings			fSettings;
+			Settings			fShown;		// as saved when last read: what
+											// differs is what was changed here
 
 			BTextControl*		fKey;
 			BButton*			fCheck;

@@ -52,7 +52,7 @@ static const uint32 kMsgPlayInCinema = 'splc';
 static const uint32 kMsgResume = 'sres';
 static const uint32 kMsgEvenVolume = 'sevn';
 static const uint32 kMsgOverlay = 'sovl';
-static const uint32 kMsgSource = 'ssrc';
+static const uint32 kMsgSource = 'sssr';
 static const uint32 kMsgQuality = 'squa';
 static const uint32 kMsgTvSelected = 'stvs';
 static const uint32 kMsgTvAddress = 'stva';
@@ -81,6 +81,7 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 			| B_CLOSE_ON_ESCAPE),
 	fTarget(target),
 	fSettings(Settings::Load()),
+	fShown(fSettings),
 	fPanel(NULL)
 {
 	// the library: the key of TMDB
@@ -495,14 +496,23 @@ SettingsWindow::_Changed()
 {
 	// what this window shows over what is saved now: the volume and the
 	// language of the subtitles change meanwhile, in the player
+	// only what was changed here since: the main window may have changed
+	// the others meanwhile (O sets the overlay to automatic)
 	Settings saved = Settings::Load();
-	saved.playInCinema = fSettings.playInCinema;
-	saved.resume = fSettings.resume;
-	saved.searchSource = fSettings.searchSource;
-	saved.videoHeight = fSettings.videoHeight;
-	saved.evenVolume = fSettings.evenVolume;
-	saved.overlayChoice = fSettings.overlayChoice;
+	if (fSettings.playInCinema != fShown.playInCinema)
+		saved.playInCinema = fSettings.playInCinema;
+	if (fSettings.resume != fShown.resume)
+		saved.resume = fSettings.resume;
+	if (fSettings.searchSource != fShown.searchSource)
+		saved.searchSource = fSettings.searchSource;
+	if (fSettings.videoHeight != fShown.videoHeight)
+		saved.videoHeight = fSettings.videoHeight;
+	if (fSettings.evenVolume != fShown.evenVolume)
+		saved.evenVolume = fSettings.evenVolume;
+	if (fSettings.overlayChoice != fShown.overlayChoice)
+		saved.overlayChoice = fSettings.overlayChoice;
 	fSettings = saved;
+	fShown = saved;
 	fSettings.Save();
 	fTarget.SendMessage(kMsgSettingsChanged);
 }

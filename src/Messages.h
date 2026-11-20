@@ -76,7 +76,6 @@ enum {
 									// again from there to go there
 	kMsgPlayerTick		= 'pltk',	// the time shown, the controls hidden
 	kMsgPlayerSave		= 'plsv',	// where it is, to go on later
-	kMsgPlayerClose		= 'plcl',
 	kMsgAddTorrent		= 'tadd',	// "source": a magnet link or a .torrent
 	kMsgAddPodcast		= 'padd',	// "address": the feed of a podcast
 	kMsgCategoryOrder	= 'cord',	// "index", "order": of a tab's search

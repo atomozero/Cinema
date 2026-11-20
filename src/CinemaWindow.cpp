@@ -2435,6 +2435,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 			if (strcmp(download->second.GetString("state", ""),
 					"pause later") == 0) {
 				download->second.SetString("state", "active");
+				_SavePending();
 				_DownloadChanged(id);
 				break;
 			}
@@ -2715,6 +2716,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 			if (id == fLowered) {
 				fHelper->SetHeight(fSettings.videoHeight);
 				fPlayerView->SetNotice(NULL);
+				fOpenAt = -1;
 			}
 			if (id == fWanted)
 				fWanted = "";
@@ -2768,14 +2770,18 @@ CinemaWindow::MessageReceived(BMessage* message)
 			fHome->ClearBusy();
 			fDetail->SetLoading(false);
 			// nothing more comes for the downloads
-			std::vector<BString> downloads;
-			for (const auto& entry : fDownloading)
-				downloads.push_back(entry.first);
-			for (const BString& id : downloads) {
-				BMessage failed(kMsgDownloadFailed);
-				failed.AddString("id", id);
-				_DownloadFailed(&failed);
+			// the downloads wait, kept on the disk, for a helper that works
+			// (installed, Cinema started again): not failed, which would
+			// lose them, the paused torrents too
+			for (auto& entry : fDownloading) {
+				BString state = entry.second.GetString("state", "");
+				if (state == "active")
+					entry.second.SetString("state", "queued");
+				else if (state == "pausing" || state == "pause later")
+					entry.second.SetString("state", "paused");
+				_DownloadChanged(entry.first);
 			}
+			_SavePending();
 			fHome->FailPending(B_TRANSLATE("Cinema needs yt-dlp and "
 				"python3, and cinema-helper.py next to it"));
 			fGrid->SetMessage(B_TRANSLATE("Cinema needs yt-dlp and python3, "
@@ -3338,7 +3344,9 @@ CinemaWindow::_RequeueDownloads()
 {
 	for (auto& entry : fDownloading) {
 		BString state = entry.second.GetString("state", "");
-		if (state == "active")
+		// the torrent being watched goes on, paused later or not
+		bool watched = fPlayerShown && fPlayingId == entry.first;
+		if (state == "active" || (state == "pause later" && watched))
 			entry.second.SetString("state", "queued");
 		else if (state == "pausing" || state == "pause later")
 			entry.second.SetString("state", "paused");
@@ -3429,6 +3437,7 @@ CinemaWindow::_DownloadChanged(const BString& id)
 	if (download == fDownloading.end())
 		return;
 	fGrid->SetStatus(id, _DownloadStatus(download->second).String());
+	fGrid->SetDownloadState(id, download->second.GetString("state", ""));
 }
 
 
@@ -3514,8 +3523,12 @@ CinemaWindow::_DownloadFailed(BMessage* message)
 	_ForgetDownload(id);
 	_SavePending();
 	fGrid->SetProgress(id, -1);
+	fGrid->SetStatus(id, "");
+	fGrid->SetDownloadState(id, "");
 	fHome->SetProgress(id, -1);
 	fDetail->SetProgress(id.String(), -1);
+	if (_ShowingDownloads())
+		_ShowDownloads();
 
 	BNotification notification(B_ERROR_NOTIFICATION);
 	notification.SetGroup(B_TRANSLATE_SYSTEM_NAME("Cinema"));
@@ -4155,6 +4168,14 @@ CinemaWindow::_ClosePlayer(bool save)
 {
 	if (!fPlayerShown)
 		return;
+	// another size of it on its way (+ or -, the processor): not wanted
+	// any more, nor where it was to start
+	if (fWaiting == fPlayingId) {
+		fWaiting = "";
+		fGrid->SetBusy(NULL);
+		fHome->ClearBusy();
+	}
+	fOpenAt = -1;
 	// a download paused while it was watched: paused now
 	auto watched = fDownloading.find(fPlayingId);
 	if (watched != fDownloading.end() && strcmp(watched->second.GetString(

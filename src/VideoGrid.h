@@ -66,6 +66,9 @@ public:
 			void				SetPicture(const char* id, BBitmap* picture);
 			void				SetProgress(const char* id, int32 progress);
 			void				SetStatus(const char* id, const char* status);
+			void				SetDownloadState(const char* id,
+									const char* state);
+									// for its menu: pause or resume
 			void				SetWatched(const char* id, bool watched,
 									int32 resume);
 			void				Select(const char* id);

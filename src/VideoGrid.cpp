@@ -239,6 +239,18 @@ VideoGrid::SetStatus(const char* id, const char* status)
 
 
 void
+VideoGrid::SetDownloadState(const char* id, const char* state)
+{
+	for (size_t i = 0; i < fVideos.size(); i++) {
+		if (fVideos[i].id == id) {
+			fVideos[i].downloadState = state;
+			return;
+		}
+	}
+}
+
+
+void
 VideoGrid::SetWatched(const char* id, bool watched, int32 resume)
 {
 	for (size_t i = 0; i < fVideos.size(); i++) {
