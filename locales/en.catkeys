@@ -1,5 +1,4 @@
-1	english	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		YouTube could not be reached: is the network on?
+1	english	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		Video quality:
 Downloaded	Detail		Downloaded
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		Sign in with WebPositive…
 Sign out	Settings		Sign out
 Getting the video ready	Grid		Getting the video ready
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".
+the helper stopped	Window		the helper stopped
 Subscriptions	Window		Subscriptions
 Settings…	Window		Settings…
 Decoding without the deblocking filter	Player		Decoding without the deblocking filter
@@ -82,6 +82,7 @@ No videos found	Window		No videos found
 Watch later	Window		Watch later
 See all	Home		See all
 Click to watch it	Window		Click to watch it
+The videos did not come: is the network on?	Window		The videos did not come: is the network on?
 Open the channel	Grid		Open the channel
 Check	Settings		Check
 Most relevant first	Categories		Most relevant first
@@ -184,8 +185,8 @@ Follow	Detail		Follow
 No statistics for this video	Player		No statistics for this video
 Details	Grid		Details
 The lowest quality already	Window		The lowest quality already
-Never	Settings		Never
 Already downloaded	Grid		Already downloaded
+Never	Settings		Never
 Search	Settings		Search
 The News tab shows the latest videos of these channels, the newest first:	Settings		The News tab shows the latest videos of these channels, the newest first:
 Moved to the network folder	Window		Moved to the network folder

@@ -928,8 +928,8 @@ VideoGrid::_ShowMenu(int32 index, BPoint where)
 		? B_TRANSLATE("Remove from favorites")
 		: B_TRANSLATE("Add to favorites"), favorite));
 
-	// live television cannot be downloaded
-	if (video.path.IsEmpty() && video.kind != "live") {
+	// live television, folders and files here cannot be downloaded
+	if (video.path.IsEmpty() && video.Downloadable()) {
 		BMessage* download = new BMessage(_DownloadMessage(index));
 		const char* label = B_TRANSLATE("Download");
 		if (video.downloaded)

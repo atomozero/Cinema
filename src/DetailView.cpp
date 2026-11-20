@@ -456,7 +456,7 @@ bool
 DetailView::_CanDownload() const
 {
 	return !fItem.downloaded && fItem.path.IsEmpty() && fItem.progress < 0
-		&& fItem.kind != "live";
+		&& fItem.Downloadable();
 }
 
 

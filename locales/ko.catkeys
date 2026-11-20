@@ -1,5 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		YouTube에 연결할 수 없습니다. 네트워크가 켜져 있나요?
+1	korean	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		WebPositive로 로그인…
 Sign out	Settings		로그아웃
 Getting the video ready	Grid		동영상 준비 중
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. WebPositive에서 YouTube에 로그인하세요.  2. 돌아와서 \"로그인했어요\"를 누르세요.
+the helper stopped	Window		도우미가 멈췄습니다
 Subscriptions	Window		구독
 Settings…	Window		설정…
 Decoding without the deblocking filter	Player		디블로킹 필터 없이 디코딩
@@ -82,6 +82,7 @@ No videos found	Window		동영상을 찾을 수 없습니다
 Watch later	Window		나중에 볼 동영상
 See all	Home		모두 보기
 Click to watch it	Window		클릭하여 보기
+The videos did not come: is the network on?	Window		동영상이 오지 않았습니다: 네트워크가 켜져 있나요?
 Open the channel	Grid		채널 열기
 Check	Settings		확인
 Most relevant first	Categories		관련성순
@@ -184,8 +185,8 @@ Follow	Detail		팔로우
 No statistics for this video	Player		이 동영상의 통계가 없습니다
 Details	Grid		세부 정보
 The lowest quality already	Window		이미 가장 낮은 화질입니다
-Never	Settings		사용 안 함
 Already downloaded	Grid		이미 다운로드됨
+Never	Settings		사용 안 함
 Search	Settings		검색
 The News tab shows the latest videos of these channels, the newest first:	Settings		뉴스 탭은 이 채널들의 최신 동영상을 최신순으로 보여 줍니다:
 Moved to the network folder	Window		네트워크 폴더로 옮김

@@ -10,54 +10,64 @@
 #   {"type": "search",   "tag": 1, "provider": "youtube", "count": 24,
 #    "query": "...", "order": "newest"}  (order optional: the latest first)
 #   {"type": "channel",  "tag": 1, "provider": "youtube", "count": 24,
-#    "channel": "UC..."}
+#    "channel": "UC..."}  (also ":news:<id>,<id>", ":subscriptions"...)
 #   {"type": "details",  "provider": "youtube", "id": "...", "kind": "video"}
 #   {"type": "find",     "id": "...", "provider": "youtube", "kind": "video"}
 #   {"type": "subtitles","id": "...", "provider": "youtube", "kind": "video"}
-#   {"type": "subtitle", "id": "...", "provider": "youtube", "language": "it",
-#    "automatic": false}
+#   {"type": "subtitle", "id": "...", "provider": "youtube", "kind": "video",
+#    "language": "it", "automatic": false}
 #   {"type": "download", "id": "...", "provider": "youtube", "folder": "/..."}
-#   {"type": "youtube account", "enabled": true}: the pages of the account
-#   (channels ":subscriptions", ":watchlater", ":liked", ":history",
-#   ":recommended") read with the cookies of WebPositive; "youtube check"
-#   tries them, answered {"type": "youtube checked", "ok", "error"}
-#   {"type": "organize", "id", "path", "root", "provider", "kind", "title",
-#    "channel", "names": {"movies", "series", "videos", "season"}}: a
-#   download put in order (organize), answered {"type": "organized", "id",
-#   "from", "path", "picture"}
+#   {"type": "pause", "id": "..."}, {"type": "cancel", "id": "..."}: a
+#   download (or a copy to the network folder) stopped, what it got kept or
+#   not; {"type": "discard", "id", "provider", "folder"} throws away what a
+#   paused one got
 #   {"type": "upload", "id": "...", "path": "/...", "target": "ftp://...",
 #    "user": "...", "password": "..."}, and "upload check" without id and
 #   path: a downloaded video copied to a network folder
+#   {"type": "organize", "id", "path", "root", "provider", "kind", "title",
+#    "channel", "names": {"movies", "series", "videos", "season",
+#    "podcasts"}}: a download put in order
+#   {"type": "youtube account", "enabled": true}: the pages of the account
+#   (channels ":subscriptions", ":watchlater", ":liked", ":history",
+#   ":recommended") read with the cookies of WebPositive; "youtube check"
+#   tries them
+#   {"type": "check"}: whether TMDB takes the key
 #
-# Any of them may carry "height": the highest picture wanted, 0 for what
-# suits the machine.
+# "find" and "download" carry "height": the highest picture wanted, 0 for
+# what suits the machine; it stays for the next ones.
 #
 # The answers:
 #
-#   {"type": "providers", "providers": [{"id", "name", "kinds"}, ...]}
-#   {"type": "results", "tag": 1, "items": [MediaItem, ...]}
-#   {"type": "details", "id": "...", "item": MediaItem or null}
+#   {"type": "providers", "providers": [{"id", "name", "kinds"}, ...]}, again
+#   when the servers of the home network answer; then {"type": "ready"}
+#   {"type": "results", "tag": 1, "items": [MediaItem, ...]}, with "about"
+#   (name, handle, followers, description, avatar) for a channel
 #   {"type": "nothing", "tag": 1}
+#   {"type": "details", "id": "...", "item": MediaItem or null}
 #   {"type": "found", "id": "...", "url": "..."}
 #   {"type": "lost", "id": "..."}
 #   {"type": "subtitles", "id": "...", "tracks": [{"language", "name",
 #    "automatic"}, ...]}
 #   {"type": "subtitle", "id": "...", "language": "...", "automatic": false,
-#    "text": "WEBVTT..."}
-#   {"type": "progress", "id": "...", "percent": 42}, with "map" for a
-#   torrent: what of its video is there (torrent_map)
+#    "text": "WEBVTT...", "failed": false}
+#   {"type": "progress", "id": "...", "percent": 42, "done", "total",
+#    "speed", "eta", "peers"}, with "map" for a torrent: what of its video
+#   is there (torrent_map)
 #   {"type": "saved", "id": "...", "path": "/..."}
-#   {"type": "failed", "id": "..."}
-#   {"type": "paused", "id": "..."}: after {"type": "pause", "id"}, what it
-#   got kept; {"type": "discard", "id", "provider", "folder"} throws it away
+#   {"type": "failed", "id": "..."}, {"type": "cancelled", "id": "..."},
+#   {"type": "paused", "id": "..."}
 #   {"type": "uploading", "id": "...", "percent": 42}
 #   {"type": "uploaded", "id": "...", "ok": true, "error": ""}
 #   {"type": "upload checked", "ok": true, "error": ""}
+#   {"type": "organized", "id", "from", "path", "picture"}
+#   {"type": "youtube checked", "ok": true, "error": ""}
+#   {"type": "checked", "ok": true}
 #
 # A MediaItem is {"provider", "kind", "id", "title", "description",
 # "channel", "channel_id", "duration", "year", "date", "views", "rating",
-# "poster", "thumbnail", "season", "episode"}. Other providers add more kinds
-# later.
+# "poster", "thumbnail", "season", "episode"}; kind is "video", "movie",
+# "episode", "live", or "series" (a folder or a series, opened as a
+# channel). Some add "timestamp", to sort them.
 #
 # Loading yt-dlp takes about 9 s on the AC100; this way it happens once.
 # Each request runs on its own thread, so a search does not wait for a video.
@@ -2807,7 +2817,7 @@ class DlnaProvider(Provider):
 					progress(int(done * 100 / total) if total else 0,
 						done=size_text(done), total=size_text(total)
 							if total else "",
-						speed=size_text(speed) + "/s",
+						speed=size_text(speed),
 						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
 		if total and os.path.getsize(temporary) != total:
 			os.remove(temporary)
@@ -2963,7 +2973,7 @@ class PodcastProvider(Provider):
 					progress(int(done * 100 / total) if total else 0,
 						done=size_text(done), total=size_text(total)
 							if total else "",
-						speed=size_text(speed) + "/s",
+						speed=size_text(speed),
 						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
 		if total and os.path.getsize(temporary) != total:
 			os.remove(temporary)
@@ -3511,6 +3521,9 @@ def job_download(provider, media_id, folder):
 		path = provider.download(media_id, folder, progress)
 	except Exception:
 		path = None
+	if path and media_id not in CANCELLED:
+		# done, even if a pause came at its very end
+		PAUSED.discard(media_id)
 	if media_id in CANCELLED:
 		CANCELLED.discard(media_id)
 		PAUSED.discard(media_id)
@@ -3892,7 +3905,10 @@ def work(request):
 		# a torrent without aria2c, say: not something for another source
 		answer({"type": "failed", "id": request.get("id", "")})
 		return
-	if provider is None:
+	# a source named that is not there (the home network before its servers
+	# answered, torrents without aria2c): not asked of YouTube instead,
+	# which would run yt-dlp on an address it cannot know
+	if provider is None and not request.get("provider"):
 		provider = PROVIDERS.get(DEFAULT_PROVIDER)
 	if provider is None:
 		# no source at all: an answer still, or Cinema would wait for it

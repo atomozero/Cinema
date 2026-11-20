@@ -35,6 +35,7 @@
 #include "VideoLimits.h"
 
 #include <algorithm>
+#include <string.h>
 #include <utility>
 
 
@@ -571,6 +572,18 @@ SettingsWindow::MessageReceived(BMessage* message)
 			fTarget.SendMessage(kMsgYouTubeSignOut);
 			fYouTubeSignOut->SetEnabled(false);
 			fYouTubeStatus->SetText(B_TRANSLATE("Not signed in."));
+			break;
+		case kMsgHelperGone:
+			// no answer will come to a check asked of it
+			fCheck->SetEnabled(true);
+			fYouTubeCheck->SetEnabled(true);
+			fNetworkTest->SetEnabled(true);
+			for (BStringView* status : { fKeyStatus, fYouTubeStatus,
+					fNetworkStatus }) {
+				if (strcmp(status->Text(),
+						B_TRANSLATE("Checking" B_UTF8_ELLIPSIS)) == 0)
+					status->SetText("");
+			}
 			break;
 		case kMsgNews:
 		{

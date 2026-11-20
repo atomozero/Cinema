@@ -1,5 +1,4 @@
-1	spanish	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		No se puede acceder a YouTube: ¿está activa la red?
+1	spanish	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		Calidad de vídeo:
 Downloaded	Detail		Descargado
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automático pregunta una sola vez, en una tarjeta gráfica que no conoce, si ves el vídeo. O lo cambia durante un vídeo.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		Iniciar sesión con WebPositive…
 Sign out	Settings		Cerrar sesión
 Getting the video ready	Grid		Preparando el vídeo
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Inicia sesión en YouTube en WebPositive.  2. Vuelve y pulsa \"Ya inicié sesión\".
+the helper stopped	Window		el asistente se detuvo
 Subscriptions	Window		Suscripciones
 Settings…	Window		Ajustes…
 Decoding without the deblocking filter	Player		Decodificando sin filtro de desbloqueo
@@ -82,6 +82,7 @@ No videos found	Window		No se encontraron vídeos
 Watch later	Window		Ver más tarde
 See all	Home		Ver todo
 Click to watch it	Window		Haz clic para verlo
+The videos did not come: is the network on?	Window		Los vídeos no llegaron: ¿está la red activa?
 Open the channel	Grid		Abrir el canal
 Check	Settings		Comprobar
 Most relevant first	Categories		Primero los más relevantes
@@ -184,8 +185,8 @@ Follow	Detail		Seguir
 No statistics for this video	Player		No hay estadísticas para este vídeo
 Details	Grid		Detalles
 The lowest quality already	Window		Ya es la calidad más baja
-Never	Settings		Nunca
 Already downloaded	Grid		Ya descargado
+Never	Settings		Nunca
 Search	Settings		Búsqueda
 The News tab shows the latest videos of these channels, the newest first:	Settings		La pestaña Noticias muestra los últimos vídeos de estos canales, los más recientes primero:
 Moved to the network folder	Window		Movido a la carpeta de red

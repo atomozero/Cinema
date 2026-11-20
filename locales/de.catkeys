@@ -1,5 +1,4 @@
-1	german	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		YouTube ist nicht erreichbar: Ist das Netzwerk an?
+1	german	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		Videoqualität:
 Downloaded	Detail		Heruntergeladen
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatisch fragt einmal, bei einer unbekannten Grafikkarte, ob du das Video siehst. O schaltet es während eines Videos um.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		Mit WebPositive anmelden…
 Sign out	Settings		Abmelden
 Getting the video ready	Grid		Das Video wird vorbereitet
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. In WebPositive bei YouTube anmelden.  2. Zurückkommen und \"Ich bin angemeldet\" drücken.
+the helper stopped	Window		das Hilfsprogramm hat angehalten
 Subscriptions	Window		Abos
 Settings…	Window		Einstellungen…
 Decoding without the deblocking filter	Player		Dekodierung ohne Deblocking-Filter
@@ -82,6 +82,7 @@ No videos found	Window		Keine Videos gefunden
 Watch later	Window		Später ansehen
 See all	Home		Alle ansehen
 Click to watch it	Window		Zum Ansehen klicken
+The videos did not come: is the network on?	Window		Die Videos kamen nicht an: Ist das Netzwerk an?
 Open the channel	Grid		Kanal öffnen
 Check	Settings		Prüfen
 Most relevant first	Categories		Relevanteste zuerst
@@ -184,8 +185,8 @@ Follow	Detail		Folgen
 No statistics for this video	Player		Keine Statistik für dieses Video
 Details	Grid		Details
 The lowest quality already	Window		Schon die niedrigste Qualität
-Never	Settings		Nie
 Already downloaded	Grid		Bereits heruntergeladen
+Never	Settings		Nie
 Search	Settings		Suche
 The News tab shows the latest videos of these channels, the newest first:	Settings		Der Tab Nachrichten zeigt die neuesten Videos dieser Kanäle, die neuesten zuerst:
 Moved to the network folder	Window		In den Netzwerkordner verschoben

@@ -16,6 +16,8 @@
 #include <Path.h>
 
 #include <algorithm>
+
+#include <ctype.h>
 #include <vector>
 
 #include "Deliver.h"
@@ -76,6 +78,19 @@ static const char* kSourceAttribute = "Cinema:source";
 /*!	An address curl may be given: one starting with "-" would be taken for
 	an option of it.
 */
+static bool
+youtube_id(const char* id)
+{
+	// eleven letters, digits, - and _
+	int32 length = 0;
+	for (const char* c = id; *c != '\0'; c++, length++) {
+		if (!isalnum((unsigned char)*c) && *c != '-' && *c != '_')
+			return false;
+	}
+	return length == 11;
+}
+
+
 static bool
 fetchable(const BString& url)
 {
@@ -182,7 +197,10 @@ Worker::_Thumbnails(BMessage* message)
 					continue;
 				BEntry(path.String()).Remove();
 			}
-			if (url.IsEmpty())
+			// YouTube's own picture only for the id of a video of YouTube:
+			// a path, an address or an id of the home network is not sent
+			// to it
+			if (url.IsEmpty() && youtube_id(id))
 				url.SetToFormat("https://i.ytimg.com/vi/%s/mqdefault.jpg", id);
 			if (!fetchable(url))
 				continue;
@@ -257,8 +275,10 @@ Worker::_Picture(BMessage* message)
 		if (_Get(url.String(), path.String()))
 			keep_source(path, url);
 		else {
-			// the biggest picture may not be there for an old video; the
-			// one every video has is
+			// the biggest picture may not be there for an old video of
+			// YouTube; the one every video has is (only for those)
+			if (!youtube_id(id.String()))
+				return;
 			BString fallback;
 			fallback.SetToFormat("https://i.ytimg.com/vi/%s/hqdefault.jpg",
 				id.String());

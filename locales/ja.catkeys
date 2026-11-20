@@ -1,5 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		YouTube に接続できません。ネットワークはオンになっていますか?
+1	japanese	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		WebPositive でログイン…
 Sign out	Settings		ログアウト
 Getting the video ready	Grid		動画を準備中
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. WebPositive で YouTube にログインします。  2. 戻って「ログインした」を押します。
+the helper stopped	Window		ヘルパーが停止しました
 Subscriptions	Window		登録チャンネル
 Settings…	Window		設定…
 Decoding without the deblocking filter	Player		デブロッキングフィルターなしでデコード
@@ -82,6 +82,7 @@ No videos found	Window		動画が見つかりません
 Watch later	Window		後で見る
 See all	Home		すべて表示
 Click to watch it	Window		クリックして見る
+The videos did not come: is the network on?	Window		動画が届きませんでした: ネットワークはつながっていますか？
 Open the channel	Grid		チャンネルを開く
 Check	Settings		確認
 Most relevant first	Categories		関連性の高い順
@@ -184,8 +185,8 @@ Follow	Detail		フォロー
 No statistics for this video	Player		この動画の統計はありません
 Details	Grid		詳細
 The lowest quality already	Window		すでに最低画質です
-Never	Settings		使わない
 Already downloaded	Grid		すでにダウンロード済み
+Never	Settings		使わない
 Search	Settings		検索
 The News tab shows the latest videos of these channels, the newest first:	Settings		ニュースタブはこれらのチャンネルの最新動画を新しい順に表示します:
 Moved to the network folder	Window		ネットワークフォルダーへ移動しました

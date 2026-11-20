@@ -1,5 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		Не вдається з'єднатися з YouTube: чи увімкнена мережа?
+1	ukrainian	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		Увійти через WebPositive…
 Sign out	Settings		Вийти
 Getting the video ready	Grid		Підготовка відео
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Увійдіть у YouTube у WebPositive.  2. Поверніться й натисніть \"Я увійшов\".
+the helper stopped	Window		помічник зупинився
 Subscriptions	Window		Підписки
 Settings…	Window		Налаштування…
 Decoding without the deblocking filter	Player		Декодування без фільтра деблокінгу
@@ -82,6 +82,7 @@ No videos found	Window		Відео не знайдено
 Watch later	Window		Переглянути пізніше
 See all	Home		Переглянути всі
 Click to watch it	Window		Натисніть, щоб дивитися
+The videos did not come: is the network on?	Window		Відео не надійшли: чи увімкнена мережа?
 Open the channel	Grid		Відкрити канал
 Check	Settings		Перевірити
 Most relevant first	Categories		Спершу найрелевантніші
@@ -184,8 +185,8 @@ Follow	Detail		Стежити
 No statistics for this video	Player		Немає статистики для цього відео
 Details	Grid		Подробиці
 The lowest quality already	Window		Це вже найнижча якість
-Never	Settings		Ніколи
 Already downloaded	Grid		Вже завантажено
+Never	Settings		Ніколи
 Search	Settings		Пошук
 The News tab shows the latest videos of these channels, the newest first:	Settings		Вкладка «Новини» показує найновіші відео цих каналів, спершу найсвіжіші:
 Moved to the network folder	Window		Переміщено в мережеву теку

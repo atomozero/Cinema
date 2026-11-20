@@ -1,5 +1,4 @@
-1	french	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		Impossible de joindre YouTube : le réseau est-il actif ?
+1	french	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatique demande une seule fois, sur une carte graphique inconnue, si vous voyez la vidéo. O le change pendant une vidéo.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		Se connecter avec WebPositive…
 Sign out	Settings		Se déconnecter
 Getting the video ready	Grid		Préparation de la vidéo
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Connectez-vous à YouTube dans WebPositive.  2. Revenez et appuyez sur \"Je suis connecté\".
+the helper stopped	Window		l'assistant s'est arrêté
 Subscriptions	Window		Abonnements
 Settings…	Window		Réglages…
 Decoding without the deblocking filter	Player		Décodage sans filtre de déblocage
@@ -82,6 +82,7 @@ No videos found	Window		Aucune vidéo trouvée
 Watch later	Window		À regarder plus tard
 See all	Home		Tout voir
 Click to watch it	Window		Cliquez pour la regarder
+The videos did not come: is the network on?	Window		Les vidéos ne sont pas arrivées : le réseau est-il actif ?
 Open the channel	Grid		Ouvrir la chaîne
 Check	Settings		Vérifier
 Most relevant first	Categories		Les plus pertinentes d'abord
@@ -184,8 +185,8 @@ Follow	Detail		Suivre
 No statistics for this video	Player		Pas de statistiques pour cette vidéo
 Details	Grid		Détails
 The lowest quality already	Window		Déjà la qualité la plus basse
-Never	Settings		Jamais
 Already downloaded	Grid		Déjà téléchargée
+Never	Settings		Jamais
 Search	Settings		Recherche
 The News tab shows the latest videos of these channels, the newest first:	Settings		L'onglet Actualités montre les dernières vidéos de ces chaînes, les plus récentes d'abord :
 Moved to the network folder	Window		Déplacée dans le dossier réseau

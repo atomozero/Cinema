@@ -21,7 +21,9 @@ struct MediaItem {
 	// from the provider
 	BString		provider;		// "youtube"
 	BString		id;				// within the provider
-	BString		kind;			// "video", "movie", "episode"...
+	BString		kind;			// "video", "movie", "episode", "live" (TV),
+								// "series" (a folder or a series, opened
+								// as a channel), "channel" (a star given)
 	BString		title;
 	BString		description;
 	BString		channel;		// who made it
@@ -44,6 +46,13 @@ struct MediaItem {
 	int32		resume;			// how far it was played, in thousandths
 	bool		downloaded;
 	bool		favorite;		// given a star
+
+			// something the helper can download: not live TV, a folder or a
+			// channel, nor a file that is on this computer already
+			bool		Downloadable() const
+						{ return kind != "live" && kind != "series"
+							&& kind != "channel" && provider != "local"
+							&& provider != "library" && provider != "iptv"; }
 
 				MediaItem() : duration(0), year(0), views(0), rating(0),
 					picture(NULL), progress(-1), watched(false), resume(0),

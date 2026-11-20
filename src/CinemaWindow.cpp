@@ -1341,8 +1341,9 @@ CinemaWindow::_HomeResults(BMessage* message, int32 shelf)
 void
 CinemaWindow::_HomeFailed(BMessage* message, int32 shelf)
 {
-	fHome->SetShelfMessage(shelf, B_TRANSLATE("YouTube could not be reached: "
-		"is the network on?"));
+	// not always YouTube: a podcast, a server of the home network, TV
+	fHome->SetShelfMessage(shelf, B_TRANSLATE("The videos did not come: is "
+		"the network on?"));
 	(void)message;
 	if (fHomeActive > 0)
 		fHomeActive--;
@@ -1961,8 +1962,8 @@ CinemaWindow::MessageReceived(BMessage* message)
 			if (home != fHomeRequests.end())
 				_HomeFailed(message, home->second);
 			else if (generation == fGeneration) {
-				fGrid->SetMessage(B_TRANSLATE("YouTube could not be reached: "
-					"is the network on?"));
+				fGrid->SetMessage(B_TRANSLATE("The videos did not come: is "
+					"the network on?"));
 			}
 			break;
 		}
@@ -2742,6 +2743,23 @@ CinemaWindow::MessageReceived(BMessage* message)
 			break;
 		case kMsgHelperGone:
 		{
+			// what was asked of it gets no answer: said here. The copies to
+			// the network folder failed, the checks of the settings window
+			// end, the page of a video stops loading
+			{
+				std::vector<BString> uploads;
+				for (const auto& upload : fUploads)
+					uploads.push_back(upload.first);
+				for (const BString& path : uploads) {
+					BMessage failed(kMsgUploaded);
+					failed.AddString("id", path);
+					failed.AddBool("ok", false);
+					failed.AddString("error", B_TRANSLATE("the helper stopped"));
+					_Uploaded(&failed);
+				}
+			}
+			fSettingsWindow.SendMessage(kMsgHelperGone);
+			fDetail->SetLoading(false);
 			fHomeQueue.clear();
 			fHomeActive = 0;
 			fFinding.clear();

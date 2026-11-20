@@ -1,5 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	3057549031
-YouTube could not be reached: is the network on?	Window		Não foi possível acessar o YouTube: a rede está ligada?
+1	portuguese	application/x-vnd.atomozero-Cinema	1037853143
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automático pergunta uma só vez, numa placa gráfica que não conhece, se vês o vídeo. O muda-o durante um vídeo.
@@ -12,6 +11,7 @@ Sign in with WebPositive…	Settings		Entrar com o WebPositive…
 Sign out	Settings		Sair
 Getting the video ready	Grid		Preparando o vídeo
 1. Sign in to YouTube in WebPositive.  2. Come back and press \"I signed in\".	Settings		1. Entre no YouTube pelo WebPositive.  2. Volte e clique em \"Já entrei\".
+the helper stopped	Window		o assistente parou
 Subscriptions	Window		Inscrições
 Settings…	Window		Configurações…
 Decoding without the deblocking filter	Player		Decodificando sem filtro de desbloqueio
@@ -82,6 +82,7 @@ No videos found	Window		Nenhum vídeo encontrado
 Watch later	Window		Assistir mais tarde
 See all	Home		Ver tudo
 Click to watch it	Window		Clique para assistir
+The videos did not come: is the network on?	Window		Os vídeos não chegaram: a rede está ligada?
 Open the channel	Grid		Abrir o canal
 Check	Settings		Verificar
 Most relevant first	Categories		Mais relevantes primeiro
@@ -184,8 +185,8 @@ Follow	Detail		Seguir
 No statistics for this video	Player		Sem estatísticas para este vídeo
 Details	Grid		Detalhes
 The lowest quality already	Window		Já é a qualidade mais baixa
-Never	Settings		Nunca
 Already downloaded	Grid		Já baixado
+Never	Settings		Nunca
 Search	Settings		Pesquisa
 The News tab shows the latest videos of these channels, the newest first:	Settings		A aba Notícias mostra os últimos vídeos destes canais, os mais recentes primeiro:
 Moved to the network folder	Window		Movido para a pasta de rede
