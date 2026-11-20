@@ -32,6 +32,8 @@
 #   ":recommended") read with the cookies of WebPositive; "youtube check"
 #   tries them
 #   {"type": "check"}: whether TMDB takes the key
+#   {"type": "languages", "languages": "fr,en"}: the languages the system
+#   prefers now (also the second argument of the helper)
 #
 # "find" and "download" carry "height": the highest picture wanted, 0 for
 # what suits the machine, and "limit", what the screen and the processor
@@ -178,18 +180,110 @@ def yt_dlp_available():
 
 
 # the words, and the short forms YouTube writes ("1 g fa", "2 gg fa")
-ITALIAN_UNITS = {"secondi": "second", "secondo": "second", "sec": "second",
-	"s": "second", "minuti": "minute", "minuto": "minute", "min": "minute",
-	"ore": "hour", "ora": "hour", "h": "hour", "giorni": "day",
-	"giorno": "day", "gg": "day", "g": "day", "settimane": "week",
-	"settimana": "week", "sett": "week", "mesi": "month", "mese": "month",
-	"anni": "year", "anno": "year", "aa": "year", "a": "year"}
+# how YouTube writes when a video came out, in the languages of Cinema, as
+# collected from it ("vor 13 Std.", "il y a 2 j", "1 日前"): the units in
+# seconds' names for yt-dlp, the words of today and yesterday, and whether
+# the unit is written against what follows (Chinese, Japanese, Korean)
+RELATIVE_TIMES = {
+	"it": ({"secondi": "second", "secondo": "second", "sec": "second",
+		"s": "second", "minuti": "minute", "minuto": "minute",
+		"min": "minute", "ore": "hour", "ora": "hour", "h": "hour",
+		"giorni": "day", "giorno": "day", "gg": "day", "g": "day",
+		"settimane": "week", "settimana": "week", "sett": "week",
+		"mesi": "month", "mese": "month", "anni": "year", "anno": "year"},
+		("oggi",), ("ieri",), False),
+	"de": ({"sekunden": "second", "sekunde": "second", "sek": "second",
+		"minuten": "minute", "minute": "minute", "min": "minute",
+		"stunden": "hour", "stunde": "hour", "std": "hour", "tagen": "day",
+		"tage": "day", "tag": "day", "wochen": "week", "woche": "week",
+		"monaten": "month", "monate": "month", "monat": "month",
+		"jahren": "year", "jahre": "year", "jahr": "year"},
+		("heute",), ("gestern",), False),
+	"fr": ({"secondes": "second", "seconde": "second", "s": "second",
+		"minutes": "minute", "minute": "minute", "min": "minute",
+		"heures": "hour", "heure": "hour", "h": "hour", "jours": "day",
+		"jour": "day", "j": "day", "semaines": "week", "semaine": "week",
+		"sem": "week", "mois": "month", "années": "year", "année": "year",
+		"ans": "year", "an": "year"},
+		("aujourd'hui",), ("hier",), False),
+	"es": ({"segundos": "second", "segundo": "second", "s": "second",
+		"minutos": "minute", "minuto": "minute", "min": "minute",
+		"horas": "hour", "hora": "hour", "h": "hour", "días": "day",
+		"día": "day", "d": "day", "semanas": "week", "semana": "week",
+		"sem": "week", "meses": "month", "mes": "month", "años": "year",
+		"año": "year"},
+		("hoy",), ("ayer",), False),
+	"pt": ({"segundos": "second", "segundo": "second", "s": "second",
+		"minutos": "minute", "minuto": "minute", "min": "minute",
+		"horas": "hour", "hora": "hour", "h": "hour", "dias": "day",
+		"dia": "day", "d": "day", "semanas": "week", "semana": "week",
+		"sem": "week", "meses": "month", "mês": "month", "anos": "year",
+		"ano": "year"},
+		("hoje",), ("ontem",), False),
+	"uk": ({"секунд": "second", "секунди": "second", "секунду": "second",
+		"сек": "second", "с": "second", "хвилин": "minute",
+		"хвилини": "minute", "хвилину": "minute", "хв": "minute",
+		"годин": "hour", "години": "hour", "годину": "hour", "год": "hour",
+		"днів": "day", "дні": "day", "день": "day", "дн": "day",
+		"тижнів": "week", "тижні": "week", "тиждень": "week",
+		"тиж": "week", "місяців": "month", "місяці": "month",
+		"місяць": "month", "міс": "month", "років": "year", "роки": "year",
+		"рік": "year", "р": "year"},
+		("сьогодні",), ("вчора",), False),
+	"ko": ({"초": "second", "분": "minute", "시간": "hour", "일": "day",
+		"주": "week", "개월": "month", "달": "month", "년": "year"},
+		("오늘",), ("어제",), True),
+	"ja": ({"秒": "second", "分": "minute", "時間": "hour", "日": "day",
+		"週間": "week", "週": "week", "か月": "month", "ヶ月": "month",
+		"カ月": "month", "年": "year"},
+		("今日",), ("昨日",), True),
+	"zh": ({"秒": "second", "分钟": "minute", "分": "minute",
+		"小时": "hour", "天": "day", "周": "week", "星期": "week",
+		"个月": "month", "月": "month", "年": "year"},
+		("今天",), ("昨天",), True),
+}
+
+# the code of the language for YouTube
+YOUTUBE_LANGUAGES = {"it": "it", "de": "de", "fr": "fr", "es": "es",
+	"pt": "pt", "uk": "uk", "ko": "ko", "ja": "ja", "zh": "zh-CN"}
 
 
-def teach_italian(module):
+def system_language():
+	"""The first language the system prefers whose dates are read ("it",
+	"zh"...), or "" for English: English first, or none of them."""
+	for code in LANGUAGES:
+		base = code.lower().replace("_", "-").split("-")[0]
+		if base == "en":
+			return ""
+		if base in RELATIVE_TIMES:
+			return base
+	return ""
+
+
+RELATIVE_PATTERNS = {}
+
+
+def relative_pattern(language):
+	"""The pattern of a date in a language, made once."""
+	pattern = RELATIVE_PATTERNS.get(language)
+	if pattern is None:
+		units, today, yesterday, joined = RELATIVE_TIMES[language]
+		names = "|".join(re.escape(unit)
+			for unit in sorted(units, key=len, reverse=True))
+		# a unit is a whole word, unless the language writes them joined
+		after = "" if joined else r"(?![^\W\d_])"
+		pattern = re.compile(r"(?P<time>\d+)\s*(?P<unit>%s)%s"
+			% (names, after), re.IGNORECASE)
+		RELATIVE_PATTERNS[language] = pattern
+	return pattern
+
+
+def teach_languages(module):
 	"""yt-dlp reads when a video came out ("3 hours ago") in English only:
-	asked in Italian, for titles in Italian rather than translated, it
-	reads "3 ore fa", "ieri", "oggi" too. Left as it is if yt-dlp changed."""
+	asked in the language the system prefers, for titles as written rather
+	than translated into English, it reads that language too
+	(RELATIVE_TIMES), the one preferred at the time. Left as it is if
+	yt-dlp changed."""
 	try:
 		try:
 			from yt_dlp.extractor.youtube._base import \
@@ -201,35 +295,38 @@ def teach_italian(module):
 		english = base.extract_relative_time.__func__
 	except (ImportError, AttributeError):
 		return
-	units = "|".join(sorted(ITALIAN_UNITS, key=len, reverse=True))
-	pattern = re.compile(r"\b(?P<start>oggi|ieri|adesso)\b|(?P<time>\d+)\s*"
-		r"(?P<unit>%s)\.?\s+fa\b" % units, re.IGNORECASE)
 
 	def relative(cls, text):
 		found = english(cls, text)
-		if found is not None or not text:
+		language = system_language()
+		if found is not None or not text or not language:
 			return found
-		match = pattern.search(text)
-		if not match:
-			return None
-		start = (match.group("start") or "").lower()
+		units, today, yesterday, joined = RELATIVE_TIMES[language]
+		plain = text.replace("\xa0", " ").lower()
 		try:
-			if start:
-				return datetime_from_str({"oggi": "today",
-					"ieri": "yesterday", "adesso": "now"}[start])
-			return datetime_from_str("now-%s%s" % (match.group("time"),
-				ITALIAN_UNITS[match.group("unit").lower()]))
-		except ValueError:
-			return None
+			match = relative_pattern(language).search(plain)
+			if match:
+				return datetime_from_str("now-%s%s" % (match.group("time"),
+					units[match.group("unit").lower()]))
+			for word in today:
+				if word in plain:
+					return datetime_from_str("today")
+			for word in yesterday:
+				if word in plain:
+					return datetime_from_str("yesterday")
+		except (ValueError, KeyError):
+			pass
+		return None
 
 	base.extract_relative_time = classmethod(relative)
 
 
 def youtube_lang():
 	"""Titles and descriptions as YouTube writes them in the language of the
-	system, rather than translated into English: in Italian, whose dates
-	teach_italian() reads."""
-	return {"lang": ["it"]} if LANGUAGE.lower().startswith("it") else {}
+	system, rather than translated into English, for the languages whose
+	dates teach_languages() reads."""
+	language = system_language()
+	return {"lang": [YOUTUBE_LANGUAGES[language]]} if language else {}
 
 
 class LazyYtDlp:
@@ -248,7 +345,7 @@ class LazyYtDlp:
 			with self._lock:
 				if self._module is None:
 					module = load_yt_dlp()
-					teach_italian(module)
+					teach_languages(module)
 					self._module = module
 		return getattr(self._module, name)
 
@@ -261,7 +358,11 @@ CACHE_TIME = 6 * 60 * 60
 DETAILS_CACHE_TIME = 24 * 60 * 60
 cache = sys.argv[1] if len(sys.argv) > 1 else None
 # the language of the system, as "it" or "pt-BR", for what TMDB writes
-LANGUAGE = sys.argv[2] if len(sys.argv) > 2 else "en"
+# the languages the system prefers, in order ("fr,en"), as Cinema sends
+# them at the start and when they change; LANGUAGE the first, for TMDB
+LANGUAGES = [code for code in (sys.argv[2] if len(sys.argv) > 2 else "en")
+	.split(",") if code] or ["en"]
+LANGUAGE = LANGUAGES[0]
 
 DEFAULT_PROVIDER = "youtube"
 PROVIDERS = {}
@@ -1001,7 +1102,8 @@ class YouTubeProvider(Provider):
 			options["format"] = self.FORMAT
 		if not client:
 			options["js_runtimes"] = YouTubeProvider.JS_RUNTIMES
-		return self.borrowed(self, ("video", client, formatted), options)
+		return self.borrowed(self, ("video", client, formatted,
+			system_language()), options)
 
 	def warm_up(self):
 		"""Makes ready what the first video played needs, while nothing
@@ -1078,7 +1180,9 @@ class YouTubeProvider(Provider):
 			with yt_dlp.YoutubeDL(options) as ydl:
 				info = ydl.extract_info(url, download=False)
 		else:
-			with self.borrowed(self, ("list", count), options) as ydl:
+			# one made for this language: another asks YouTube in another
+			with self.borrowed(self, ("list", count, system_language()),
+					options) as ydl:
 				info = ydl.extract_info(url, download=False)
 		if channel_id:
 			keep_about(self.id, channel_id, self.about(info))
@@ -3504,7 +3608,9 @@ def job_search(provider, tag, count, query, order=""):
 		return provider.search(query, count)
 
 	try:
-		name = "%s search %d %s" % (provider.id, count, query)
+		# in the language preferred: another one, another list
+		name = "%s search %d %s %s" % (provider.id, count, query,
+			system_language())
 		if order:
 			name += " " + order
 		# the latest: looked for again after ten minutes, and never shown
@@ -3520,7 +3626,8 @@ def job_search(provider, tag, count, query, order=""):
 
 def job_channel(provider, tag, count, channel_id):
 	try:
-		name = "%s channel %d %s" % (provider.id, count, channel_id)
+		name = "%s channel %d %s %s" % (provider.id, count, channel_id,
+			system_language())
 		# what the list depends on besides (the key of TMDB for the library):
 		# another key, another list
 		salt = getattr(provider, "cache_salt", None)
@@ -3991,6 +4098,15 @@ def work(request):
 		return
 	if request.get("type") == "check":
 		threading.Thread(target=job_check, daemon=True).start()
+		return
+	if request.get("type") == "languages":
+		# other languages preferred: titles, dates, plots in them from now on
+		global LANGUAGE
+		languages = [code for code in str(request.get("languages", ""))
+			.split(",") if code]
+		if languages:
+			LANGUAGES[:] = languages
+			LANGUAGE = languages[0]
 		return
 	if request.get("type") == "youtube account":
 		ACCOUNT["enabled"] = bool(request.get("enabled"))

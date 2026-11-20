@@ -85,6 +85,10 @@ public:
 									// WebPositive; kept for a new helper
 			void				CheckYouTube();
 									// answered with kMsgYouTubeChecked
+			void				SetLanguages();
+									// the languages the system prefers
+									// now, changed in its preferences
+	static	BString				PreferredLanguages();
 			void				CheckTmdb();
 									// answered with kMsgTmdbChecked
 									// NULL or empty: the default provider

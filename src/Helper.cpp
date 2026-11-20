@@ -117,16 +117,9 @@ Helper::Start(const char* script, const char* cache)
 		return B_ERROR;
 	}
 
-	// the language of the system, for what the sources write: "it",
-	// "pt-BR"
-	BString language("en");
-	BMessage languages;
-	const char* preferred;
-	if (BLocaleRoster::Default()->GetPreferredLanguages(&languages) == B_OK
-		&& languages.FindString("language", &preferred) == B_OK) {
-		language = preferred;
-		language.ReplaceAll('_', '-');
-	}
+	// the languages the system prefers, in order, for what the sources
+	// write: "it,en", "pt-BR"
+	BString language = PreferredLanguages();
 
 	fProcess = fork();
 	if (fProcess < 0)
@@ -370,6 +363,39 @@ Helper::CheckYouTube()
 {
 	Json request = Json::MakeObject();
 	request.Set("type", "youtube check");
+	_Send(request);
+}
+
+
+/*!	The languages the system prefers, first the most, as "fr,en,it" ("en"
+	without any): what the helper writes in, and follows.
+*/
+BString
+Helper::PreferredLanguages()
+{
+	BString list;
+	BMessage languages;
+	const char* language;
+	if (BLocaleRoster::Default()->GetPreferredLanguages(&languages) == B_OK) {
+		for (int32 i = 0;
+				languages.FindString("language", i, &language) == B_OK; i++) {
+			BString code(language);
+			code.ReplaceAll('_', '-');
+			if (!list.IsEmpty())
+				list << ",";
+			list << code;
+		}
+	}
+	return list.IsEmpty() ? BString("en") : list;
+}
+
+
+void
+Helper::SetLanguages()
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "languages");
+	request.Set("languages", PreferredLanguages().String());
 	_Send(request);
 }
 

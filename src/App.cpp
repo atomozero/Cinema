@@ -7,6 +7,7 @@
 #include <Application.h>
 #include <string.h>
 #include <Entry.h>
+#include <LocaleRoster.h>
 #include <Mime.h>
 #include <Path.h>
 #include <String.h>
@@ -117,6 +118,13 @@ public:
 
 	virtual void MessageReceived(BMessage* message)
 	{
+		// other languages chosen in the preferences: Cinema follows them,
+		// for what it is sent (titles, dates, plots) at once
+		if (message->what == B_LOCALE_CHANGED) {
+			BLocaleRoster::Default()->Refresh();
+			_Post(kMsgLanguagesChanged);
+			return;
+		}
 		if (message->what == B_GET_PROPERTY || message->what == B_SET_PROPERTY
 			|| message->what == B_EXECUTE_PROPERTY) {
 			CinemaWindow* window = _Window();

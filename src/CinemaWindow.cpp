@@ -1809,6 +1809,20 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgAddTorrent:
 			_AddTorrent(message->GetString("source", ""));
 			break;
+		case kMsgLanguagesChanged:
+		{
+			// the helper writes in them from now on; what is shown is asked
+			// for again
+			fHelper->SetLanguages();
+			fHomeLoaded = false;
+			if (fCard == 2)
+				_LoadHome();
+			int32 index = fCategoryBar->Selected() - fCategoryBar->CategoryTab(0);
+			if (fCard == 0 && fChannelId.IsEmpty() && index >= 0
+				&& index < (int32)fCategories.size())
+				_ShowCategory(index);
+			break;
+		}
 		case kMsgCategoryOrder:
 			_SetCategoryOrder(message->GetInt32("index", -1),
 				message->GetString("order", ""));

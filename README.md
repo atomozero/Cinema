@@ -220,6 +220,17 @@ Live TV links the FFmpeg libraries: `ffmpeg6` on x86_64, `ffmpeg` on ARM. The
 `ffmpeg` and `ffprobe` commands are used for YouTube above 360p and for the
 length and the picture of your own videos, and `aria2c` for torrents.
 
+## Languages
+
+Cinema follows the languages chosen in the Locale preferences of Haiku, in
+their order, and changes with them while it runs. Its own words are in English,
+Italian, German, French, Spanish, Portuguese, Ukrainian, Korean, Japanese and
+Chinese. The titles and descriptions of YouTube come in the first of these the
+system prefers (not translated into English, as they otherwise are), with the
+day each video came out read in that language too; English first keeps them in
+English. TMDB writes plots in the first language preferred, and the folders of
+the downloads are named in it.
+
 ## Testing
 
 Variables of the environment that change Cinema for a test, none needed in
