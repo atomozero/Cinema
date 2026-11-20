@@ -32,6 +32,8 @@
 #   ":recommended") read with the cookies of WebPositive; "youtube check"
 #   tries them
 #   {"type": "check"}: whether TMDB takes the key
+#   {"type": "rest"}: Cinema uses nothing of the helper; it may start
+#   again to give back the memory of yt-dlp (only short of memory)
 #   {"type": "languages", "languages": "fr,en"}: the languages the system
 #   prefers now (also the second argument of the helper)
 #
@@ -2090,7 +2092,8 @@ class Relay:
 		self.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0),
 			Handler)
 		self.server.daemon_threads = True
-		threading.Thread(target=self.server.serve_forever, daemon=True).start()
+		threading.Thread(target=self.server.serve_forever, daemon=True,
+			name="keep: relay").start()
 
 	def inputs(self, path):
 		token = urllib.parse.urlparse(path).path.strip("/").split("/")[0]
@@ -4144,6 +4147,10 @@ def work(request):
 	if request.get("type") == "check":
 		threading.Thread(target=job_check, daemon=True).start()
 		return
+	if request.get("type") == "rest":
+		# Cinema uses nothing of it: the memory of yt-dlp may go
+		REST[0] = True
+		return
 	if request.get("type") == "languages":
 		# other languages preferred: titles, dates, plots in them from now on
 		global LANGUAGE
@@ -4297,34 +4304,127 @@ def ignore_errors(function):
 		pass
 
 
+# Cinema asked it to rest (see serve())
+REST = [False]
+# where the helper started again keeps what it was told
+REBORN = os.environ.pop("CINEMA_HELPER_REBORN", "")
+
+
+def can_rest():
+	"""Whether starting again gives memory back and loses nothing: yt-dlp
+	loaded on a machine short of memory, and nothing of the helper running
+	(no thread but those always there, no download, torrent, upload, nor a
+	video being got ready)."""
+	if not SHORT_OF_MEMORY or yt_dlp is None or yt_dlp._module is None:
+		return False
+	with CHILDREN_LOCK:
+		if CHILDREN:
+			return False
+	if TORRENTS or UPLOADS or PLAYING[0] > 0:
+		return False
+	for thread in threading.enumerate():
+		if thread is not threading.main_thread() \
+				and not thread.name.startswith("keep: "):
+			return False
+	return True
+
+
+def rest():
+	"""Starts again as it was, in the same process with the same pipes to
+	Cinema, which sees nothing of it: what it was told is kept in a file."""
+	state = {"height": HEIGHT[0], "limit": LIMIT[0], "languages": LANGUAGES,
+		"account": ACCOUNT["enabled"]}
+	dlna = PROVIDERS.get("dlna")
+	if dlna is not None:
+		with dlna.lock:
+			state["dlna"] = {"servers": dlna.servers, "urls": dlna.urls,
+				"titles": dlna.titles}
+	path = os.path.join(cache or "/tmp", "helper-state.json")
+	if not write_json(path, state):
+		return
+	sys.stdout.flush()
+	os.environ["CINEMA_HELPER_REBORN"] = path
+	try:
+		os.execv(sys.executable, [sys.executable] + sys.argv)
+	except OSError:
+		os.environ.pop("CINEMA_HELPER_REBORN", None)
+
+
+def reborn():
+	"""What the helper was told before it started again (rest())."""
+	global LANGUAGE
+	try:
+		with open(REBORN, encoding="utf-8") as file:
+			state = json.load(file)
+		os.remove(REBORN)
+	except (OSError, ValueError):
+		return False
+	HEIGHT[0] = as_int(state.get("height"), 0)
+	LIMIT[0] = as_int(state.get("limit"), 0)
+	languages = [str(code) for code in state.get("languages") or []]
+	if languages:
+		LANGUAGES[:] = languages
+		LANGUAGE = languages[0]
+	ACCOUNT["enabled"] = bool(state.get("account"))
+	kept = state.get("dlna")
+	if isinstance(kept, dict):
+		dlna = DlnaProvider()
+		dlna.servers = dict(kept.get("servers") or {})
+		dlna.urls = dict(kept.get("urls") or {})
+		dlna.titles = dict(kept.get("titles") or {})
+		PROVIDERS[dlna.id] = dlna
+	return True
+
+
 def serve():
 	# the names of files that are not UTF-8 go to Cinema as they are
 	sys.stdout.reconfigure(errors="surrogateescape")
-	threading.Thread(target=watch_parent, daemon=True).start()
-	answer({"type": "providers",
-		"providers": [provider.describe() for provider in PROVIDERS.values()]})
-	answer({"type": "ready"})
-	youtube = PROVIDERS.get("youtube")
-	if youtube is not None:
-		threading.Thread(target=lambda: ignore_errors(youtube.warm_up),
+	threading.Thread(target=watch_parent, daemon=True,
+		name="keep: parent").start()
+	if not (REBORN and reborn()):
+		answer({"type": "providers", "providers":
+			[provider.describe() for provider in PROVIDERS.values()]})
+		answer({"type": "ready"})
+		youtube = PROVIDERS.get("youtube")
+		if youtube is not None:
+			threading.Thread(target=lambda: ignore_errors(youtube.warm_up),
+				daemon=True).start()
+		threading.Thread(target=lambda: ignore_errors(prune_cache),
 			daemon=True).start()
-	threading.Thread(target=lambda: ignore_errors(prune_cache),
-		daemon=True).start()
-	threading.Thread(target=lambda: ignore_errors(look_for_servers),
-		daemon=True).start()
-	for raw in sys.stdin.buffer:
-		line = raw.decode("utf-8", "surrogateescape").strip()
-		if not line:
-			continue
+		threading.Thread(target=lambda: ignore_errors(look_for_servers),
+			daemon=True).start()
+	# read straight from the pipe, not through a buffer of Python: what
+	# Cinema sent and was not read yet stays in the pipe when the helper
+	# starts again
+	pending = b""
+	while True:
 		try:
-			request = json.loads(line)
-		except ValueError:
+			chunk = os.read(0, 65536)
+		except InterruptedError:
 			continue
-		if isinstance(request, dict):
+		except OSError:
+			break
+		if not chunk:
+			break
+		pending += chunk
+		while b"\n" in pending:
+			raw, pending = pending.split(b"\n", 1)
+			line = raw.decode("utf-8", "surrogateescape").strip()
+			if not line:
+				continue
 			try:
-				work(request)
-			except Exception:
-				pass
+				request = json.loads(line)
+			except ValueError:
+				continue
+			if isinstance(request, dict):
+				try:
+					work(request)
+				except Exception:
+					pass
+		if REST[0]:
+			REST[0] = False
+			if not pending and can_rest():
+				rest()
 	# Cinema is gone: so are its downloads
 	stop_children()
 

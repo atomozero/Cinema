@@ -237,6 +237,7 @@ private:
 			// Esc while the video got ready: it goes on behind, muted, and
 			// paused once open, until its notification is clicked
 			bool				fPlayerHidden = false;
+			BMessageRunner*		fHelperRester = NULL;
 			// downloads being copied to the network folder, by their path
 			std::map<BString, BMessage> fUploads;
 			// the downloads in the order they were asked: the next one to

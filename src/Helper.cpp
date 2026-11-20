@@ -443,13 +443,36 @@ Helper::Cancel(const char* id)
 
 
 void
-Helper::_Send(const Json& request)
+Helper::_Send(const Json& request, bool asked)
 {
 	std::string line = request.ToString();
 	line += '\n';
 	BAutolock locker(fLock);
+	if (asked)
+		fLastAsked = system_time();
 	if (fInput >= 0)
 		write(fInput, line.c_str(), line.size());
+}
+
+
+/*!	Lets the helper give back the memory of yt-dlp (40 MB on the AC100)
+	by starting again, as it was: Cinema asks it when nothing of it is used
+	(no player, nothing downloaded), and it does it only on a machine
+	short of memory, with yt-dlp loaded and nothing of its own running.
+*/
+void
+Helper::Rest()
+{
+	Json request = Json::MakeObject();
+	request.Set("type", "rest");
+	_Send(request, false);
+}
+
+
+bigtime_t
+Helper::Quiet() const
+{
+	return system_time() - fLastAsked;
 }
 
 

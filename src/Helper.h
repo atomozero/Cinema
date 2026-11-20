@@ -8,6 +8,7 @@
 
 #include <Locker.h>
 #include <Messenger.h>
+#include <OS.h>
 #include <String.h>
 
 #include <atomic>
@@ -85,6 +86,9 @@ public:
 									// WebPositive; kept for a new helper
 			void				CheckYouTube();
 									// answered with kMsgYouTubeChecked
+			void				Rest();
+			bigtime_t			Quiet() const;
+									// since Cinema last asked something
 			void				SetLanguages();
 									// the languages the system prefers
 									// now, changed in its preferences
@@ -97,7 +101,8 @@ private:
 	static	status_t			_ReaderEntry(void* data);
 			void				_Read();
 			void				_Handle(const BString& line);
-			void				_Send(const Json& request);
+			void				_Send(const Json& request,
+									bool asked = true);
 			BString				_Provider(const char* provider);
 			void				_Stop();
 
@@ -113,6 +118,7 @@ private:
 			BString				fScript;
 			BString				fCache;
 			volatile bool		fReady;		// it said "ready"
+			bigtime_t			fLastAsked = system_time();
 			std::atomic<bool>	fStopping;
 };
 

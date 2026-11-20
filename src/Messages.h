@@ -80,6 +80,7 @@ enum {
 	kMsgAddPodcast		= 'padd',	// "address": the feed of a podcast
 	kMsgCategoryOrder	= 'cord',	// "index", "order": of a tab's search
 	kMsgLanguagesChanged = 'lang',	// the system prefers other languages
+	kMsgHelperRest		= 'rest',	// a minute gone: may the helper rest?
 	kMsgToggleOverlay	= 'plov',	// the O key: the overlay off or on
 	kMsgChangeQuality	= 'plqu',	// + and -: "up", a size more or less
 	kMsgInstallHelper	= 'hins',	// pkgman for what the helper needs:

@@ -173,6 +173,8 @@ CinemaWindow::CinemaWindow()
 	fPlayerShown = false;
 	fPlayerReturn = 2;
 	fPlayerSaver = NULL;
+	BMessage rest(kMsgHelperRest);
+	fHelperRester = new BMessageRunner(BMessenger(this), &rest, 60000000);
 	pages->AddChild(fPlayerView);
 	fCards->SetVisibleItem(2);
 	fCard = 2;
@@ -251,6 +253,7 @@ CinemaWindow::~CinemaWindow()
 	delete fPrefetchRunner;
 	delete fOverlayAsker;
 	delete fPlayerSaver;
+	delete fHelperRester;
 	delete fDirectRunner;
 	fDirectRunner = NULL;
 	if (fDirectUi != NULL) {
@@ -1810,6 +1813,22 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgAddTorrent:
 			_AddTorrent(message->GetString("source", ""));
 			break;
+		case kMsgHelperRest:
+		{
+			// nothing of the helper used for five minutes: no video open or
+			// hidden (the relay serves it), none got ready, nothing sent
+			// or downloaded
+			bool busy = fPlayerShown || fPlayerHidden || !fFinding.empty()
+				|| !fUploads.empty();
+			for (const auto& download : fDownloading) {
+				BString state = download.second.GetString("state", "");
+				if (state != kDownloadQueued && state != kDownloadPaused)
+					busy = true;
+			}
+			if (!busy && fHelper->Quiet() > 5 * 60 * 1000000LL)
+				fHelper->Rest();
+			break;
+		}
 		case kMsgLanguagesChanged:
 		{
 			// the helper writes in them from now on; what is shown is asked
