@@ -1376,6 +1376,14 @@ Player::_LiveLoop()
 		return true;
 	};
 
+	// seconds of sound in the ring, for the sound player
+	auto soundQueuedSeconds = [&]() -> double {
+		if (audio < 0 || fFrameSize == 0 || fSound.frame_rate <= 0)
+			return 1e9;
+		BAutolock ring(fRingLock);
+		return fRingFill / (double)fFrameSize / fSound.frame_rate;
+	};
+
 	// decodes the pictures near the clock, or any once the queue is long
 	auto pumpVideo = [&](bool all) -> bool {
 		while (!packets.empty() && frames.size() < maxDecodedFrames
@@ -1649,7 +1657,22 @@ Player::_LiveLoop()
 		} else
 			av_packet_unref(packet);
 
-		if (video >= 0 && (!pumpVideo(false) || !showFrames(false)))
+		// less than a second of sound, and sound read waiting: the pictures
+		// wait in their queue (as long as it is not full) and the loop reads
+		// on to the sound. A processor behind decoded the pictures one after
+		// the other while the sound read between them (an MP4 has a second
+		// of each in turn) came that slowly, and ran out; now the sound goes
+		// on, the clock with it, and the pictures late for it are dropped
+		bool soundWaiting;
+		{
+			std::lock_guard<std::mutex> locker(readLock);
+			soundWaiting = soundQueued > 0;
+		}
+		bool soundFirst = audio >= 0 && video >= 0 && !fAudioEnded
+			&& soundWaiting && queuedSpan() < maxQueuedVideo
+			&& soundQueuedSeconds() < 1.0;
+		if (video >= 0 && ((!soundFirst && !pumpVideo(false))
+				|| !showFrames(false)))
 			failed = true;
 
 		if (debug && system_time() > nextReport) {
