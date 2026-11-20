@@ -1584,7 +1584,7 @@ CinemaWindow::_DownloadsJson()
 		video.Set("size", (double)size);
 		auto upload = fUploads.find(item.path);
 		video.Set("uploading", upload != fUploads.end()
-			? upload->second.GetInt32("percent", 0) : -1);
+			? (int)upload->second.GetInt32("percent", 0) : -1);
 		list.Add(video);
 	}
 	return BString(list.ToString().c_str());
