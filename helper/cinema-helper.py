@@ -34,7 +34,8 @@
 #   {"type": "check"}: whether TMDB takes the key
 #
 # "find" and "download" carry "height": the highest picture wanted, 0 for
-# what suits the machine; it stays for the next ones.
+# what suits the machine, and "limit", what the screen and the processor
+# allow; they stay for the next ones.
 #
 # The answers:
 #
@@ -59,7 +60,8 @@
 #   {"type": "uploading", "id": "...", "percent": 42}
 #   {"type": "uploaded", "id": "...", "ok": true, "error": ""}
 #   {"type": "upload checked", "ok": true, "error": ""}
-#   {"type": "organized", "id", "from", "path", "picture"}
+#   {"type": "organized", "id", "from", "path", "picture", "section"}
+#   (section: "movies", "series", "videos" or "podcasts")
 #   {"type": "youtube checked", "ok": true, "error": ""}
 #   {"type": "checked", "ok": true}
 #
@@ -489,7 +491,20 @@ def cached_details(name, fetch):
 USER_AGENT = "Cinema (Haiku)"
 # machines that play 320x240 or 360p at once, and need a faster processor
 # for more, such as the Toshiba AC100
-SLOW_MACHINE = platform.machine().lower().startswith("arm")
+MACHINE = platform.machine().lower()
+SLOW_MACHINE = MACHINE.startswith("arm") and "64" not in MACHINE
+
+
+def total_memory():
+	try:
+		return os.sysconf("SC_PHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+	except (ValueError, OSError, AttributeError):
+		return 0
+
+
+# a machine whose memory a few runs of the JavaScript of YouTube can fill:
+# the AC100 (512 MB), an old netbook with 32-bit Haiku
+SHORT_OF_MEMORY = SLOW_MACHINE or 0 < total_memory() < 1536 * 1024 * 1024
 # the height of the videos Cinema asks for, which a request may carry: 0
 # lets the machine choose
 HEIGHT = [0]
@@ -511,8 +526,17 @@ def free_memory():
 		return None
 
 
+# the highest picture the screen and the processor allow, which Cinema
+# sends: "Automatic" (HEIGHT 0) no higher than that either
+LIMIT = [0]
+
+
+def limited(height):
+	return min(height, LIMIT[0]) if LIMIT[0] > 0 else height
+
+
 def wanted_height():
-	return HEIGHT[0] or (360 if SLOW_MACHINE else 720)
+	return limited(HEIGHT[0] or (360 if SLOW_MACHINE else 720))
 
 
 def download_height():
@@ -520,7 +544,7 @@ def download_height():
 	machine, which plays a 480p file smoothly with FFmpeg and the overlay
 	(the AC100) while finding the two streams of YouTube to play them at
 	once takes it a minute and a half."""
-	return HEIGHT[0] or (480 if SLOW_MACHINE else 720)
+	return limited(HEIGHT[0] or (480 if SLOW_MACHINE else 720))
 
 
 def http_json(url, query=None):
@@ -575,38 +599,61 @@ CANCELLED = set()
 RUNNING = {}
 
 
+def short_id(media_id):
+	"""A few letters that name a video in the name of its file: an id that
+	is an address or a path cannot be one."""
+	return hashlib.sha1(media_id.encode("utf-8", "surrogateescape")) \
+		.hexdigest()[:8]
+
+
 def http_download(url, path, size=0, progress=None):
-	"""Downloads url to path, through a .part file that goes away if it
-	fails. size is used when the server does not tell the length."""
-	temporary = path + ".part.%d" % threading.get_ident()
-	request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+	"""Downloads url to path, through path.part. Paused (or a network that
+	failed), the .part stays, and the next time goes on from where it was
+	when the server can give the rest; cancelled, it goes. size is used
+	when the server does not tell the length; a file that comes shorter
+	than told is not taken.
+
+	Every download of a file by HTTP goes through here: one place for the
+	progress, the pause, the cancel and the checks."""
+	temporary = path + ".part"
+	have = os.path.getsize(temporary) if os.path.exists(temporary) else 0
+	headers = {"User-Agent": USER_AGENT}
+	if have:
+		headers["Range"] = "bytes=%d-" % have
+	request = urllib.request.Request(url, headers=headers)
 	try:
-		with urllib.request.urlopen(request, timeout=60) as response, \
-				open(temporary, "wb") as output_file:
-			total = as_int(response.headers.get("Content-Length"), size)
-			done = 0
-			start = time.time()
-			while True:
-				block = response.read(256 * 1024)
-				if not block:
-					break
-				output_file.write(block)
-				done += len(block)
-				if progress is not None:
-					elapsed = max(time.time() - start, 0.001)
-					speed = done / elapsed
-					progress(int(100 * done / total) if total else 0,
-						done=size_text(done),
-						total=size_text(total) if total else "",
-						speed=size_text(speed),
-						eta=duration_text((total - done) / speed)
-							if total and speed > 0 else "")
-	except Exception:
+		with urllib.request.urlopen(request, timeout=60) as response:
+			# the rest, or (the server not giving parts) all again
+			if have and response.status != 206:
+				have = 0
+			total = as_int(response.headers.get("Content-Length"), 0)
+			total = total + have if total else size
+			with open(temporary, "ab" if have else "wb") as output_file:
+				done = have
+				start = time.time()
+				while True:
+					block = response.read(256 * 1024)
+					if not block:
+						break
+					output_file.write(block)
+					done += len(block)
+					if progress is not None:
+						elapsed = max(time.time() - start, 0.001)
+						speed = (done - have) / elapsed
+						progress(int(100 * done / total) if total else 0,
+							done=size_text(done),
+							total=size_text(total) if total else "",
+							speed=size_text(speed),
+							eta=duration_text((total - done) / speed)
+								if total and speed > 0 else "")
+	except Cancelled:
 		try:
 			os.remove(temporary)
 		except OSError:
 			pass
 		raise
+	if total and os.path.getsize(temporary) < total:
+		raise IOError("the file came shorter than told")
 	os.replace(temporary, path)
 	return path
 
@@ -849,7 +896,7 @@ class YouTubeProvider(Provider):
 		if formatted:
 			options["format"] = self.FORMAT
 		if not client:
-			options["js_runtimes"] = {"quickjs": {}}
+			options["js_runtimes"] = YouTubeProvider.JS_RUNTIMES
 		return self.borrowed(self, ("video", client, formatted), options)
 
 	def warm_up(self):
@@ -1131,7 +1178,7 @@ class YouTubeProvider(Provider):
 		url = "https://www.youtube.com/watch?v=" + media_id
 		if wanted_height() > 360:
 			found = None
-			if not SLOW_MACHINE:
+			if not SHORT_OF_MEMORY:
 				found = self.find_separate(url, wanted_height())
 			else:
 				with JS_LOCK:
@@ -1258,9 +1305,26 @@ class YouTubeProvider(Provider):
 			outtmpl=os.path.join(folder,
 				"%(title).150B [%(id)s].%(ext)s"),
 			extractor_args={"youtube": {"player_client": ["android"]}})
-		free = free_memory() if SLOW_MACHINE else None
-		if download_height() > 360 and shutil.which("ffmpeg") \
-				and (free is None or free >= JS_MEMORY):
+		def fetch(ydl, javascript):
+			"""The file of the video, its address found first: with the
+			JavaScript of the web client, one at a time where memory is
+			short and only with enough of it free (a few of them at once
+			stopped the AC100), the download itself after, without the
+			lock."""
+			if javascript and SHORT_OF_MEMORY:
+				with JS_LOCK:
+					free = free_memory()
+					if free is not None and free < JS_MEMORY:
+						return None
+					info = ydl.extract_info(url, download=False)
+				info = ydl.process_ie_result(info, download=True)
+			else:
+				info = ydl.extract_info(url, download=True)
+			done = info.get("requested_downloads") or [{}]
+			path = done[0].get("filepath") or ydl.prepare_filename(info)
+			return path if os.path.exists(path) else None
+
+		if download_height() > 360 and shutil.which("ffmpeg"):
 			# above 360p, the picture and the sound that ffmpeg puts
 			# together; the single file if they cannot be had
 			better = dict(options, format=self.separate(download_height())
@@ -1269,11 +1333,8 @@ class YouTubeProvider(Provider):
 			del better["extractor_args"]
 			try:
 				with yt_dlp.YoutubeDL(better) as ydl:
-					info = ydl.extract_info(url, download=True)
-					done = info.get("requested_downloads") or [{}]
-					path = done[0].get("filepath") \
-						or ydl.prepare_filename(info)
-				if os.path.exists(path):
+					path = fetch(ydl, True)
+				if path:
 					return path
 			except Exception:
 				if media_id in CANCELLED or media_id in PAUSED:
@@ -1281,18 +1342,15 @@ class YouTubeProvider(Provider):
 		for attempt in range(2):
 			try:
 				with yt_dlp.YoutubeDL(options) as ydl:
-					info = ydl.extract_info(url, download=True)
-					done = info.get("requested_downloads") or [{}]
-					path = done[0].get("filepath") \
-						or ydl.prepare_filename(info)
-				if os.path.exists(path):
+					path = fetch(ydl, attempt > 0)
+				if path:
 					return path
 			except Exception:
 				if media_id in CANCELLED or media_id in PAUSED:
 					raise
 			# the web client, as find() does
 			options["extractor_args"] = {"youtube": {}}
-			options["js_runtimes"] = {"quickjs": {}}
+			options["js_runtimes"] = self.JS_RUNTIMES
 		return None
 
 
@@ -2596,12 +2654,11 @@ class DlnaProvider(Provider):
 
 	def discover(self, wait=3.0):
 		"""The servers that answer in wait seconds, added to those known."""
-		import socket as sockets
 		locations = set()
 		try:
-			sock = sockets.socket(sockets.AF_INET, sockets.SOCK_DGRAM,
-				sockets.IPPROTO_UDP)
-			sock.setsockopt(sockets.IPPROTO_IP, sockets.IP_MULTICAST_TTL, 2)
+			sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,
+				socket.IPPROTO_UDP)
+			sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 			sock.settimeout(0.5)
 			message = ("M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\n"
 				"MAN: \"ssdp:discover\"\r\nMX: 2\r\nST: %s\r\n\r\n"
@@ -2612,7 +2669,7 @@ class DlnaProvider(Provider):
 			while time.time() < end:
 				try:
 					data, _ = sock.recvfrom(8192)
-				except sockets.timeout:
+				except socket.timeout:
 					continue
 				found = re.search(rb"(?im)^LOCATION:\s*(\S+)", data)
 				if found:
@@ -2795,35 +2852,10 @@ class DlnaProvider(Provider):
 		extension = os.path.splitext(urllib.parse.urlparse(url).path)[1]
 		if not re.fullmatch(r"\.[A-Za-z0-9]{1,5}", extension or ""):
 			extension = ".mp4"
-		name = re.sub(r'[/\\:*?"<>|]', "_", title)[:150].strip() or "video"
 		os.makedirs(folder, exist_ok=True)
-		path = os.path.join(folder, name + extension)
-		temporary = path + ".part"
-		request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-		with urllib.request.urlopen(request, timeout=30) as response, \
-				open(temporary, "wb") as file:
-			total = as_int(response.headers.get("Content-Length"), 0)
-			done = 0
-			began = time.time()
-			while True:
-				data = response.read(1024 * 1024)
-				if not data:
-					break
-				file.write(data)
-				done += len(data)
-				if progress is not None:
-					speed = done / max(0.001, time.time() - began)
-					left = (total - done) / speed if total and speed else 0
-					progress(int(done * 100 / total) if total else 0,
-						done=size_text(done), total=size_text(total)
-							if total else "",
-						speed=size_text(speed),
-						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
-		if total and os.path.getsize(temporary) != total:
-			os.remove(temporary)
-			return None
-		os.replace(temporary, path)
-		return path
+		path = os.path.join(folder, "%s [%s]%s" % (file_name(title),
+			short_id(media_id), extension))
+		return http_download(url, path, progress=progress)
 
 
 class PodcastProvider(Provider):
@@ -2945,41 +2977,15 @@ class PodcastProvider(Provider):
 		"""The file of an episode, as the server gives it."""
 		with self.lock:
 			title = self.titles.get(media_id) or ""
-		extension = os.path.splitext(
-			urllib.parse.urlparse(media_id).path)[1]
+		address = urllib.parse.urlparse(media_id).path
+		extension = os.path.splitext(address)[1]
 		if not re.fullmatch(r"\.[A-Za-z0-9]{1,5}", extension or ""):
 			extension = ".mp3"
-		name = file_name(title or os.path.basename(
-			urllib.parse.urlparse(media_id).path) or "podcast")
+		name = file_name(title or os.path.basename(address) or "podcast")
 		os.makedirs(folder, exist_ok=True)
-		path = os.path.join(folder, name + extension)
-		temporary = path + ".part"
-		request = urllib.request.Request(media_id,
-			headers={"User-Agent": USER_AGENT})
-		with urllib.request.urlopen(request, timeout=30) as response, \
-				open(temporary, "wb") as file:
-			total = as_int(response.headers.get("Content-Length"), 0)
-			done = 0
-			began = time.time()
-			while True:
-				data = response.read(1024 * 1024)
-				if not data:
-					break
-				file.write(data)
-				done += len(data)
-				if progress is not None:
-					speed = done / max(0.001, time.time() - began)
-					left = (total - done) / speed if total and speed else 0
-					progress(int(done * 100 / total) if total else 0,
-						done=size_text(done), total=size_text(total)
-							if total else "",
-						speed=size_text(speed),
-						eta="%dm%02ds" % (left // 60, left % 60) if left else "")
-		if total and os.path.getsize(temporary) != total:
-			os.remove(temporary)
-			return None
-		os.replace(temporary, path)
-		return path
+		path = os.path.join(folder, "%s [%s]%s" % (name, short_id(media_id),
+			extension))
+		return http_download(media_id, path, progress=progress)
 
 
 def look_for_servers():
@@ -3557,10 +3563,13 @@ def discard(request):
 	if provider is not None and hasattr(provider, "discard") and folder:
 		ignore_errors(lambda: provider.discard(media_id, folder))
 	# what yt-dlp and the others leave: "<name> [<id>].<ext>.part"
-	if folder and media_id and "/" not in media_id:
+	if folder and media_id:
+		marks = ["[%s]" % short_id(media_id)]
+		if "/" not in media_id:
+			marks.append("[%s]" % media_id)
 		try:
 			for name in os.listdir(folder):
-				if name.endswith(".part") and ("[%s]" % media_id) in name:
+				if ".part" in name and any(mark in name for mark in marks):
 					os.remove(os.path.join(folder, name))
 		except OSError:
 			pass
@@ -3723,12 +3732,14 @@ def organize(request):
 		r"(19|20)\d{6}[_-]?\d{6}", stem, re.IGNORECASE) is not None
 	if provider == "podcast":
 		# by the podcast, its picture kept already
+		section = "podcasts"
 		folder = os.path.join(podcasts, file_name(clean(channel) or "Podcast"))
 		target = os.path.join(folder, file_name(clean(title) or stem)
 			+ extension)
 		need_picture = False
 	elif provider in ("youtube", "peertube") or camera or (kind == "video"
 			and provider not in ("torrent", "dlna", "local", "archive")):
+		section = "videos"
 		# a video of a channel, or a clip: by the channel; the videos of a
 		# channel have their picture already, a clip gets a frame of it
 		folder = os.path.join(videos, file_name(clean(channel) or provider
@@ -3746,6 +3757,7 @@ def organize(request):
 		parsed = library.parse(os.path.join(os.path.dirname(path),
 			name + extension))
 		if parsed["kind"] == "episode":
+			section = "series"
 			info = library.series_info(parsed["series"]) \
 				if library.key() else None
 			series = clean((info or {}).get("name") or parsed["series"]) \
@@ -3757,6 +3769,7 @@ def organize(request):
 				file_name(series), parsed["season"], parsed["episode"],
 				extension))
 		else:
+			section = "movies"
 			info = library.movie_info(parsed["title"], parsed.get("year")) \
 				if library.key() else None
 			found = clean((info or {}).get("title") or parsed["title"]) \
@@ -3811,22 +3824,22 @@ def organize(request):
 			# a frame of it
 			found = library.local.item(target, True) or {}
 			picture = (found.get("thumbnail") or "").replace("file://", "")
-	return target, picture
+	return target, picture, section
 
 
 def job_organize(request):
 	media_id = request.get("id", "")
 	path = request.get("path", "")
 	try:
-		target, picture = organize(request)
+		target, picture, section = organize(request)
 	except Exception:
-		target, picture = path, ""
+		target, picture, section = path, "", ""
 	# a torrent played as it came goes on from where it is now
 	with TORRENTS_LOCK:
 		if media_id in TORRENTS and target != path:
 			TORRENTS[media_id]["final"] = target
 	answer({"type": "organized", "id": media_id, "from": path,
-		"path": target, "picture": picture})
+		"path": target, "picture": picture, "section": section})
 
 
 def job_youtube_check():
@@ -3865,6 +3878,8 @@ def job_check():
 def work(request):
 	if "height" in request:
 		HEIGHT[0] = max(0, as_int(request.get("height"), 0))
+	if "limit" in request:
+		LIMIT[0] = max(0, as_int(request.get("limit"), 0))
 	if request.get("type") == "cancel":
 		cancel(request.get("id", ""))
 		return

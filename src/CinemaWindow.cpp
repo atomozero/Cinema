@@ -53,6 +53,7 @@
 #include "Scripting.h"
 #include "History.h"
 #include "LiveAddress.h"
+#include "Feeds.h"
 #include "NewsChannels.h"
 #include "VideoLimits.h"
 #include "HomeView.h"
@@ -636,27 +637,6 @@ CinemaWindow::_ShowHiddenPlayer()
 }
 
 
-/*!	Whether an address is likely the feed of a podcast. */
-static bool
-is_feed(const BString& text)
-{
-	if (!text.IStartsWith("http://") && !text.IStartsWith("https://")
-		&& !text.IStartsWith("feed:"))
-		return false;
-	if (text.FindFirst(' ') >= 0 || text.FindFirst('\n') >= 0)
-		return false;
-	BString lower(text);
-	lower.ToLower();
-	int32 query = lower.FindFirst('?');
-	if (query >= 0)
-		lower.Truncate(query);
-	return lower.StartsWith("feed:") || lower.EndsWith(".xml")
-		|| lower.EndsWith(".rss") || lower.EndsWith(".atom")
-		|| lower.FindFirst("/feed") >= 0 || lower.FindFirst("/rss") >= 0
-		|| lower.FindFirst("podcast") >= 0;
-}
-
-
 /*!	A tab with the episodes of a podcast, from its feed; named after the
 	podcast once its feed is read.
 */
@@ -805,9 +785,11 @@ CinemaWindow::_ChangeQuality(bool up)
 	// being found again already
 	if (fFinding.count(fPlayingId) > 0)
 		return;
+	// its size as YouTube names it: a 1280x536 film is 720p, from its
+	// width, or + would ask for 720 and get the same one back
 	PlayerStatistics stats;
 	int32 current = fPlayer->Statistics(stats) && stats.height > 0
-		? stats.height : 360;
+		? std::max(stats.height, stats.width * 9 / 16) : 360;
 	static const int32 kSizes[] = { 360, 480, 720, 1080 };
 	int32 wanted = 0;
 	if (up) {
@@ -1914,7 +1896,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 				break;
 			}
 			// the feed of a podcast: a tab of its episodes
-			if (is_feed(query)) {
+			if (IsFeedAddress(query)) {
 				_AddPodcast(query.String());
 				break;
 			}
@@ -3573,7 +3555,7 @@ CinemaWindow::_Trash(BMessage* message)
 			title = BPath(path.String()).Leaf();
 		BString text(B_TRANSLATE("Move \"%title%\" to the Trash?"));
 		text.ReplaceFirst("%title%", title);
-		BAlert* alert = new BAlert("Cinema", text.String(),
+		BAlert* alert = new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), text.String(),
 			B_TRANSLATE("Cancel"), B_TRANSLATE("Move to Trash"), NULL,
 			B_WIDTH_AS_USUAL, B_WARNING_ALERT);
 		alert->SetShortcut(0, B_ESCAPE);
@@ -3592,7 +3574,7 @@ CinemaWindow::_Trash(BMessage* message)
 		BString text(B_TRANSLATE("The video could not be moved to the Trash: "
 			"%error%"));
 		text.ReplaceFirst("%error%", strerror(status));
-		(new BAlert("Cinema", text.String(), B_TRANSLATE("OK")))->Go(NULL);
+		(new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), text.String(), B_TRANSLATE("OK")))->Go(NULL);
 		return;
 	}
 	_Trashed(id);
@@ -3639,14 +3621,10 @@ CinemaWindow::_Organized(BMessage* message)
 		if (fPlayerShown && fPlayingAddress == from)
 			fPlayingAddress = path;
 	}
-	// a film or an episode: the tabs of the library, once
-	BString movies(Downloads::Folder());
-	movies << "/" << B_TRANSLATE_COMMENT("Films",
-		"the folder of the films downloaded") << "/";
-	BString series(Downloads::Folder());
-	series << "/" << B_TRANSLATE_COMMENT("Series",
-		"the folder of the series downloaded") << "/";
-	if (path.StartsWith(movies) || path.StartsWith(series)) {
+	// a film or an episode: the tabs of the library, once (the helper
+	// says which, whatever its folders are named)
+	BString section = message->GetString("section", "");
+	if (section == "movies" || section == "series") {
 		size_t before = fCategories.size();
 		_AddLibraryTabs();
 		if (fCategories.size() != before) {
@@ -3692,7 +3670,7 @@ CinemaWindow::_Upload(BMessage* message)
 		return;
 	fSettings = Settings::Load();
 	if (fSettings.networkFolder.IsEmpty()) {
-		BAlert* alert = new BAlert("Cinema", B_TRANSLATE("Choose the network "
+		BAlert* alert = new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), B_TRANSLATE("Choose the network "
 			"folder first, in the settings: an address such as "
 			"ftp://192.168.178.1/USB/Video, with its user and password."),
 			B_TRANSLATE("Cancel"), B_TRANSLATE("Settings" B_UTF8_ELLIPSIS));
@@ -3782,10 +3760,10 @@ CinemaWindow::_AddTorrent(const char* source)
 		(void)question;
 		(void)install;
 		(void)notNow;
-		(new BAlert("Cinema", text.String(), B_TRANSLATE("OK")))->Go(NULL);
+		(new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), text.String(), B_TRANSLATE("OK")))->Go(NULL);
 #else
 		text << "\n\n" << question;
-		BAlert* alert = new BAlert("Cinema", text.String(), install, notNow);
+		BAlert* alert = new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), text.String(), install, notNow);
 		// only if asked: Enter and Esc leave things as they are
 		alert->SetShortcut(1, B_ESCAPE);
 		BMessage* chosen = new BMessage(kMsgInstallHelper);
@@ -3836,7 +3814,7 @@ CinemaWindow::_AddTorrent(const char* source)
 		BString text(B_TRANSLATE("\"%title%\" is downloading. Watch it now, "
 			"closing the video playing, or later from the downloads?"));
 		text.ReplaceFirst("%title%", title.String());
-		BAlert* alert = new BAlert("Cinema", text.String(),
+		BAlert* alert = new BAlert(B_TRANSLATE_SYSTEM_NAME("Cinema"), text.String(),
 			B_TRANSLATE("Watch now"), B_TRANSLATE("Later"));
 		alert->SetShortcut(1, B_ESCAPE);
 		BMessage* chosen = new BMessage(play);
@@ -4096,7 +4074,7 @@ CinemaWindow::_Dropped(BMessage* message)
 		_AddTorrent(text.String());
 		return;
 	}
-	if (is_feed(text)) {
+	if (IsFeedAddress(text)) {
 		_AddPodcast(text.String());
 		return;
 	}

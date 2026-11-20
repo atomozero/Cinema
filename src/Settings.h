@@ -38,8 +38,8 @@ struct Settings {
 								// the pages of the account of YouTube,
 								// with the cookies of WebPositive
 	bool		organizeDownloads = true;
-								// a download put in Films, Series or
-								// Videos once done
+								// a download put in Films, Series,
+								// Videos or Podcasts once done
 	BString		networkFolder;	// ftp://host/folder: downloads copied there
 	BString		networkUser;
 	bool		homeNetworkOffered = false;

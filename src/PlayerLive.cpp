@@ -785,7 +785,8 @@ Player::_LiveLoad()
 		_Struggling();
 	// CINEMA_FORCE_STRUGGLE=1: as if the processor could not keep up, 20 s
 	// in, to try what follows on a machine that can
-	static const bool force = getenv("CINEMA_FORCE_STRUGGLE") != NULL;
+	static const bool force = getenv("CINEMA_FORCE_STRUGGLE") != NULL
+		&& strcmp(getenv("CINEMA_FORCE_STRUGGLE"), "1") == 0;
 	if (force && _LiveClock() - fClockBase > 20000000)
 		_Struggling();
 	if (fLiveSkipLevel == 3 && now - fLiveLevelSince > fLiveKeyWait) {

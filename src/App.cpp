@@ -11,6 +11,7 @@
 #include <Path.h>
 #include <String.h>
 
+#include "Feeds.h"
 #include "LiveAddress.h"
 #include "CinemaWindow.h"
 #include "Messages.h"
@@ -57,12 +58,7 @@ public:
 				continue;
 			}
 			// the feed of a podcast: a tab of its episodes
-			BString lower(address);
-			lower.ToLower();
-			if (lower.StartsWith("feed:") || (lower.StartsWith("http")
-					&& (lower.EndsWith(".xml") || lower.EndsWith(".rss")
-						|| lower.FindFirst("/feed") >= 0
-						|| lower.FindFirst("/rss") >= 0))) {
+			if (IsFeedAddress(address)) {
 				BMessage podcast(kMsgAddPodcast);
 				podcast.AddString("address", address);
 				_Post(&podcast);

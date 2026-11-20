@@ -20,7 +20,7 @@ resource app_version {
 	variety = B_APPV_FINAL,
 	internal = 0,
 	short_info = "Cinema",
-	long_info = "Cinema: YouTube videos, found with yt-dlp and played by MediaPlayer. ©2026 Andrea Bernardi"
+	long_info = "Cinema: YouTube, podcasts, TV, torrents and the videos of the home network, played with FFmpeg. ©2026 Andrea Bernardi"
 };
 
 resource vector_icon {

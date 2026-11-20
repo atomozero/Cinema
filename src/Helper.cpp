@@ -255,6 +255,8 @@ Helper::Find(const char* id, const char* provider)
 	request.Set("id", id);
 	request.Set("kind", "video");
 	request.Set("height", (int)fHeight);
+	// what the screen and the processor allow, for "Automatic" too
+	request.Set("limit", (int)VideoHeightLimit());
 	_Send(request);
 }
 
@@ -295,6 +297,8 @@ Helper::Download(const char* id, const char* folder, const char* provider)
 	request.Set("id", id);
 	request.Set("folder", folder);
 	request.Set("height", (int)fHeight);
+	// what the screen and the processor allow, for "Automatic" too
+	request.Set("limit", (int)VideoHeightLimit());
 	_Send(request);
 }
 
@@ -654,7 +658,7 @@ Helper::_Handle(const BString& line)
 
 	if (type == "organized") {
 		BMessage organized(kMsgOrganized);
-		for (const char* field : { "id", "from", "path", "picture" })
+		for (const char* field : { "id", "from", "path", "picture", "section" })
 			organized.AddString(field, answer.GetString(field, "").c_str());
 		Deliver(fTarget, &organized, &fStopping);
 		return;

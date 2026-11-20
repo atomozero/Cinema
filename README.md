@@ -35,8 +35,8 @@ Archive), `Blender = @peertube channel:blender_open_movies@video.blender.org`
 or `Home videos = @local channel:/boot/home/Videos`.
 
 Videos play in Cinema, from where they were left; a check marks what was
-watched and a red bar what was started. Space pauses, the left and right arrows
-go back and on by 10 seconds, up and down (or the mouse wheel) change the
+watched and a red bar what was started. Space or Enter pauses, the left and
+right arrows go back and on by 10 seconds (a minute with Shift), up and down (or the mouse wheel) change the
 volume, shown upright at the right, **F** goes to full screen, **Esc** closes
 the video (while it is still getting ready, it sends it behind instead: you can
 browse meanwhile, and a notification says when it is ready, a click on it
@@ -52,10 +52,12 @@ the overlay while a video plays, and the settings can keep it always on or
 off. **I** shows, small at the top, what the player is doing: the size and
 codecs of the video, frames per second, how much it decodes and drops, the
 processor, and the sound ready ahead. **+** and **-** ask for a video of
-YouTube a size larger or smaller, from 360p to 1080p: it plays on until the
+YouTube a size larger or smaller, from 360p to 1080p as far as the screen
+and the processor allow (480p on 32-bit ARM): it plays on until the
 new one is found, then goes on from the same point. The video
-quality is in the settings: Automatic means 360p on 32-bit ARM and 720p
-elsewhere, and you can ask for anything from 360p to 1080p. Above 360p YouTube
+quality is in the settings: Automatic means 360p on 32-bit ARM (480p for a
+download) and 720p elsewhere, never above what the screen shows, and you can
+ask for anything from 360p to 1080p within that. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for
 the player, so those videos take longer to start (about a minute and a half on
 the AC100).
@@ -205,9 +207,10 @@ A relative `to` is in `~/Cinema`; a folder ends with `/`. Errors come back as
 
 ## What it needs
 
-Cinema needs `python3` and yt-dlp, either the Python module
-(`yt_dlp_python3.14`, matching your Python) or the single-file `yt-dlp` in the
-`PATH`, and `curl` for the pictures. yt-dlp is loaded once, by
+Cinema needs `python3` and yt-dlp, either the package `yt_dlp` (with the
+module for your Python) or the single-file `yt-dlp` in the `PATH`, and `curl`
+for the pictures. Above 360p, YouTube needs its JavaScript run too, by QuickJS
+(`qjs`) or Node.js: without either, the videos stay at 360p. yt-dlp is loaded once, by
 `cinema-helper.py`, a small helper that Cinema starts and talks to. If they
 are missing or broken, Cinema says so once and, on x86, offers to install
 them: only if you choose Install, and pkgman asks again in a Terminal before
@@ -216,6 +219,19 @@ it changes anything.
 Live TV links the FFmpeg libraries: `ffmpeg6` on x86_64, `ffmpeg` on ARM. The
 `ffmpeg` and `ffprobe` commands are used for YouTube above 360p and for the
 length and the picture of your own videos, and `aria2c` for torrents.
+
+## Testing
+
+Variables of the environment that change Cinema for a test, none needed in
+use: `CINEMA_PLAYER_DEBUG=1` and `CINEMA_LIVE_DEBUG=1` write what the player
+does to the standard error; `CINEMA_VIDEO_HEIGHT=720` asks for that size for
+this run; `CINEMA_MAX_HEIGHT` lowers the highest one; `CINEMA_FORCE_STRUGGLE=1`
+behaves as if the processor could not keep up, 20 s in; `CINEMA_ASK_OVERLAY=1`
+asks whether the video shows on any graphics card; `CINEMA_NO_OVERLAY`,
+`CINEMA_OVERLAY_FILTER`, `CINEMA_DIRECT`, `CINEMA_HWACCEL`, `CINEMA_MEDIA_KIT`
+and `CINEMA_EVEN_VOLUME` turn the overlay, its filtering, the direct screen,
+hardware decoding, the Media Kit and the even volume on or off; `CINEMA_SCALE`
+scales the interface.
 
 ## Building
 

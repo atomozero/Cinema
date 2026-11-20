@@ -22,7 +22,12 @@ make
 # is linked with: a newer one has other libraries.
 REQUIRES=""
 case $ARCH in
-	x86_64)	REQUIRES="yt_dlp_python3.14 ffmpeg6" ;;
+	# yt-dlp by its command: its module comes with it, for the Python of
+	# the day (a package named after one Python breaks with the next)
+	x86_64)	REQUIRES="cmd:yt_dlp ffmpeg6" ;;
+	# 32-bit Haiku: the gcc 13 side of the hybrid (build with setarch x86)
+	x86|x86_gcc2)
+		REQUIRES="haiku_x86 gcc_x86_syslibs cmd:yt_dlp ffmpeg6_x86" ;;
 	# the libraries themselves on ARM: the ffmpeg package built for it
 	# does not provide its own name
 	arm)	REQUIRES="lib:libavformat lib:libavcodec lib:libswscale \
