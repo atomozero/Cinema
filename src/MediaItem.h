@@ -41,7 +41,7 @@ struct MediaItem {
 	BBitmap*	picture;		// may be NULL
 	int32		progress;		// of its download, or -1
 	BString		status;			// of its download: done, speed, time left
-	BString		downloadState;	// "active", "queued", "paused", "pausing"
+	BString		downloadState;	// kDownloadActive... (DownloadState.h)
 	bool		watched;		// played to the end
 	int32		resume;			// how far it was played, in thousandths
 	bool		downloaded;

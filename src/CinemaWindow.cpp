@@ -62,6 +62,7 @@
 #include "MenuButton.h"
 #include "Positions.h"
 #include "SettingsWindow.h"
+#include "DownloadState.h"
 #include "Messages.h"
 #include "Style.h"
 #include "TvLists.h"
@@ -2378,8 +2379,8 @@ CinemaWindow::MessageReceived(BMessage* message)
 			if (download == fDownloading.end())
 				break;
 			BString state = download->second.GetString("state", "");
-			if (state == "active" || state == "pausing"
-				|| state == "pause later") {
+			if (state == kDownloadActive || state == kDownloadPausing
+				|| state == kDownloadPauseLater) {
 				fHelper->Cancel(id.String());
 				break;
 			}
@@ -2398,15 +2399,15 @@ CinemaWindow::MessageReceived(BMessage* message)
 			if (download == fDownloading.end())
 				break;
 			BString state = download->second.GetString("state", "");
-			if (state == "active" && fPlayerShown && fPlayingId == id) {
+			if (state == kDownloadActive && fPlayerShown && fPlayingId == id) {
 				// watched as it comes: it goes on while it is watched, and
 				// pauses once the player closes
-				download->second.SetString("state", "pause later");
-			} else if (state == "active") {
-				download->second.SetString("state", "pausing");
+				download->second.SetString("state", kDownloadPauseLater);
+			} else if (state == kDownloadActive) {
+				download->second.SetString("state", kDownloadPausing);
 				fHelper->Pause(id.String());
-			} else if (state == "queued")
-				download->second.SetString("state", "paused");
+			} else if (state == kDownloadQueued)
+				download->second.SetString("state", kDownloadPaused);
 			_SavePending();
 			_DownloadChanged(id);
 			if (_ShowingDownloads())
@@ -2419,7 +2420,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 			auto download = fDownloading.find(id);
 			if (download == fDownloading.end())
 				break;
-			download->second.SetString("state", "paused");
+			download->second.SetString("state", kDownloadPaused);
 			download->second.RemoveName("speed");
 			download->second.RemoveName("eta");
 			_SavePending();
@@ -2436,16 +2437,16 @@ CinemaWindow::MessageReceived(BMessage* message)
 			if (download == fDownloading.end())
 				break;
 			if (strcmp(download->second.GetString("state", ""),
-					"pause later") == 0) {
-				download->second.SetString("state", "active");
+					kDownloadPauseLater) == 0) {
+				download->second.SetString("state", kDownloadActive);
 				_SavePending();
 				_DownloadChanged(id);
 				break;
 			}
-			if (strcmp(download->second.GetString("state", ""), "paused")
+			if (strcmp(download->second.GetString("state", ""), kDownloadPaused)
 					!= 0)
 				break;
-			download->second.SetString("state", "queued");
+			download->second.SetString("state", kDownloadQueued);
 			_StartDownloads();
 			_SavePending();
 			_DownloadChanged(id);
@@ -2801,10 +2802,10 @@ CinemaWindow::MessageReceived(BMessage* message)
 			// lose them, the paused torrents too
 			for (auto& entry : fDownloading) {
 				BString state = entry.second.GetString("state", "");
-				if (state == "active")
-					entry.second.SetString("state", "queued");
-				else if (state == "pausing" || state == "pause later")
-					entry.second.SetString("state", "paused");
+				if (state == kDownloadActive)
+					entry.second.SetString("state", kDownloadQueued);
+				else if (state == kDownloadPausing || state == kDownloadPauseLater)
+					entry.second.SetString("state", kDownloadPaused);
 				_DownloadChanged(entry.first);
 			}
 			_SavePending();
@@ -3310,7 +3311,8 @@ CinemaWindow::_Download(BMessage* message)
 	// paused it stays so, when Cinema starts again; the others wait for
 	// their turn
 	BString state = download.GetString("state", "");
-	download.SetString("state", state == "paused" ? "paused" : "queued");
+	download.SetString("state", state == kDownloadPaused ? kDownloadPaused
+		: kDownloadQueued);
 	download.RemoveName("which");
 	fDownloading[id] = download;
 	fDownloadOrder.push_back(id);
@@ -3340,7 +3342,8 @@ CinemaWindow::_StartDownloads()
 	int32 going = 0;
 	for (const auto& entry : fDownloading) {
 		BString state = entry.second.GetString("state", "");
-		if (state == "active" || state == "pausing" || state == "pause later")
+		if (state == kDownloadActive || state == kDownloadPausing
+			|| state == kDownloadPauseLater)
 			going++;
 	}
 	BString folder = Downloads::Folder();
@@ -3349,9 +3352,9 @@ CinemaWindow::_StartDownloads()
 			break;
 		auto download = fDownloading.find(id);
 		if (download == fDownloading.end()
-			|| strcmp(download->second.GetString("state", ""), "queued") != 0)
+			|| strcmp(download->second.GetString("state", ""), kDownloadQueued) != 0)
 			continue;
-		download->second.SetString("state", "active");
+		download->second.SetString("state", kDownloadActive);
 		fHelper->Download(id.String(), folder.String(),
 			download->second.GetString("provider",
 				_ProviderOf(id).String()));
@@ -3372,10 +3375,10 @@ CinemaWindow::_RequeueDownloads()
 		BString state = entry.second.GetString("state", "");
 		// the torrent being watched goes on, paused later or not
 		bool watched = fPlayerShown && fPlayingId == entry.first;
-		if (state == "active" || (state == "pause later" && watched))
-			entry.second.SetString("state", "queued");
-		else if (state == "pausing" || state == "pause later")
-			entry.second.SetString("state", "paused");
+		if (state == kDownloadActive || (state == kDownloadPauseLater && watched))
+			entry.second.SetString("state", kDownloadQueued);
+		else if (state == kDownloadPausing || state == kDownloadPauseLater)
+			entry.second.SetString("state", kDownloadPaused);
 		_DownloadChanged(entry.first);
 	}
 	_StartDownloads();
@@ -3433,9 +3436,9 @@ CinemaWindow::_StartDownloadNow(const BString& id)
 	if (download == fDownloading.end())
 		return;
 	BString state = download->second.GetString("state", "");
-	if (state != "queued" && state != "paused")
+	if (state != kDownloadQueued && state != kDownloadPaused)
 		return;
-	download->second.SetString("state", "active");
+	download->second.SetString("state", kDownloadActive);
 	fHelper->Download(id.String(), Downloads::Folder().String(),
 		download->second.GetString("provider", _ProviderOf(id).String()));
 	_SavePending();
@@ -3481,8 +3484,9 @@ CinemaWindow::_SavePending()
 		BMessage download(entry->second);
 		download.what = kMsgDownload;
 		BString state = download.GetString("state", "");
-		download.SetString("state", state == "paused" || state == "pausing"
-			|| state == "pause later" ? "paused" : "queued");
+		download.SetString("state", state == kDownloadPaused
+			|| state == kDownloadPausing
+			|| state == kDownloadPauseLater ? kDownloadPaused : kDownloadQueued);
 		torrents.push_back(download);
 	}
 	Downloads::SavePending(torrents);
@@ -3861,9 +3865,9 @@ BString
 CinemaWindow::_DownloadStatus(const BMessage& download) const
 {
 	BString state = download.GetString("state", "");
-	if (state == "queued")
+	if (state == kDownloadQueued)
 		return B_TRANSLATE("Waiting for its turn");
-	if (state == "pause later")
+	if (state == kDownloadPauseLater)
 		return B_TRANSLATE("Pauses when you stop watching it");
 	BString status;
 	BString done = download.GetString("done", "");
@@ -3877,8 +3881,8 @@ CinemaWindow::_DownloadStatus(const BMessage& download) const
 	else
 		status.SetToFormat("%" B_PRId32 "%%", download.GetInt32("percent", 0));
 
-	if (state == "paused" || state == "pausing") {
-		BString paused(state == "paused" ? B_TRANSLATE("Paused")
+	if (state == kDownloadPaused || state == kDownloadPausing) {
+		BString paused(state == kDownloadPaused ? B_TRANSLATE("Paused")
 			: B_TRANSLATE("Pausing" B_UTF8_ELLIPSIS));
 		paused << " · " << status;
 		return paused;
@@ -4201,8 +4205,8 @@ CinemaWindow::_ClosePlayer(bool save)
 	// a download paused while it was watched: paused now
 	auto watched = fDownloading.find(fPlayingId);
 	if (watched != fDownloading.end() && strcmp(watched->second.GetString(
-			"state", ""), "pause later") == 0) {
-		watched->second.SetString("state", "pausing");
+			"state", ""), kDownloadPauseLater) == 0) {
+		watched->second.SetString("state", kDownloadPausing);
 		fHelper->Pause(fPlayingId.String());
 		_DownloadChanged(fPlayingId);
 	}

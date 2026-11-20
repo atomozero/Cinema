@@ -751,12 +751,23 @@ def download_height():
 	return limited(HEIGHT[0] or (480 if SLOW_MACHINE else 720))
 
 
+def http_get(url, headers=None, data=None, timeout=30,
+		limit=20 * 1024 * 1024, final=False):
+	"""What an address answers, at most limit bytes (a server does not fill
+	the memory), with the User-Agent of Cinema unless headers name another;
+	with final, also the address it was in the end. data makes it a POST.
+	Raises as urlopen does."""
+	request = urllib.request.Request(url, data=data,
+		headers=dict({"User-Agent": USER_AGENT}, **(headers or {})))
+	with urllib.request.urlopen(request, timeout=timeout) as response:
+		body = response.read(limit)
+		return (body, response.geturl()) if final else body
+
+
 def http_json(url, query=None):
 	if query:
 		url += "?" + urllib.parse.urlencode(query)
-	request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-	with urllib.request.urlopen(request, timeout=30) as response:
-		return json.load(response)
+	return json.loads(http_get(url))
 
 
 def file_name(title):
@@ -1270,10 +1281,8 @@ class YouTubeProvider(Provider):
 		their length is not in it."""
 		import xml.etree.ElementTree as tree
 		import calendar
-		request = urllib.request.Request(self.RSS % channel,
-			headers={"User-Agent": USER_AGENT})
-		with urllib.request.urlopen(request, timeout=20) as response:
-			root = tree.fromstring(response.read(2 * 1024 * 1024))
+		root = tree.fromstring(http_get(self.RSS % channel, timeout=20,
+			limit=2 * 1024 * 1024))
 		names = self.ATOM
 		videos = []
 		for entry in root.findall("a:entry", names):
@@ -1304,6 +1313,61 @@ class YouTubeProvider(Provider):
 				"rating": 0.0, "poster": "", "thumbnail": "", "season": 0,
 				"episode": 0, "timestamp": stamp})
 		return videos
+
+	COMPLETING = set()
+	COMPLETING_LOCK = threading.Lock()
+
+	def completed(self, channel_id, feed, count):
+		"""The videos of the feed of a channel (the latest 15, without their
+		lengths) with what yt-dlp found of it the last time: the length of
+		each, and the older ones after them. yt-dlp looks again behind,
+		for the next time, when it never did or did over CACHE_TIME ago;
+		that also keeps what the channel is (keep_about)."""
+		path = None
+		known = []
+		if cache:
+			key = hashlib.sha1(("youtube complete %s %s" % (channel_id,
+				system_language())).encode()).hexdigest()
+			path = os.path.join(cache, "videos-%s.json" % key[:16])
+			try:
+				with open(path, encoding="utf-8") as file:
+					known = [json.loads(line) for line in file
+						if line.strip()]
+				old = time.time() - os.path.getmtime(path) > CACHE_TIME
+			except (OSError, ValueError):
+				old = True
+			with self.COMPLETING_LOCK:
+				start = old and path not in self.COMPLETING
+				if start:
+					self.COMPLETING.add(path)
+			if start:
+				def complete():
+					try:
+						found = self.videos_of("https://www.youtube.com/"
+							"channel/%s/videos" % channel_id,
+							max(count, 30), channel_id=channel_id)
+						if found:
+							store_videos(path, found)
+					except Exception:
+						pass
+					finally:
+						with self.COMPLETING_LOCK:
+							self.COMPLETING.discard(path)
+				threading.Thread(target=complete, daemon=True).start()
+		lengths = {video.get("id"): video.get("duration") or 0
+			for video in known}
+		for video in feed:
+			if not video.get("duration"):
+				video["duration"] = lengths.get(video["id"], 0)
+		# the older ones: those yt-dlp lists after the last it shares with
+		# the feed (its dates are only "3 days ago"; its order is the
+		# channel's), or all of them when it shares none
+		have = {video["id"] for video in feed}
+		last = max((i for i, video in enumerate(known)
+			if video.get("id") in have), default=-1)
+		feed.extend(video for video in known[last + 1:]
+			if video.get("id") not in have)
+		return feed
 
 	def news(self, channels, count):
 		"""The latest videos of news channels together, the newest first,
@@ -1354,11 +1418,7 @@ class YouTubeProvider(Provider):
 			except Exception:
 				videos = []
 			if videos:
-				if not kept_about(self.id, channel_id):
-					threading.Thread(target=lambda: ignore_errors(
-						lambda: self.videos_of("https://www.youtube.com/"
-							"channel/%s/videos" % channel_id, 1,
-							channel_id=channel_id)), daemon=True).start()
+				videos = self.completed(channel_id, videos, count)
 				return videos[:count] if count > 0 else videos
 		# the videos of a channel only name it once, in the list
 		return self.videos_of(
@@ -1489,12 +1549,9 @@ class YouTubeProvider(Provider):
 			extension = f.get("ext")
 			if not url or extension not in ("vtt", "json3"):
 				continue
-			headers = {"User-Agent": USER_AGENT}
-			headers.update(f.get("http_headers") or {})
 			try:
-				request = urllib.request.Request(url, headers=headers)
-				with urllib.request.urlopen(request, timeout=30) as response:
-					text = response.read().decode("utf-8", "replace")
+				text = http_get(url, f.get("http_headers")).decode("utf-8",
+					"replace")
 			except Exception:
 				continue
 			if extension == "json3":
@@ -2184,11 +2241,8 @@ class IptvProvider(Provider):
 		"""The text of a list, and where it was in the end: what it names
 		is from there."""
 		if source.startswith(("http://", "https://")):
-			request = urllib.request.Request(source,
-				headers=dict({"User-Agent": USER_AGENT}, **(headers or {})))
-			with urllib.request.urlopen(request, timeout=30) as response:
-				data = response.read(limit)
-				source = response.geturl()
+			data, source = http_get(source, headers, limit=limit,
+				final=True)
 		else:
 			with open(os.path.expanduser(source), "rb") as file:
 				data = file.read(limit)
@@ -2904,10 +2958,8 @@ class DlnaProvider(Provider):
 
 	def describe_server(self, location):
 		import xml.etree.ElementTree as tree
-		request = urllib.request.Request(location,
-			headers={"User-Agent": USER_AGENT})
-		with urllib.request.urlopen(request, timeout=5) as response:
-			root = tree.fromstring(response.read(1024 * 1024))
+		root = tree.fromstring(http_get(location, timeout=5,
+			limit=1024 * 1024))
 		def local(element):
 			return element.tag.rsplit("}", 1)[-1]
 		name = ""
@@ -2942,12 +2994,10 @@ class DlnaProvider(Provider):
 			'<RequestedCount>%d</RequestedCount><SortCriteria></SortCriteria>'
 			'</u:Browse></s:Body></s:Envelope>') % (self.DIRECTORY,
 			html.escape(object_id), flag, start, count)
-		request = urllib.request.Request(control, data=body.encode("utf-8"),
-			headers={"Content-Type": 'text/xml; charset="utf-8"',
-				"SOAPACTION": '"%s#Browse"' % self.DIRECTORY,
-				"User-Agent": USER_AGENT})
-		with urllib.request.urlopen(request, timeout=15) as response:
-			text = response.read(16 * 1024 * 1024).decode("utf-8", "replace")
+		text = http_get(control, {"Content-Type": 'text/xml; charset="utf-8"',
+			"SOAPACTION": '"%s#Browse"' % self.DIRECTORY},
+			data=body.encode("utf-8"), timeout=15,
+			limit=16 * 1024 * 1024).decode("utf-8", "replace")
 		result = re.search(r"<Result[^>]*>(.*?)</Result>", text, re.S)
 		total = re.search(r"<TotalMatches>(\d+)</TotalMatches>", text)
 		return (html.unescape(result.group(1)) if result else "",
@@ -3094,10 +3144,7 @@ class PodcastProvider(Provider):
 			kept = self.feeds.get(address)
 		if kept and time.time() - kept[0] < self.FRESH:
 			return kept[1]
-		request = urllib.request.Request(address,
-			headers={"User-Agent": USER_AGENT})
-		with urllib.request.urlopen(request, timeout=30) as response:
-			text = response.read(20 * 1024 * 1024)
+		text = http_get(address)
 		with self.lock:
 			self.feeds[address] = (time.time(), text)
 		return text
@@ -4019,10 +4066,8 @@ def organize(request):
 				% hashlib.sha1(poster.encode()).hexdigest()[:16])
 			if not os.path.exists(picture):
 				try:
-					request_ = urllib.request.Request(library.image(poster),
-						headers={"User-Agent": USER_AGENT})
-					with urllib.request.urlopen(request_, timeout=30) as response:
-						data = response.read(5 * 1024 * 1024)
+					data = http_get(library.image(poster),
+						limit=5 * 1024 * 1024)
 					with open(picture, "wb") as file:
 						file.write(data)
 				except Exception:

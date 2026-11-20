@@ -19,6 +19,7 @@
 #include <Window.h>
 
 #include "Format.h"
+#include "DownloadState.h"
 #include "Messages.h"
 #include "Style.h"
 
@@ -959,15 +960,15 @@ VideoGrid::_ShowMenu(int32 index, BPoint where)
 		menu->AddItem(item);
 		if (video.progress >= 0) {
 			// paused, it goes on; otherwise it can be paused
-			bool paused = video.downloadState == "paused"
-				|| video.downloadState == "pause later";
+			bool paused = video.downloadState == kDownloadPaused
+				|| video.downloadState == kDownloadPauseLater;
 			BMessage* pause = new BMessage(paused ? kMsgResumeDownload
 				: kMsgPauseDownload);
 			pause->AddString("id", video.id);
 			BMenuItem* item = new BMenuItem(paused
 				? B_TRANSLATE("Resume the download")
 				: B_TRANSLATE("Pause the download"), pause);
-			item->SetEnabled(video.downloadState != "pausing");
+			item->SetEnabled(video.downloadState != kDownloadPausing);
 			menu->AddItem(item);
 			BMessage* stop = new BMessage(kMsgCancelDownload);
 			stop->AddString("id", video.id);
