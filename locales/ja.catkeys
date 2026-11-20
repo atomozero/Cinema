@@ -1,12 +1,12 @@
-1	japanese	application/x-vnd.atomozero-Cinema	1222975932
+1	japanese	application/x-vnd.atomozero-Cinema	3156791526
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
 Pauses when you stop watching it	Window		見終わると一時停止します
 full documentary	Categories		ドキュメンタリー 全編
 Search first in:	Settings		最初に検索する場所:
-Video downloaded	Window		動画をダウンロードしました
 Play	Grid		再生
+Video downloaded	Window		動画をダウンロードしました
 Sign in with WebPositive…	Settings		WebPositive でログイン…
 Sign out	Settings		ログアウト
 Getting the video ready	Grid		動画を準備中
@@ -118,6 +118,7 @@ No subtitles	Player		字幕なし
 Pause the download	Grid		ダウンロードを一時停止
 Yes	Player		はい
 Library	Settings		ライブラリ
+Leaving out half the pictures nothing refers to	Player		参照されない画像の半分を省略中
 Cinema settings	Settings		Cinema の設定
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent でのダウンロードには aria2c が必要ですが、インストールされていません。
 From YouTube, through the helper	Player		YouTubeから、ヘルパー経由

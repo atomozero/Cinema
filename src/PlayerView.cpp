@@ -712,9 +712,12 @@ PlayerView::_UpdateStatistics()
 		const char* decoding = B_TRANSLATE("Decoding every picture");
 		if (stats.skipLevel == 1)
 			decoding = B_TRANSLATE("Decoding without the deblocking filter");
-		else if (stats.skipLevel == 2)
+		else if (stats.skipLevel == 2) {
+			decoding = B_TRANSLATE("Leaving out half the pictures nothing "
+				"refers to");
+		} else if (stats.skipLevel == 3)
 			decoding = B_TRANSLATE("Decoding the reference pictures only");
-		else if (stats.skipLevel >= 3)
+		else if (stats.skipLevel >= 4)
 			decoding = B_TRANSLATE("Decoding the key frames only");
 		line = decoding;
 		BString dropped(B_TRANSLATE("%count% dropped"));

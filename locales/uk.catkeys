@@ -1,12 +1,12 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	1222975932
+1	ukrainian	application/x-vnd.atomozero-Cinema	3156791526
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
 Pauses when you stop watching it	Window		Призупиниться, коли ви перестанете дивитися
 full documentary	Categories		повний документальний фільм
 Search first in:	Settings		Спершу шукати в:
-Video downloaded	Window		Відео завантажено
 Play	Grid		Відтворити
+Video downloaded	Window		Відео завантажено
 Sign in with WebPositive…	Settings		Увійти через WebPositive…
 Sign out	Settings		Вийти
 Getting the video ready	Grid		Підготовка відео
@@ -118,6 +118,7 @@ No subtitles	Player		Без субтитрів
 Pause the download	Grid		Призупинити завантаження
 Yes	Player		Так
 Library	Settings		Бібліотека
+Leaving out half the pictures nothing refers to	Player		Пропускаю половину кадрів, на які ніщо не посилається
 Cinema settings	Settings		Налаштування Cinema
 BitTorrent downloads need aria2c, which is not installed.	Window		Для завантажень BitTorrent потрібен aria2c, який не встановлено.
 From YouTube, through the helper	Player		З YouTube, через помічника

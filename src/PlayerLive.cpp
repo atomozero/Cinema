@@ -732,25 +732,87 @@ Player::_LiveVideoStream(int32 maxHeight)
 }
 
 
+/*!	Whether nothing refers to a picture of H.264, so that it can be left
+	out alone: all its slices have a nal_ref_idc of 0. lengthSize is the
+	size of the lengths before its units (an MP4), 0 for start codes (a
+	transport stream).
+*/
+static bool
+h264_disposable(const AVPacket* packet, int lengthSize)
+{
+	const uint8* data = packet->data;
+	int size = packet->size;
+	bool slices = false;
+	int at = 0;
+	while (at < size) {
+		int start;
+		int end;
+		if (lengthSize > 0) {
+			if (at + lengthSize > size)
+				break;
+			int length = 0;
+			for (int i = 0; i < lengthSize; i++)
+				length = (length << 8) | data[at + i];
+			start = at + lengthSize;
+			end = std::min(size, start + length);
+			if (length <= 0)
+				break;
+		} else {
+			// the next start code, 00 00 01
+			int code = at;
+			while (code + 2 < size && !(data[code] == 0
+					&& data[code + 1] == 0 && data[code + 2] == 1))
+				code++;
+			if (code + 2 >= size)
+				break;
+			start = code + 3;
+			end = start;
+			while (end + 2 < size && !(data[end] == 0 && data[end + 1] == 0
+					&& (data[end + 2] == 1 || data[end + 2] == 0)))
+				end++;
+			if (end + 2 >= size)
+				end = size;
+		}
+		if (start < end) {
+			int type = data[start] & 0x1f;
+			int referred = (data[start] >> 5) & 3;
+			if (type == 1 || type == 5) {
+				if (referred != 0 || type == 5)
+					return false;
+				slices = true;
+			}
+		}
+		at = end;
+	}
+	return slices;
+}
+
+
 /*!	0: all decoded. 1: without the loop filter of H.264, a good part of
-	the time for a little blockiness (on a slow processor, always). 2: the
-	frames nothing refers to skipped too, while it is behind.
+	the time for a little blockiness (on a slow processor, always). 2: one
+	of every two pictures nothing refers to left out too (H.264): 20 of 30
+	frames a second in most films, where 3 shows 10. 3: all of those left
+	out, while it is behind. 4: only the key frames.
 */
 void
 Player::_LiveSkip(int level)
 {
 	if (fLiveVideo == NULL)
 		return;
-	level = std::max(0, std::min(3, level));
+	level = std::max(0, std::min(4, level));
+	// only H.264 says which pictures nothing refers to before they are
+	// decoded: for the others there is no 2
+	if (level == 2 && fLiveVideo->codec_id != AV_CODEC_ID_H264)
+		level = fLiveSkipLevel > 2 ? 1 : 3;
 	if (level != fLiveSkipLevel)
 		fLiveLevelSince = system_time();
 	fLiveSkipLevel = level;
 	fLiveVideo->skip_loop_filter = fLiveSkipLevel >= 1
 		? AVDISCARD_ALL : AVDISCARD_DEFAULT;
-	fLiveVideo->skip_frame = fLiveSkipLevel >= 3 ? AVDISCARD_NONKEY
-		: fLiveSkipLevel >= 2 ? AVDISCARD_NONREF : AVDISCARD_DEFAULT;
+	fLiveVideo->skip_frame = fLiveSkipLevel >= 4 ? AVDISCARD_NONKEY
+		: fLiveSkipLevel >= 3 ? AVDISCARD_NONREF : AVDISCARD_DEFAULT;
 	// too much for this machine: the window may want less of it
-	if (fLiveSkipLevel >= 3)
+	if (fLiveSkipLevel >= 4)
 		_Struggling();
 }
 
@@ -788,17 +850,17 @@ Player::_LiveLoad()
 		fLiveUnderrunAt = now;
 	}
 	bool starving = now - fLiveUnderrunAt < 1000000;
-	if (!starving || fLiveSkipLevel < 2)
+	if (!starving || fLiveSkipLevel < 3)
 		fLiveStarveSince = 0;
 	else if (fLiveStarveSince == 0)
 		fLiveStarveSince = now;
-	if (fLiveSkipLevel == 2 && fLiveStarveSince != 0
+	if (fLiveSkipLevel == 3 && fLiveStarveSince != 0
 		&& now - fLiveStarveSince > 3000000) {
 		fLiveStarveSince = 0;
-		_LiveSkip(3);
+		_LiveSkip(4);
 		return;
 	}
-	if (fLiveSkipLevel == 2 && now - fLiveLevelSince > 15000000)
+	if (fLiveSkipLevel == 3 && now - fLiveLevelSince > 15000000)
 		_Struggling();
 	// CINEMA_FORCE_STRUGGLE=1: as if the processor could not keep up, 20 s
 	// in, to try what follows on a machine that can
@@ -806,9 +868,9 @@ Player::_LiveLoad()
 		&& strcmp(getenv("CINEMA_FORCE_STRUGGLE"), "1") == 0;
 	if (force && _LiveClock() - fClockBase > 20000000)
 		_Struggling();
-	if (fLiveSkipLevel == 3 && now - fLiveLevelSince > fLiveKeyWait) {
+	if (fLiveSkipLevel == 4 && now - fLiveLevelSince > fLiveKeyWait) {
 		fLiveKeyWait = std::min(fLiveKeyWait * 2, (bigtime_t)60000000);
-		_LiveSkip(2);
+		_LiveSkip(3);
 	}
 }
 
@@ -827,15 +889,16 @@ Player::_LiveLateness(bool late)
 		// a moment say, does not keep the decoding low with time to spare:
 		// it only sets the way back further
 		fLiveOnTime = std::max(0, fLiveOnTime - 10);
-		if (++fLiveLate >= 4 && fLiveSkipLevel < 2) {
-			_LiveSkip(2);
+		// first one of two of the pictures nothing refers to, then all
+		if (++fLiveLate >= 4 && fLiveSkipLevel < 3) {
+			_LiveSkip(fLiveSkipLevel < 2 ? 2 : 3);
 			fLiveLate = 0;
 		}
 	} else {
 		fLiveLate = 0;
 		// from the key frames only, the time says when to try again
 		if (++fLiveOnTime >= 60 && fLiveSkipLevel > base
-			&& fLiveSkipLevel < 3) {
+			&& fLiveSkipLevel < 4) {
 			_LiveSkip(fLiveSkipLevel - 1);
 			fLiveOnTime = 0;
 		}
@@ -1191,6 +1254,14 @@ Player::_LiveLoop()
 	// for the statistics, every second
 	int droppedAll = 0, shownSecond = 0;
 	bigtime_t nextStats = system_time() + 1000000;
+	// H.264 in an MP4 says the size of the lengths before its units in
+	// avcC (1 at its start); in a transport stream they have start codes
+	int lengthSize = 0;
+	if (fLiveVideo != NULL && fLiveVideo->codec_id == AV_CODEC_ID_H264
+		&& fLiveVideo->extradata != NULL && fLiveVideo->extradata_size > 4
+		&& fLiveVideo->extradata[0] == 1)
+		lengthSize = (fLiveVideo->extradata[4] & 3) + 1;
+	uint32 disposables = 0;
 	bigtime_t statsCpuAt = system_time(), statsTeamCpu = 0, statsSystemCpu = 0;
 	{
 		int32 cpus;
@@ -1315,6 +1386,13 @@ Player::_LiveLoop()
 					break;
 			}
 			packets.pop_front();
+			// one of two of the pictures nothing refers to, not decoded
+			if (fLiveSkipLevel == 2 && h264_disposable(next, lengthSize)
+				&& (++disposables & 1) != 0) {
+				av_packet_free(&next);
+				dropped++, droppedAll++;
+				continue;
+			}
 			int status = avcodec_send_packet(fLiveVideo, next);
 			av_packet_free(&next);
 			if (status < 0)

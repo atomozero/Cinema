@@ -1,12 +1,12 @@
-1	chinese	application/x-vnd.atomozero-Cinema	1222975932
+1	chinese	application/x-vnd.atomozero-Cinema	3156791526
 Video quality:	Settings		视频画质：
 Downloaded	Detail		已下载
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自动模式会在不认识的显卡上询问一次是否能看到视频。播放时可按 O 切换。
 Pauses when you stop watching it	Window		停止观看后暂停
 full documentary	Categories		完整纪录片
 Search first in:	Settings		优先搜索：
-Video downloaded	Window		视频已下载
 Play	Grid		播放
+Video downloaded	Window		视频已下载
 Sign in with WebPositive…	Settings		用 WebPositive 登录…
 Sign out	Settings		退出
 Getting the video ready	Grid		正在准备视频
@@ -118,6 +118,7 @@ No subtitles	Player		无字幕
 Pause the download	Grid		暂停下载
 Yes	Player		是
 Library	Settings		媒体库
+Leaving out half the pictures nothing refers to	Player		跳过一半未被引用的画面
 Cinema settings	Settings		Cinema 设置
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 下载需要 aria2c，但尚未安装。
 From YouTube, through the helper	Player		来自 YouTube，经由助手

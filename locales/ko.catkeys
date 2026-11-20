@@ -1,12 +1,12 @@
-1	korean	application/x-vnd.atomozero-Cinema	1222975932
+1	korean	application/x-vnd.atomozero-Cinema	3156791526
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
 Pauses when you stop watching it	Window		시청을 멈추면 일시 정지됩니다
 full documentary	Categories		다큐멘터리 전편
 Search first in:	Settings		먼저 검색할 곳:
-Video downloaded	Window		동영상 다운로드 완료
 Play	Grid		재생
+Video downloaded	Window		동영상 다운로드 완료
 Sign in with WebPositive…	Settings		WebPositive로 로그인…
 Sign out	Settings		로그아웃
 Getting the video ready	Grid		동영상 준비 중
@@ -118,6 +118,7 @@ No subtitles	Player		자막 없음
 Pause the download	Grid		다운로드 일시 정지
 Yes	Player		예
 Library	Settings		라이브러리
+Leaving out half the pictures nothing refers to	Player		참조되지 않는 프레임의 절반을 건너뜀
 Cinema settings	Settings		Cinema 설정
 BitTorrent downloads need aria2c, which is not installed.	Window		BitTorrent 다운로드에는 aria2c가 필요하지만 설치되어 있지 않습니다.
 From YouTube, through the helper	Player		YouTube에서, 도우미를 통해

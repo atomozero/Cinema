@@ -1,12 +1,12 @@
-1	french	application/x-vnd.atomozero-Cinema	1222975932
+1	french	application/x-vnd.atomozero-Cinema	3156791526
 Video quality:	Settings		Qualité vidéo :
 Downloaded	Detail		Téléchargée
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automatique demande une seule fois, sur une carte graphique inconnue, si vous voyez la vidéo. O le change pendant une vidéo.
 Pauses when you stop watching it	Window		Se met en pause quand vous arrêtez de la regarder
 full documentary	Categories		documentaire complet
 Search first in:	Settings		Chercher d'abord dans :
-Video downloaded	Window		Vidéo téléchargée
 Play	Grid		Lire
+Video downloaded	Window		Vidéo téléchargée
 Sign in with WebPositive…	Settings		Se connecter avec WebPositive…
 Sign out	Settings		Se déconnecter
 Getting the video ready	Grid		Préparation de la vidéo
@@ -118,6 +118,7 @@ No subtitles	Player		Aucun sous-titre
 Pause the download	Grid		Mettre le téléchargement en pause
 Yes	Player		Oui
 Library	Settings		Bibliothèque
+Leaving out half the pictures nothing refers to	Player		Saute la moitié des images auxquelles rien ne fait référence
 Cinema settings	Settings		Réglages de Cinema
 BitTorrent downloads need aria2c, which is not installed.	Window		Les téléchargements BitTorrent nécessitent aria2c, qui n'est pas installé.
 From YouTube, through the helper	Player		Depuis YouTube, via l'assistant

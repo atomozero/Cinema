@@ -62,7 +62,7 @@ struct PlayerStatistics {
 	float		fps = 0;			// shown in the last second
 	int64		bitRate = 0;		// of the file, bits per second, 0 unknown
 	int32		dropped = 0;		// since it opened
-	int32		skipLevel = 0;		// 0 all decoded .. 3 key frames only
+	int32		skipLevel = 0;		// 0 all decoded .. 4 key frames only
 	float		soundAhead = 0;		// seconds of sound queued
 	bool		overlay = false;
 	float		cinemaLoad = 0;		// % of all the processors
