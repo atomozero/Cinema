@@ -849,7 +849,10 @@ Player::_LiveLoad()
 		fLiveUnderrunsSeen = underruns;
 		fLiveUnderrunAt = now;
 	}
-	bool starving = now - fLiveUnderrunAt < 1000000;
+	// only what ran out since the level began: the sound that ran out at
+	// the level before, while it fell behind, is not this one's
+	bool starving = now - fLiveUnderrunAt < 1000000
+		&& fLiveUnderrunAt > fLiveLevelSince + 500000;
 	if (!starving || fLiveSkipLevel < 3)
 		fLiveStarveSince = 0;
 	else if (fLiveStarveSince == 0)
