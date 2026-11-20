@@ -383,15 +383,49 @@ REFRESHING = set()
 REFRESHING_LOCK = threading.Lock()
 
 
-def store_videos(path, videos):
+def write_json(path, value, lines=False, ascii=False):
+	"""value written to path as JSON (lines: one item per line) through a
+	file of its own that takes the place of the old one only once whole,
+	and goes when it cannot be written. True when written."""
 	temporary = path + ".part.%d" % threading.get_ident()
 	try:
 		with open(temporary, "w", encoding="utf-8") as file:
-			for video in videos:
-				file.write(json.dumps(video, ensure_ascii=False) + "\n")
+			if lines:
+				for item in value:
+					file.write(json.dumps(item, ensure_ascii=ascii) + "\n")
+			else:
+				json.dump(value, file, ensure_ascii=ascii)
 		os.replace(temporary, path)
-	except OSError:
-		pass
+		return True
+	except (OSError, TypeError, ValueError):
+		try:
+			os.remove(temporary)
+		except OSError:
+			pass
+		return False
+
+
+def parse_duration(text, bare=1):
+	"""Seconds from a length as the sources write it: "1:17:26", "20:33",
+	"1:23:45.678", "77 min", "1 hr 5 min", "1h 5m 30s", or a bare number,
+	of seconds or (bare=60) minutes; 0 when it cannot be read."""
+	text = str(text or "").strip().lower()
+	if re.fullmatch(r"\d+(:\d{1,2}){1,2}(\.\d+)?", text):
+		total = 0
+		for part in text.split(":"):
+			total = total * 60 + float(part)
+		return int(total)
+	if re.fullmatch(r"\d+(\.\d+)?", text):
+		return int(float(text) * bare)
+	units = {"h": 3600, "m": 60, "s": 1}
+	total = 0
+	for amount, unit in re.findall(r"(\d+)\s*([hms])", text):
+		total += int(amount) * units[unit]
+	return total
+
+
+def store_videos(path, videos):
+	write_json(path, videos, lines=True)
 
 
 def cached(name, fetch, fresh=None, stale=None):
@@ -504,13 +538,8 @@ def keep_stream(media_id, url):
 	expire = stream_expiry(url)
 	if not path or not expire:
 		return
-	temporary = path + ".part.%d" % threading.get_ident()
-	try:
-		with open(temporary, "w", encoding="utf-8") as file:
-			json.dump({"id": media_id, "url": url, "expire": expire}, file)
-		os.replace(temporary, path)
-	except OSError:
-		pass
+	write_json(path, {"id": media_id, "url": url, "expire": expire},
+		ascii=True)
 
 
 def about_path(provider_id, channel_id):
@@ -526,13 +555,7 @@ def keep_about(provider_id, channel_id, about):
 	path = about_path(provider_id, channel_id)
 	if not path or not about or not about.get("name"):
 		return
-	temporary = path + ".part.%d" % threading.get_ident()
-	try:
-		with open(temporary, "w", encoding="utf-8") as file:
-			json.dump(about, file, ensure_ascii=False)
-		os.replace(temporary, path)
-	except OSError:
-		pass
+	write_json(path, about)
 
 
 def kept_about(provider_id, channel_id):
@@ -564,13 +587,7 @@ def cached_details(name, fetch):
 
 	item = fetch()
 	if path and item:
-		temporary = path + ".part.%d" % threading.get_ident()
-		try:
-			with open(temporary, "w", encoding="utf-8") as file:
-				json.dump(item, file, ensure_ascii=False)
-			os.replace(temporary, path)
-		except OSError:
-			pass
+		write_json(path, item)
 	return item
 
 
@@ -1504,19 +1521,9 @@ class ArchiveProvider(Provider):
 
 	@staticmethod
 	def seconds(runtime):
-		"""The length of a "1:17:26", "20:33", "77 min" or "1 hr 5 min"."""
-		text = str(runtime or "").strip().lower()
-		if re.fullmatch(r"\d+(:\d{1,2}){1,2}", text):
-			total = 0
-			for part in text.split(":"):
-				total = total * 60 + int(part)
-			return total
-		hours = re.search(r"(\d+)\s*h", text)
-		minutes = re.search(r"(\d+)\s*m", text)
-		if hours or minutes:
-			return (int(hours.group(1)) * 3600 if hours else 0) \
-				+ (int(minutes.group(1)) * 60 if minutes else 0)
-		return as_int(text, 0) * 60 if text.isdigit() else 0
+		"""The length of a "1:17:26", "20:33", "77 min" or "1 hr 5 min"; a
+		bare number is of minutes."""
+		return parse_duration(runtime, 60)
 
 	@staticmethod
 	def text(value):
@@ -2315,30 +2322,37 @@ def torrent_session(media_id, stream):
 	return best
 
 
-def torrent_ready(session, start, end):
-	"""Whether the pieces of the bytes from start to end are there."""
-	stream = session["stream"]
-	if stream.get("final") or session["gid"] is None:
-		return True
+def torrent_bits(session, most_age=0.5):
+	"""What aria2c has of a torrent, asked at most every most_age seconds:
+	(its bitfield as hex digits, its status). Shared by the relay, which
+	waits for pieces, and the map of the bar."""
 	now = time.time()
-	if now - session.get("asked", 0) > 0.5:
-		status = aria2_call(stream, "aria2.tellStatus", session["gid"],
-			["bitfield", "status"])
+	if now - session.get("asked", 0) > most_age:
+		status = aria2_call(session["stream"], "aria2.tellStatus",
+			session["gid"], ["bitfield", "status"])
 		session["asked"] = now
 		if status:
 			session["bitfield"] = status.get("bitfield") or ""
 			session["status"] = status.get("status") or ""
-	if session.get("status") == "complete":
+	return session.get("bitfield") or "", session.get("status") or ""
+
+
+def has_piece(bits, piece):
+	"""Whether a bitfield of aria2c (hex digits, 4 pieces each) has it."""
+	digit = piece // 4
+	return digit < len(bits) and (int(bits[digit], 16) >> (3 - piece % 4)) & 1
+
+
+def torrent_ready(session, start, end):
+	"""Whether the pieces of the bytes from start to end are there."""
+	if session["stream"].get("final") or session["gid"] is None:
 		return True
-	bits = session.get("bitfield") or ""
+	bits, status = torrent_bits(session)
+	if status == "complete":
+		return True
 	first = (session["offset"] + start) // session["piece"]
 	last = (session["offset"] + end) // session["piece"]
-	for piece in range(first, last + 1):
-		digit = piece // 4
-		if digit >= len(bits) or not (int(bits[digit], 16)
-				>> (3 - piece % 4)) & 1:
-			return False
-	return True
+	return all(has_piece(bits, piece) for piece in range(first, last + 1))
 
 
 def torrent_map(media_id, slots=160):
@@ -2357,13 +2371,13 @@ def torrent_map(media_id, slots=160):
 		if not session:
 			return ""
 		stream["map session"] = session
-	status = aria2_call(stream, "aria2.tellStatus", session["gid"],
-		["bitfield", "status"])
-	if not status:
+	if session["gid"] is None:
 		return ""
-	if status.get("status") == "complete":
+	bits, status = torrent_bits(session)
+	if status == "complete":
 		return "9" * slots
-	bits = status.get("bitfield") or ""
+	if not bits:
+		return ""
 	piece, offset, length = session["piece"], session["offset"], \
 		session["length"]
 	digits = []
@@ -2371,12 +2385,8 @@ def torrent_map(media_id, slots=160):
 		start = offset + length * slot // slots
 		end = max(start, offset + length * (slot + 1) // slots - 1)
 		first, last = start // piece, end // piece
-		have = 0
-		for number in range(first, last + 1):
-			digit = number // 4
-			if digit < len(bits) \
-					and (int(bits[digit], 16) >> (3 - number % 4)) & 1:
-				have += 1
+		have = sum(1 for number in range(first, last + 1)
+			if has_piece(bits, number))
 		digits.append(str(have * 9 // (last - first + 1)))
 	return "".join(digits)
 
@@ -2617,13 +2627,7 @@ class LocalProvider(Provider):
 		if not self.path:
 			return
 		with self.lock:
-			try:
-				temporary = self.path + ".part.%d" % threading.get_ident()
-				with open(temporary, "w", encoding="utf-8") as file:
-					json.dump(self.known, file)
-				os.replace(temporary, self.path)
-			except OSError:
-				pass
+			write_json(self.path, self.known, ascii=True)
 
 	def probe(self, path, key):
 		"""The length of a video and the path of a picture of it."""
@@ -2848,14 +2852,7 @@ class DlnaProvider(Provider):
 	@staticmethod
 	def seconds(duration):
 		"""'1:23:45.678' in seconds."""
-		try:
-			parts = [float(part) for part in duration.split(":")]
-		except ValueError:
-			return 0
-		total = 0
-		for part in parts:
-			total = total * 60 + part
-		return int(total)
+		return parse_duration(duration)
 
 	def items(self, control, didl, server, folder):
 		import xml.etree.ElementTree as tree
@@ -3003,14 +3000,8 @@ class PodcastProvider(Provider):
 
 	@staticmethod
 	def seconds(text):
-		"""'1:02:03', '62:03' or '3723' in seconds."""
-		try:
-			total = 0
-			for part in str(text or "").strip().split(":"):
-				total = total * 60 + float(part)
-			return int(total)
-		except ValueError:
-			return 0
+		"""'1:02:03', '62:03', '3723' or '77 min' in seconds."""
+		return parse_duration(text)
 
 	@staticmethod
 	def plain(text):
@@ -3284,13 +3275,7 @@ class LibraryProvider(Provider):
 		except Exception:
 			return None
 		if cached_path:
-			try:
-				temporary = cached_path + ".part.%d" % threading.get_ident()
-				with open(temporary, "w", encoding="utf-8") as file:
-					json.dump(response, file)
-				os.replace(temporary, cached_path)
-			except OSError:
-				pass
+			write_json(cached_path, response, ascii=True)
 		return response
 
 	def check(self):
