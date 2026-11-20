@@ -6,6 +6,7 @@
 #define VIDEO_LIMITS_H
 
 
+#include <OS.h>
 #include <Screen.h>
 #include <SupportDefs.h>
 
@@ -15,7 +16,12 @@
 static inline int32
 VideoHeightLimit()
 {
+	// above 1080p YouTube only has VP9, decoded by the processor: 1440p and
+	// 2160p for four of them or more, on a screen as high
 	int32 limit = 1080;
+	system_info info;
+	if (get_system_info(&info) == B_OK && info.cpu_count >= 4)
+		limit = 2160;
 #if defined(__arm__) && !defined(__aarch64__)
 	limit = 480;
 #endif

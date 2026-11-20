@@ -549,7 +549,7 @@ CinemaWindow::_LowerQuality(int32 height)
 		|| _ProviderOf(fPlayingId) != "youtube"
 		|| fFinding.count(fPlayingId) > 0)
 		return;
-	static const int32 kSizes[] = { 720, 480, 360 };
+	static const int32 kSizes[] = { 1440, 1080, 720, 480, 360 };
 	int32 smaller = 0;
 	for (int32 size : kSizes) {
 		if (size < height) {
@@ -794,7 +794,7 @@ CinemaWindow::_ChangeQuality(bool up)
 	PlayerStatistics stats;
 	int32 current = fPlayer->Statistics(stats) && stats.height > 0
 		? std::max(stats.height, stats.width * 9 / 16) : 360;
-	static const int32 kSizes[] = { 360, 480, 720, 1080 };
+	static const int32 kSizes[] = { 360, 480, 720, 1080, 1440, 2160 };
 	int32 wanted = 0;
 	if (up) {
 		// not above what the helper is let ask for: the screen and the

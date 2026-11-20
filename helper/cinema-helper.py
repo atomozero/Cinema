@@ -1434,9 +1434,17 @@ class YouTubeProvider(Provider):
 	def separate(self, height):
 		"""The format of a picture up to height and its sound, as two files:
 		all YouTube gives above 360p. H.264 and AAC, which every machine
-		decodes; through HTTPS, not the playlists of segments."""
-		return ("bv*[height<=%d][vcodec^=avc1][protocol^=https]"
+		decodes; through HTTPS, not the playlists of segments. Above 1080p,
+		where YouTube has no H.264, VP9 first (Cinema lets it be asked only
+		of a machine with four processors or more), from the playlist of
+		segments YouTube has it in, in 8 bits (the 10 of HDR would look
+		washed out), with Opus; H.264 if it is not there."""
+		h264 = ("bv*[height<=%d][vcodec^=avc1][protocol^=https]"
 			"+ba[acodec^=mp4a][protocol^=https]" % height)
+		if height <= 1080:
+			return h264
+		return ("bv*[height<=%d][height>1080][vcodec^=vp09.00]"
+			"+ba[acodec^=opus][protocol^=https]/" % height) + h264
 
 	def find_separate(self, url, height):
 		"""The address of the relay that plays the picture and the sound
@@ -1457,7 +1465,8 @@ class YouTubeProvider(Provider):
 				or as_int(formats[0].get("height"), 0) <= 360:
 			# not better than the single file
 			return None
-		inputs = [{"url": f["url"], "headers": f.get("http_headers") or {}}
+		inputs = [{"url": f["url"], "headers": f.get("http_headers") or {},
+			"codec": f.get("vcodec") or f.get("acodec") or ""}
 			for f in formats]
 		return RELAY.address(inputs, info.get("duration") or 0)
 
@@ -2154,7 +2163,17 @@ class Relay:
 			command += ["-map", "0:v:0", "-map", "1:a:0"]
 		else:
 			command += ["-map", "0:v:0?", "-map", "0:a:0?"]
-		return command + ["-c", "copy", "-f", "mpegts", "-"]
+		return command + ["-c", "copy", "-f", self.container(inputs), "-"]
+
+	@staticmethod
+	def container(inputs):
+		"""MPEG-TS for H.264 and AAC; Matroska for VP9 and Opus, which it
+		does not carry (above 1080p)."""
+		for entry in inputs:
+			if str(entry.get("codec", "")).startswith(("vp09", "vp9", "av01",
+					"opus")):
+				return "matroska"
+		return "mpegts"
 
 	def serve(self, request):
 		parts = urllib.parse.urlparse(request.path)
@@ -2185,7 +2204,8 @@ class Relay:
 			self.stop(before)
 		try:
 			request.send_response(200)
-			request.send_header("Content-Type", "video/mp2t")
+			request.send_header("Content-Type", "video/x-matroska"
+				if self.container(inputs) == "matroska" else "video/mp2t")
 			request.send_header("Connection", "close")
 			request.end_headers()
 			while True:

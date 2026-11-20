@@ -52,15 +52,18 @@ the overlay while a video plays, and the settings can keep it always on or
 off. **I** shows, small at the top, what the player is doing: the size and
 codecs of the video, frames per second, how much it decodes and drops, the
 processor, and the sound ready ahead. **+** and **-** ask for a video of
-YouTube a size larger or smaller, from 360p to 1080p as far as the screen
-and the processor allow (480p on 32-bit ARM): it plays on until the
+YouTube a size larger or smaller, from 360p to 2160p as far as the screen
+and the processor allow (480p on 32-bit ARM, 1080p with fewer than four
+processors): it plays on until the
 new one is found, then goes on from the same point. The video
 quality is in the settings: Automatic means 360p on 32-bit ARM (480p for a
 download) and 720p elsewhere, never above what the screen shows, and you can
-ask for anything from 360p to 1080p within that. Above 360p YouTube
+ask for anything from 360p to 2160p within that. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for
 the player, so those videos take longer to start (about a minute and a half on
-the AC100).
+the AC100). Up to 1080p they are H.264; 1440p and 2160p exist only in VP9,
+which the processor decodes, and Cinema goes a size down by itself when it
+cannot keep up.
 
 The first time, Cinema offers a **TV** tab with the free channels of your
 country, from the public lists of [iptv-org](https://github.com/iptv-org/iptv).

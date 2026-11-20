@@ -204,7 +204,7 @@ SettingsWindow::SettingsWindow(const BMessenger& target,
 
 	// how big the pictures of YouTube and PeerTube are
 	BPopUpMenu* qualities = new BPopUpMenu("qualities");
-	static const int32 kHeights[] = { 0, 360, 480, 720, 1080 };
+	static const int32 kHeights[] = { 0, 360, 480, 720, 1080, 1440, 2160 };
 	int32 limit = VideoHeightLimit();
 	for (int32 height : kHeights) {
 		if (height > limit)
