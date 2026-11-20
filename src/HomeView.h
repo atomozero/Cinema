@@ -41,6 +41,9 @@ public:
 
 			void				SetShelves(
 									const std::vector<ShelfSpec>& shelves);
+			size_t				ShelfPictures() const;
+									// the pictures a shelf keeps: no more
+									// are worth getting
 			void				SetShelfVideos(int32 index,
 									const std::vector<MediaItem>& videos);
 			void				SetShelfMessage(int32 index,

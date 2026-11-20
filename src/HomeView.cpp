@@ -237,6 +237,17 @@ HomeView::SetShelfMessage(int32 index, const char* message)
 }
 
 
+size_t
+HomeView::ShelfPictures() const
+{
+	for (const Shelf& shelf : fShelves) {
+		if (shelf.row != NULL)
+			return shelf.row->ShelfPictures();
+	}
+	return 6;
+}
+
+
 void
 HomeView::SetPicture(const char* id, BBitmap* picture)
 {

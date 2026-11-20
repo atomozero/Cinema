@@ -71,7 +71,7 @@ picture(const BString& id, const char* cache)
 
 
 static std::vector<MediaItem>
-load(const char* cache)
+load(const char* cache, int32 pictures = INT32_MAX)
 {
 	std::vector<MediaItem> items;
 	BPath path;
@@ -112,8 +112,10 @@ load(const char* cache)
 		if (!item.path.IsEmpty() && !BEntry(item.path.String()).Exists())
 			item.path = "";
 		item.downloaded = !item.path.IsEmpty();
-		// none without a cache: Remember() only rewrites the file
-		item.picture = cache != NULL ? picture(item.id, cache) : NULL;
+		// none without a cache: Remember() only rewrites the file; only
+		// the first ones, which the shelf shows
+		item.picture = cache != NULL && (int32)items.size() < pictures
+			? picture(item.id, cache) : NULL;
 		items.push_back(item);
 		if ((int32)items.size() >= kMost)
 			break;
@@ -125,9 +127,9 @@ load(const char* cache)
 
 
 std::vector<MediaItem>
-Load(const char* cache)
+Load(const char* cache, int32 pictures)
 {
-	return load(cache);
+	return load(cache, pictures);
 }
 
 

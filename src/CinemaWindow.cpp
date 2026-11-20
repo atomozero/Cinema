@@ -107,7 +107,6 @@ CinemaWindow::CinemaWindow()
 	fGeneration(0),
 	fHomeGeneration(0),
 	fHomeLoaded(false),
-	fHomeActive(0),
 	fDetailsReturn(0),
 	fCard(2),
 	fPrefetchRunner(NULL),
@@ -1020,7 +1019,8 @@ CinemaWindow::_HomeChanged()
 	fHomeLoaded = false;
 	fHomeRequests.clear();
 	fHomeQueue.clear();
-	fHomeActive = 0;
+	// fHomeRunning stays: the searches asked before still run, and free
+	// their place when they answer (two at a time, not four)
 	if (fCard == 2 && !fDetailsShown)
 		_ShowHome();
 	else if (fDetailsShown && fDetailsReturn == 2)
@@ -1220,10 +1220,11 @@ CinemaWindow::_LoadHome()
 	fHomeStale = false;
 	fHomeRequests.clear();
 	fHomeQueue.clear();
-	fHomeActive = 0;
+	// fHomeRunning stays, as in _HomeChanged()
 	std::vector<ShelfSpec> shelves;
 
-	std::vector<MediaItem> history = History::Load(fWorker->Cache());
+	std::vector<MediaItem> history = History::Load(fWorker->Cache(),
+		(int32)fHome->ShelfPictures());
 	if (!history.empty()) {
 		ShelfSpec spec;
 		spec.title = B_TRANSLATE("Continue watching");
@@ -1236,7 +1237,7 @@ CinemaWindow::_LoadHome()
 	// the window on a slow machine with many files
 	static const int32 kShelfDownloads = 24;
 	std::vector<MediaItem> downloads = Downloads::Load(&fDownloaded,
-		kShelfDownloads);
+		(int32)fHome->ShelfPictures());
 	if (downloads.size() > (size_t)kShelfDownloads)
 		downloads.resize(kShelfDownloads);
 	if (!downloads.empty()) {
@@ -1279,7 +1280,7 @@ void
 CinemaWindow::_StartHomeRequests()
 {
 	static const int32 kAtOnce = 2;
-	while (fHomeActive < kAtOnce && !fHomeQueue.empty()) {
+	while ((int32)fHomeRunning.size() < kAtOnce && !fHomeQueue.empty()) {
 		HomeRequest request = fHomeQueue.front();
 		fHomeQueue.pop_front();
 		if (fHomeRequests.find(request.generation) == fHomeRequests.end()
@@ -1298,7 +1299,7 @@ CinemaWindow::_StartHomeRequests()
 			fHelper->Search(request.generation, kResultCount,
 				category.query, category.provider.String(),
 				category.order.String());
-		fHomeActive++;
+		fHomeRunning.insert(request.generation);
 	}
 }
 
@@ -1311,11 +1312,12 @@ CinemaWindow::_HomeResults(BMessage* message, int32 shelf)
 		fHome->SetShelfMessage(shelf, B_TRANSLATE("No videos found"));
 	else {
 		fHome->SetShelfVideos(shelf, videos);
-		_Thumbnails(videos, message->GetInt32("generation", -1),
+		// only the pictures the shelf shows
+		std::vector<MediaItem> shown(videos.begin(), videos.begin()
+			+ std::min(videos.size(), fHome->ShelfPictures()));
+		_Thumbnails(shown, message->GetInt32("generation", -1),
 			Pictures::kShelf);
 	}
-	if (fHomeActive > 0)
-		fHomeActive--;
 	_StartHomeRequests();
 }
 
@@ -1327,8 +1329,6 @@ CinemaWindow::_HomeFailed(BMessage* message, int32 shelf)
 	fHome->SetShelfMessage(shelf, B_TRANSLATE("The videos did not come: is "
 		"the network on?"));
 	(void)message;
-	if (fHomeActive > 0)
-		fHomeActive--;
 	_StartHomeRequests();
 }
 
@@ -1944,9 +1944,12 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgResults:
 		{
 			int32 generation = message->GetInt32("generation", -1);
+			bool freed = fHomeRunning.erase(generation) > 0;
 			auto home = fHomeRequests.find(generation);
 			if (home != fHomeRequests.end())
 				_HomeResults(message, home->second);
+			else if (freed)
+				_StartHomeRequests();
 			else if (generation == fGeneration)
 				_ShowResults(message);
 			break;
@@ -1954,9 +1957,12 @@ CinemaWindow::MessageReceived(BMessage* message)
 		case kMsgSearchFailed:
 		{
 			int32 generation = message->GetInt32("generation", -1);
+			bool freed = fHomeRunning.erase(generation) > 0;
 			auto home = fHomeRequests.find(generation);
 			if (home != fHomeRequests.end())
 				_HomeFailed(message, home->second);
+			else if (freed)
+				_StartHomeRequests();
 			else if (generation == fGeneration) {
 				fGrid->SetMessage(B_TRANSLATE("The videos did not come: is "
 					"the network on?"));
@@ -2763,7 +2769,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 			fSettingsWindow.SendMessage(kMsgHelperGone);
 			fDetail->SetLoading(false);
 			fHomeQueue.clear();
-			fHomeActive = 0;
+			fHomeRunning.clear();
 			fFinding.clear();
 			// a helper that worked and then went, a crash say: another one,
 			// unless that keeps happening

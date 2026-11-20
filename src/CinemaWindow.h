@@ -217,7 +217,8 @@ private:
 				int32			category;
 			};
 			std::deque<HomeRequest> fHomeQueue;
-			int32				fHomeActive;
+			std::set<int32>		fHomeRunning;
+									// the home's searches asked, not answered
 			int32				fDetailsReturn;
 			int32				fCard;
 

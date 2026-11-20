@@ -66,6 +66,8 @@ public:
 			void				SetPicture(const char* id, BBitmap* picture);
 			void				SetProgress(const char* id, int32 progress);
 			void				SetStatus(const char* id, const char* status);
+			size_t				ShelfPictures() const;
+									// the pictures a shelf keeps
 			void				SetDownloadState(const char* id,
 									const char* state);
 									// for its menu: pause or resume

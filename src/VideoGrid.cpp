@@ -94,6 +94,12 @@ VideoGrid::SetVideos(const std::vector<MediaItem>& videos)
 {
 	_Clear();
 	fVideos = videos;
+	// a shelf shows the few that fit: the pictures of the others only take
+	// memory, a lot of it on the AC100 (4 of 24 shown there)
+	for (size_t i = ShelfPictures(); fShelf && i < fVideos.size(); i++) {
+		delete fVideos[i].picture;
+		fVideos[i].picture = NULL;
+	}
 	fSelected = 0;
 	fHover = -1;
 	fHoverChannel = -1;
@@ -198,6 +204,8 @@ VideoGrid::SetPicture(const char* id, BBitmap* picture)
 {
 	for (size_t i = 0; i < fVideos.size(); i++) {
 		if (fVideos[i].id == id) {
+			if (fShelf && i >= ShelfPictures())
+				break;
 			delete fVideos[i].picture;
 			fVideos[i].picture = picture;
 			Invalidate(_TileFrame(i));
@@ -347,6 +355,16 @@ VideoGrid::SetBusy(const char* title)
 			new BMessage(kMsgAnimate), 400000);
 	}
 	Invalidate();
+}
+
+
+/*!	How many pictures a shelf keeps: those that fit, and two more for a
+	window made a little wider; at least six, the width not known yet.
+*/
+size_t
+VideoGrid::ShelfPictures() const
+{
+	return (size_t)std::max<int32>(6, _Columns() + 2);
 }
 
 
