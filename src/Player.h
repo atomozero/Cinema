@@ -244,6 +244,7 @@ private:
 			int					fScalerTo[3] = { 0, 0, -1 };
 			int					fScalerThreads = 0;
 			bool				fThreadedScaling = true;
+			bool				_LiveHostKnown(const BString& address);
 			SwsContext*			_LiveScaler(const AVFrame* frame, int width,
 									int height, int flags, int threads);
 			int					fLiveVideoIndex;

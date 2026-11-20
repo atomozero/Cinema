@@ -1,4 +1,4 @@
-1	ukrainian	application/x-vnd.atomozero-Cinema	1037853143
+1	ukrainian	application/x-vnd.atomozero-Cinema	1222975932
 Video quality:	Settings		Якість відео:
 Downloaded	Detail		Завантажено
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Автоматично: один раз запитує на незнайомій відеокарті, чи видно відео. O перемикає його під час відео.
@@ -196,6 +196,7 @@ Subtitles	Subtitles		Субтитри
 Paused	Window		Призупинено
 This video comes in one quality only	Window		Це відео має лише одну якість
 Signed in: the tabs of the account are there.	Settings		Вхід виконано: вкладки облікового запису на місці.
+Above 360p YouTube needs QuickJS or Node.js, which are not installed	Window		Понад 360p YouTube потребує QuickJS або Node.js, які не встановлено
 Later	Window		Пізніше
 %count% subscribers	Detail		%count% підписників
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Одна вкладка верхньої панелі на рядок: назва = що шукати на YouTube

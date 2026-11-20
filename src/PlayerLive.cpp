@@ -28,6 +28,7 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
+#include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,6 +40,8 @@ extern "C" {
 
 #include <algorithm>
 #include <deque>
+#include <string>
+#include <memory>
 #include <mutex>
 #include <thread>
 
@@ -384,6 +387,20 @@ Player::_OpenLive()
 			av_dict_set(&options, "reconnect", "1", 0);
 			av_dict_set(&options, "reconnect_streamed", "1", 0);
 			av_dict_set(&options, "reconnect_on_network_error", "1", 0);
+			// a few seconds of trying again, not FFmpeg's two minutes: the
+			// window finds the video again after that, and closing it does
+			// not wait meanwhile
+			av_dict_set(&options, "reconnect_delay_max", "5", 0);
+		}
+		// the name of the server looked up here first, for 8 s at most and
+		// giving up as soon as the video is closed: FFmpeg's own lookup
+		// cannot be interrupted, and with a DNS that does not answer it
+		// held the window closing the video for tens of seconds
+		if (!_LiveHostKnown(live.url)) {
+			av_dict_free(&options);
+			avformat_free_context(format);
+			format = NULL;
+			break;
 		}
 		int status = avformat_open_input(&format, live.url.String(), NULL,
 			&options);
@@ -823,6 +840,65 @@ Player::_LiveLateness(bool late)
 			fLiveOnTime = 0;
 		}
 	}
+}
+
+
+/*!	Whether the host of an address can be found, looked up on a thread
+	of its own: false when it cannot in 8 s, or the video is closed
+	meanwhile. The lookup goes on alone then, and ends by itself.
+*/
+bool
+Player::_LiveHostKnown(const BString& address)
+{
+	BString url(address);
+	int32 scheme = url.FindFirst("://");
+	if (scheme < 0 || !url.IStartsWith("http"))
+		return true;
+	BString host;
+	url.CopyInto(host, scheme + 3, url.Length() - scheme - 3);
+	int32 end = host.FindFirst('/');
+	if (end >= 0)
+		host.Truncate(end);
+	int32 at = host.FindLast('@');
+	if (at >= 0)
+		host.Remove(0, at + 1);
+	if (host.ByteAt(0) == '[')
+		return true;	// an address of IPv6, nothing to look up
+	int32 colon = host.FindFirst(':');
+	if (colon >= 0)
+		host.Truncate(colon);
+	if (host.IsEmpty() || host == "localhost" || host == "127.0.0.1")
+		return true;
+
+	struct Lookup {
+		std::atomic<int> state{0};	// 0 going, 1 found, 2 not
+	};
+	std::shared_ptr<Lookup> lookup = std::make_shared<Lookup>();
+	std::string name(host.String());
+	try {
+		std::thread([lookup, name]() {
+			struct addrinfo hints = {};
+			hints.ai_socktype = SOCK_STREAM;
+			struct addrinfo* found = NULL;
+			int status = getaddrinfo(name.c_str(), NULL, &hints, &found);
+			if (found != NULL)
+				freeaddrinfo(found);
+			lookup->state = status == 0 ? 1 : 2;
+		}).detach();
+	} catch (...) {
+		// no thread for it: FFmpeg looks it up as before
+		return true;
+	}
+	bigtime_t until = system_time() + 8000000;
+	while (lookup->state == 0 && !fQuit && system_time() < until)
+		snooze(50000);
+	if (lookup->state == 1)
+		return true;
+	if (getenv("CINEMA_PLAYER_DEBUG") != NULL) {
+		fprintf(stderr, "player: %s not found%s\n", name.c_str(),
+			fQuit ? " (closing)" : "");
+	}
+	return false;
 }
 
 

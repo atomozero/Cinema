@@ -2688,6 +2688,12 @@ CinemaWindow::MessageReceived(BMessage* message)
 				fHome->ClearBusy();
 				_Play(stream.url.String(), fWaitingTitle.String(),
 					id.String());
+				// the size asked for could not be had: said, for a while
+				if (strcmp(message->GetString("note", ""), "javascript") == 0
+					&& fPlayerShown && fPlayingId == id) {
+					fPlayerView->SetNotice(B_TRANSLATE("Above 360p YouTube needs "
+						"QuickJS or Node.js, which are not installed"), 6000000);
+				}
 			}
 			_PrefetchWanted();
 			break;

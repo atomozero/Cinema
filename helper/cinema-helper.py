@@ -45,7 +45,8 @@
 #   (name, handle, followers, description, avatar) for a channel
 #   {"type": "nothing", "tag": 1}
 #   {"type": "details", "id": "...", "item": MediaItem or null}
-#   {"type": "found", "id": "...", "url": "..."}
+#   {"type": "found", "id": "...", "url": "...", "note": ""}  (note
+#   "javascript": not above 360p, no QuickJS nor Node.js)
 #   {"type": "lost", "id": "..."}
 #   {"type": "subtitles", "id": "...", "tracks": [{"language", "name",
 #    "automatic"}, ...]}
@@ -164,11 +165,96 @@ def load_yt_dlp():
 	raise ImportError("yt-dlp not found")
 
 
-try:
-	yt_dlp = load_yt_dlp()
-except ImportError:
-	# the Internet Archive still works without it
-	yt_dlp = None
+def yt_dlp_available():
+	"""Whether yt-dlp is there, without loading it."""
+	import importlib.util
+	try:
+		if importlib.util.find_spec("yt_dlp") is not None:
+			return True
+	except (ImportError, ValueError):
+		pass
+	return any(os.path.isfile(os.path.join(directory, "yt-dlp"))
+		for directory in os.environ.get("PATH", "").split(os.pathsep))
+
+
+# the words, and the short forms YouTube writes ("1 g fa", "2 gg fa")
+ITALIAN_UNITS = {"secondi": "second", "secondo": "second", "sec": "second",
+	"s": "second", "minuti": "minute", "minuto": "minute", "min": "minute",
+	"ore": "hour", "ora": "hour", "h": "hour", "giorni": "day",
+	"giorno": "day", "gg": "day", "g": "day", "settimane": "week",
+	"settimana": "week", "sett": "week", "mesi": "month", "mese": "month",
+	"anni": "year", "anno": "year", "aa": "year", "a": "year"}
+
+
+def teach_italian(module):
+	"""yt-dlp reads when a video came out ("3 hours ago") in English only:
+	asked in Italian, for titles in Italian rather than translated, it
+	reads "3 ore fa", "ieri", "oggi" too. Left as it is if yt-dlp changed."""
+	try:
+		try:
+			from yt_dlp.extractor.youtube._base import \
+				YoutubeBaseInfoExtractor as base
+		except ImportError:
+			from yt_dlp.extractor.youtube import \
+				YoutubeBaseInfoExtractor as base
+		from yt_dlp.utils import datetime_from_str
+		english = base.extract_relative_time.__func__
+	except (ImportError, AttributeError):
+		return
+	units = "|".join(sorted(ITALIAN_UNITS, key=len, reverse=True))
+	pattern = re.compile(r"\b(?P<start>oggi|ieri|adesso)\b|(?P<time>\d+)\s*"
+		r"(?P<unit>%s)\.?\s+fa\b" % units, re.IGNORECASE)
+
+	def relative(cls, text):
+		found = english(cls, text)
+		if found is not None or not text:
+			return found
+		match = pattern.search(text)
+		if not match:
+			return None
+		start = (match.group("start") or "").lower()
+		try:
+			if start:
+				return datetime_from_str({"oggi": "today",
+					"ieri": "yesterday", "adesso": "now"}[start])
+			return datetime_from_str("now-%s%s" % (match.group("time"),
+				ITALIAN_UNITS[match.group("unit").lower()]))
+		except ValueError:
+			return None
+
+	base.extract_relative_time = classmethod(relative)
+
+
+def youtube_lang():
+	"""Titles and descriptions as YouTube writes them in the language of the
+	system, rather than translated into English: in Italian, whose dates
+	teach_italian() reads."""
+	return {"lang": ["it"]} if LANGUAGE.lower().startswith("it") else {}
+
+
+class LazyYtDlp:
+	"""yt-dlp, loaded the first time it is used: 12 s and 26 MB on the
+	AC100 that podcasts, the news from feeds, TV and the home network do
+	not wait for, nor take when YouTube is not used."""
+
+	def __init__(self):
+		self._module = None
+		self._lock = threading.Lock()
+
+	def __getattr__(self, name):
+		if name.startswith("_"):
+			raise AttributeError(name)
+		if self._module is None:
+			with self._lock:
+				if self._module is None:
+					module = load_yt_dlp()
+					teach_italian(module)
+					self._module = module
+		return getattr(self._module, name)
+
+
+# the Internet Archive and the other sources still work without it
+yt_dlp = LazyYtDlp() if yt_dlp_available() else None
 output = threading.Lock()
 
 CACHE_TIME = 6 * 60 * 60
@@ -889,7 +975,8 @@ class YouTubeProvider(Provider):
 	def extractor(self, client, formatted):
 		"""A YoutubeDL to lend that describes a video, from a client of
 		YouTube ("" the web client) and with or without Cinema's format."""
-		arguments = {"youtube": {"player_skip": ["webpage"]}}
+		arguments = {"youtube": dict({"player_skip": ["webpage"]},
+			**youtube_lang())}
 		if client:
 			arguments["youtube"]["player_client"] = [client]
 		options = dict(self.OPTIONS, extractor_args=arguments)
@@ -967,7 +1054,7 @@ class YouTubeProvider(Provider):
 		options = dict(self.OPTIONS, extract_flat="in_playlist",
 			playlistend=count, extractor_args={
 				"youtubetab": {"approximate_date": [""]},
-				"youtube": {"approximate_date": [""]}})
+				"youtube": dict({"approximate_date": [""]}, **youtube_lang())})
 		if cookies:
 			# the pages of the account: a YoutubeDL of their own, not lent
 			options["cookiefile"] = cookies
@@ -1135,6 +1222,23 @@ class YouTubeProvider(Provider):
 				return []
 			return self.videos_of(YOUTUBE_FEEDS[channel_id], count,
 				cookies=cookies)
+		# a channel: its latest videos from its feed, in under a second
+		# (yt-dlp takes seconds, many on the AC100), with their own titles
+		# and the time each came out; what the channel is, its picture and
+		# its followers, which the feed does not say, from yt-dlp behind,
+		# the first time
+		if re.fullmatch(r"UC[\w-]{22}", channel_id):
+			try:
+				videos = self.feed_of(channel_id)
+			except Exception:
+				videos = []
+			if videos:
+				if not kept_about(self.id, channel_id):
+					threading.Thread(target=lambda: ignore_errors(
+						lambda: self.videos_of("https://www.youtube.com/"
+							"channel/%s/videos" % channel_id, 1,
+							channel_id=channel_id)), daemon=True).start()
+				return videos[:count] if count > 0 else videos
 		# the videos of a channel only name it once, in the list
 		return self.videos_of(
 			"https://www.youtube.com/channel/%s/videos" % channel_id,
@@ -1176,6 +1280,11 @@ class YouTubeProvider(Provider):
 
 	def find(self, media_id, kind="video"):
 		url = "https://www.youtube.com/watch?v=" + media_id
+		# above 360p needs the JavaScript of YouTube run: without QuickJS
+		# or Node.js it stays at 360p, which Cinema says
+		if wanted_height() > 360 and not (shutil.which("qjs")
+				or shutil.which("node")):
+			NOTES[media_id] = "javascript"
 		if wanted_height() > 360:
 			found = None
 			if not SHORT_OF_MEMORY:
@@ -3472,13 +3581,19 @@ def job_find(provider, media_id, kind):
 		job_find_now(provider, media_id, kind)
 
 
+# what Cinema should know of a video found: "javascript", it could not be
+# had above 360p without a runtime of JavaScript
+NOTES = {}
+
+
 def job_find_now(provider, media_id, kind):
 	try:
 		url = provider.find(media_id, kind)
 	except Exception:
 		url = None
+	note = NOTES.pop(media_id, "")
 	if url:
-		answer({"type": "found", "id": media_id, "url": url})
+		answer({"type": "found", "id": media_id, "url": url, "note": note})
 	else:
 		answer({"type": "lost", "id": media_id})
 

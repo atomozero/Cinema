@@ -601,6 +601,7 @@ Helper::_Handle(const BString& line)
 		BMessage found(kMsgFound);
 		found.AddString("id", answer.GetString("id", "").c_str());
 		found.AddString("url", answer.GetString("url", "").c_str());
+		found.AddString("note", answer.GetString("note", "").c_str());
 		Deliver(fTarget, &found, &fStopping);
 		return;
 	}

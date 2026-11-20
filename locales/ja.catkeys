@@ -1,4 +1,4 @@
-1	japanese	application/x-vnd.atomozero-Cinema	1037853143
+1	japanese	application/x-vnd.atomozero-Cinema	1222975932
 Video quality:	Settings		動画の画質:
 Downloaded	Detail		ダウンロード済み
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		自動では、知らないグラフィックカードで動画が見えるかを一度だけ尋ねます。再生中は O で切り替えられます。
@@ -196,6 +196,7 @@ Subtitles	Subtitles		字幕
 Paused	Window		一時停止
 This video comes in one quality only	Window		この動画の画質は一つだけです
 Signed in: the tabs of the account are there.	Settings		ログイン済み: アカウントのタブがあります。
+Above 360p YouTube needs QuickJS or Node.js, which are not installed	Window		360p を超えるには YouTube に QuickJS か Node.js が必要ですが、インストールされていません
 Later	Window		後で
 %count% subscribers	Detail		チャンネル登録者数 %count%人
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 上部バーのタブを1行に1つ: 名前 = YouTube で検索する内容

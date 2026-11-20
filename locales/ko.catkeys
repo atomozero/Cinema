@@ -1,4 +1,4 @@
-1	korean	application/x-vnd.atomozero-Cinema	1037853143
+1	korean	application/x-vnd.atomozero-Cinema	1222975932
 Video quality:	Settings		동영상 화질:
 Downloaded	Detail		다운로드됨
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		자동은 모르는 그래픽 카드에서 동영상이 보이는지 한 번만 묻습니다. 재생 중에 O로 바꿀 수 있습니다.
@@ -196,6 +196,7 @@ Subtitles	Subtitles		자막
 Paused	Window		일시 정지됨
 This video comes in one quality only	Window		이 동영상은 한 가지 화질만 있습니다
 Signed in: the tabs of the account are there.	Settings		로그인됨: 계정 탭이 추가되었습니다.
+Above 360p YouTube needs QuickJS or Node.js, which are not installed	Window		360p를 넘으려면 YouTube에 QuickJS나 Node.js가 필요한데 설치되어 있지 않습니다
 Later	Window		나중에
 %count% subscribers	Detail		구독자 %count%명
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# 한 줄에 상단 막대의 탭 하나: 이름 = YouTube에서 검색할 내용

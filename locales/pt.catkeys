@@ -1,4 +1,4 @@
-1	portuguese	application/x-vnd.atomozero-Cinema	1037853143
+1	portuguese	application/x-vnd.atomozero-Cinema	1222975932
 Video quality:	Settings		Qualidade do vídeo:
 Downloaded	Detail		Baixado
 Automatic asks once, on a graphics card it does not know, whether you see the video. O switches it while one plays.	Settings		Automático pergunta uma só vez, numa placa gráfica que não conhece, se vês o vídeo. O muda-o durante um vídeo.
@@ -196,6 +196,7 @@ Subtitles	Subtitles		Legendas
 Paused	Window		Em pausa
 This video comes in one quality only	Window		Este vídeo só tem uma qualidade
 Signed in: the tabs of the account are there.	Settings		Conectado: as abas da conta estão aí.
+Above 360p YouTube needs QuickJS or Node.js, which are not installed	Window		Acima de 360p o YouTube precisa do QuickJS ou do Node.js, que não estão instalados
 Later	Window		Depois
 %count% subscribers	Detail		%count% inscritos
 # One tab of the top bar per line: name = what to search on YouTube	Categories		# Uma aba da barra superior por linha: nome = o que pesquisar no YouTube
