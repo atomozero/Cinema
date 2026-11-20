@@ -137,6 +137,7 @@ private:
 			void				_OfferHomeNetwork();
 			void				_StartDownloads();
 			BString				_NewsChannel();
+			void				_Retranslate();
 			void				_SetCategoryOrder(int32 index,
 									const char* order);
 			void				_RequeueDownloads();
@@ -238,6 +239,7 @@ private:
 			// paused once open, until its notification is clicked
 			bool				fPlayerHidden = false;
 			BMessageRunner*		fHelperRester = NULL;
+			BButton*			fSearchButton = NULL;
 			// downloads being copied to the network folder, by their path
 			std::map<BString, BMessage> fUploads;
 			// the downloads in the order they were asked: the next one to

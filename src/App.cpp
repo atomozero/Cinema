@@ -5,6 +5,8 @@
 
 
 #include <Application.h>
+#include <Catalog.h>
+#include <Roster.h>
 #include <string.h>
 #include <Entry.h>
 #include <LocaleRoster.h>
@@ -122,6 +124,11 @@ public:
 		// for what it is sent (titles, dates, plots) at once
 		if (message->what == B_LOCALE_CHANGED) {
 			BLocaleRoster::Default()->Refresh();
+			// the words of Cinema in the language now preferred: what is
+			// written from now on, and what the window writes again
+			app_info info;
+			if (GetAppInfo(&info) == B_OK)
+				B_CATALOG->SetTo(info.ref);
 			_Post(kMsgLanguagesChanged);
 			return;
 		}

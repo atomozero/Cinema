@@ -131,7 +131,8 @@ CinemaWindow::CinemaWindow()
 	fCategoryBar = new CategoryBar(fCategories);
 	fSearchField = new BTextControl("search", NULL, "",
 		new BMessage(kMsgSearchField));
-	BButton* searchButton = new BButton("find", B_TRANSLATE("Search"),
+	BButton* searchButton = fSearchButton = new BButton("find",
+		B_TRANSLATE("Search"),
 		new BMessage(kMsgSearchField));
 	// where the search goes: filled when the helper tells its providers
 	BPopUpMenu* sources = new BPopUpMenu("sources");
@@ -1218,6 +1219,47 @@ CinemaWindow::_ToggleCategoryFocus()
 }
 
 
+static void
+invalidate_all(BView* view)
+{
+	view->Invalidate();
+	for (int32 i = 0; i < view->CountChildren(); i++)
+		invalidate_all(view->ChildAt(i));
+}
+
+
+/*!	The words of the window in the language now preferred (the catalog is
+	loaded again by the application): the tabs, whose examples are named
+	in it, the button and the title; all that is drawn is drawn again. The
+	home and the tab shown are asked for again by the caller.
+*/
+void
+CinemaWindow::_Retranslate()
+{
+	SetTitle(B_TRANSLATE_SYSTEM_NAME("Cinema"));
+	fSearchButton->SetLabel(B_TRANSLATE("Search"));
+	int32 selected = fCategoryBar->Selected();
+	std::vector<Category> categories = LoadCategories();
+	if (categories.size() == fCategories.size()) {
+		// only the names and searches of the examples change: what Cinema
+		// learned of the others (a podcast's title) is kept
+		for (size_t i = 0; i < categories.size(); i++) {
+			if (categories[i].channel == fCategories[i].channel
+				&& categories[i].provider == fCategories[i].provider) {
+				fCategories[i].name = categories[i].name;
+				if (!fCategories[i].IsChannel())
+					fCategories[i].query = categories[i].query;
+			}
+		}
+		fCategoryBar->SetCategories(fCategories);
+		if (selected >= 0)
+			fCategoryBar->SetSelected(selected);
+	}
+	for (int32 i = 0; i < CountChildren(); i++)
+		invalidate_all(ChildAt(i));
+}
+
+
 void
 CinemaWindow::_LoadHome()
 {
@@ -1834,6 +1876,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 			// the helper writes in them from now on; what is shown is asked
 			// for again
 			fHelper->SetLanguages();
+			_Retranslate();
 			fHomeLoaded = false;
 			if (fCard == 2)
 				_LoadHome();
