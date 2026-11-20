@@ -97,7 +97,8 @@ VideoGrid::SetVideos(const std::vector<MediaItem>& videos)
 	fVideos = videos;
 	// a shelf shows the few that fit: the pictures of the others only take
 	// memory, a lot of it on the AC100 (4 of 24 shown there)
-	for (size_t i = ShelfPictures(); fShelf && i < fVideos.size(); i++) {
+	for (size_t i = ShelfPictures(); fShelf && Bounds().Width() > 0
+			&& i < fVideos.size(); i++) {
 		delete fVideos[i].picture;
 		fVideos[i].picture = NULL;
 	}
@@ -359,12 +360,27 @@ VideoGrid::SetBusy(const char* title)
 }
 
 
+/*!	Whether it shows the video of id and keeps its picture. */
+bool
+VideoGrid::WantsPicture(const char* id) const
+{
+	for (size_t i = 0; i < fVideos.size(); i++) {
+		if (fVideos[i].id == id)
+			return !fShelf || i < ShelfPictures();
+	}
+	return false;
+}
+
+
 /*!	How many pictures a shelf keeps: those that fit, and two more for a
-	window made a little wider; at least six, the width not known yet.
+	window made a little wider; twelve while its width is not known yet
+	(a shelf just made), enough for a wide screen.
 */
 size_t
 VideoGrid::ShelfPictures() const
 {
+	if (Bounds().Width() <= 0)
+		return 12;
 	return (size_t)std::max<int32>(6, _Columns() + 2);
 }
 

@@ -6,6 +6,8 @@
 
 #include "HomeView.h"
 
+#include <new>
+
 #include <algorithm>
 
 #include <Bitmap.h>
@@ -251,20 +253,26 @@ HomeView::ShelfPictures() const
 void
 HomeView::SetPicture(const char* id, BBitmap* picture)
 {
-	bool found = false;
+	// to the shelves that show it: the first takes it and keeps it, the
+	// others get a copy of it (none when there is no memory for one)
+	bool taken = false;
 	for (Shelf& shelf : fShelves) {
-		if (!shelf.row->HasVideo(id))
+		if (!shelf.row->WantsPicture(id))
 			continue;
-		if (!found) {
-			shelf.row->SetPicture(id, picture);
-			found = true;
-		} else {
-			BBitmap* copy = picture != NULL
-				? new BBitmap(picture) : NULL;
-			shelf.row->SetPicture(id, copy);
+		BBitmap* copy = NULL;
+		if (!taken)
+			copy = picture;
+		else if (picture != NULL) {
+			copy = new(std::nothrow) BBitmap(picture);
+			if (copy != NULL && copy->InitCheck() != B_OK) {
+				delete copy;
+				copy = NULL;
+			}
 		}
+		shelf.row->SetPicture(id, copy);
+		taken = true;
 	}
-	if (!found)
+	if (!taken)
 		delete picture;
 }
 
