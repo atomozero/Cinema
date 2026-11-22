@@ -885,7 +885,7 @@ Player::_LiveLoad()
 	seconds on time; not while it starts.
 */
 void
-Player::_LiveLateness(bool late)
+Player::_LiveLateness(bool late, int64 behind)
 {
 	if (_LiveClock() - fClockBase < kSettling)
 		return;
@@ -900,10 +900,12 @@ Player::_LiveLateness(bool late)
 			_LiveSkip(fLiveSkipLevel < 2 ? 2 : 3);
 			fLiveLate = 0;
 		}
-		// still late with the reference pictures only, for seconds: the key
-		// frames. The sound, on a thread of its own, no longer runs out to
-		// say it (_LiveLoad())
-		if (fLiveSkipLevel == 3 && fLiveLate >= 24
+		// the pictures fallen well behind the sound with the reference ones
+		// only: the key frames, until they catch up. Pictures a little late
+		// still move, where the key frames show one every second or two;
+		// the sound, on a thread of its own, no longer runs out to say it
+		// (_LiveLoad())
+		if (fLiveSkipLevel == 3 && behind > 1500000
 			&& system_time() - fLiveLevelSince > 3000000) {
 			_LiveSkip(4);
 			fLiveLate = 0;
@@ -1371,7 +1373,7 @@ Player::_LiveLoop()
 				drop = after != AV_NOPTS_VALUE && after <= now;
 			}
 			if (known)
-				_LiveLateness(late);
+				_LiveLateness(late, now - at);
 			if (late)
 				lateCount++;
 			if (drop)
@@ -1388,9 +1390,16 @@ Player::_LiveLoop()
 		return true;
 	};
 
+	// how many pictures decoded may wait: one with the key frames only,
+	// which are seconds apart, or the decoder runs that far ahead of the
+	// clock, and going back to more pictures holds the video as long
+	auto mostFrames = [&]() -> size_t {
+		return fLiveSkipLevel >= 4 ? 1 : maxDecodedFrames;
+	};
+
 	// decodes the pictures near the clock, or any once the queue is long
 	auto pumpVideo = [&](bool all) -> bool {
-		while (!packets.empty() && frames.size() < maxDecodedFrames
+		while (!packets.empty() && frames.size() < mostFrames()
 			&& !fQuit) {
 			AVPacket* next = packets.front();
 			if (!all) {
@@ -1803,7 +1812,7 @@ Player::_LiveLoop()
 			_LiveLoad();
 
 		// without sound nothing else paces the reading
-		if (!failed && video >= 0 && frames.size() >= maxDecodedFrames
+		if (!failed && video >= 0 && frames.size() >= mostFrames()
 			&& queuedSpan() >= maxQueuedVideo && !showFrames(true))
 			failed = true;
 	}

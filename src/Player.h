@@ -192,7 +192,7 @@ private:
 			void				_LiveLoop();
 			int					_LiveVideoStream(int32 maxHeight);
 			void				_LiveSkip(int level);
-			void				_LiveLateness(bool late);
+			void				_LiveLateness(bool late, int64 behind);
 			void				_LiveLoad();
 			void				_Struggling();
 			bool				_LiveRender(AVFrame* frame);
