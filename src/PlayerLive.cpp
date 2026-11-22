@@ -1386,6 +1386,12 @@ Player::_LiveLoop()
 				return false;
 			if (!drop)
 				started = true;
+			// the key frames only were to catch up with the sound: one shown
+			// on time, it has, and the reference pictures come again. A
+			// film may have a key frame every eight seconds, which is all
+			// that level shows
+			if (!drop && !late && known && fLiveSkipLevel >= 4)
+				_LiveSkip(3);
 		}
 		return true;
 	};
