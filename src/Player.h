@@ -270,7 +270,8 @@ private:
 			PlayerStatistics	fStats;
 			bool				fHasStats = false;
 			int					fLivePixels;	// AVPixelFormat of the bitmaps
-			int64				fLiveBase;		// stream time of the clock's 0
+			std::atomic<int64>	fLiveBase;		// stream time of the clock's 0;
+										// set by the thread of the sound too
 			int64				fLiveSoundEnd;	// stream time of the sound queued
 			std::vector<uint8>	fLivePcm;
 			std::vector<float>	fLiveFloat;	// out of the resampler

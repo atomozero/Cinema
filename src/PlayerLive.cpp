@@ -42,6 +42,9 @@ extern "C" {
 #include <deque>
 #include <string>
 #include <memory>
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
 #include <mutex>
 #include <thread>
 
@@ -897,6 +900,14 @@ Player::_LiveLateness(bool late)
 			_LiveSkip(fLiveSkipLevel < 2 ? 2 : 3);
 			fLiveLate = 0;
 		}
+		// still late with the reference pictures only, for seconds: the key
+		// frames. The sound, on a thread of its own, no longer runs out to
+		// say it (_LiveLoad())
+		if (fLiveSkipLevel == 3 && fLiveLate >= 24
+			&& system_time() - fLiveLevelSince > 3000000) {
+			_LiveSkip(4);
+			fLiveLate = 0;
+		}
 	} else {
 		fLiveLate = 0;
 		// from the key frames only, the time says when to try again
@@ -1252,7 +1263,8 @@ Player::_LiveLoop()
 
 	// CINEMA_LIVE_DEBUG=1: what happens, every five seconds
 	const bool debug = getenv("CINEMA_LIVE_DEBUG") != NULL;
-	int decoded = 0, shown = 0, dropped = 0, lateCount = 0, audioFrames = 0;
+	int decoded = 0, shown = 0, dropped = 0, lateCount = 0;
+	std::atomic<int> audioFrames(0);
 	bigtime_t nextReport = system_time() + 5000000;
 	// for the statistics, every second
 	int droppedAll = 0, shownSecond = 0;
@@ -1293,7 +1305,7 @@ Player::_LiveLoop()
 	// when the last sound was read: a file whose sound ends before its
 	// pictures has the clock go on without it, two seconds of nothing
 	// later, or the pictures would wait for it and the reading for them
-	bigtime_t lastSound = system_time();
+	std::atomic<bigtime_t> lastSound(system_time());
 	// packets of sound read and not handled yet: with them waiting, the
 	// sound is not over, only late, on a processor that cannot keep up
 	std::atomic<int32> soundQueued(0);
@@ -1376,14 +1388,6 @@ Player::_LiveLoop()
 		return true;
 	};
 
-	// seconds of sound in the ring, for the sound player
-	auto soundQueuedSeconds = [&]() -> double {
-		if (audio < 0 || fFrameSize == 0 || fSound.frame_rate <= 0)
-			return 1e9;
-		BAutolock ring(fRingLock);
-		return fRingFill / (double)fFrameSize / fSound.frame_rate;
-	};
-
 	// decodes the pictures near the clock, or any once the queue is long
 	auto pumpVideo = [&](bool all) -> bool {
 		while (!packets.empty() && frames.size() < maxDecodedFrames
@@ -1460,35 +1464,16 @@ Player::_LiveLoop()
 		return true;
 	};
 
-	// the sound waiting for room in the ring, the pictures shown meanwhile
-	auto queueSound = [&]() -> bool {
-		size_t offset = 0;
-		while (offset < fLivePcm.size() && !fQuit) {
-			size_t room;
-			{
-				BAutolock ring(fRingLock);
-				room = fRing.size() - fRingFill;
-			}
-			room -= room % fFrameSize;
-			if (room == 0) {
-				if (video >= 0 && (!pumpVideo(false) || !showFrames(false)))
-					return false;
-				snooze_until(system_time() + 5000,
-					B_SYSTEM_TIMEBASE);
-				continue;
-			}
-			size_t bytes = std::min(room, fLivePcm.size() - offset);
-			_LiveQueueSound(fLivePcm.data() + offset, bytes);
-			offset += bytes;
-		}
-		fLivePcm.clear();
-		return true;
-	};
 
 	// the network apart: reading a segment of HLS may hold av_read_frame()
 	// for a second or more, while the pictures have to go on
 	std::mutex readLock;
 	std::deque<AVPacket*> read;
+	// the sound read, for the thread of the sound: it never waits for the
+	// pictures, which a slow processor decodes late
+	std::deque<AVPacket*> soundRead;
+	std::condition_variable soundCome;
+	std::atomic<bool> soundStop(false);
 	bool readEnded = false;
 	// the network failed, rather than the video ending
 	bool readFailed = false;
@@ -1498,8 +1483,14 @@ Player::_LiveLoop()
 		while (got != NULL && !fQuit && !fLiveStopRead) {
 			bool full;
 			{
+				// not when one queue alone is full: an MP4 has a second of
+				// each in turn, and the sound waiting for room in the ring
+				// would hold the pictures. Both enough, or far too much
 				std::lock_guard<std::mutex> locker(readLock);
-				full = read.size() >= maxReadPackets;
+				size_t soundEnough = audio >= 0 ? 150 : 0;
+				full = (read.size() >= maxReadPackets
+						&& soundRead.size() >= soundEnough)
+					|| read.size() + soundRead.size() >= maxReadPackets * 2;
 			}
 			if (full) {
 				snooze_until(system_time() + 20000,
@@ -1526,10 +1517,13 @@ Player::_LiveLoop()
 				break;
 			}
 			av_packet_move_ref(copy, got);
-			if (copy->stream_index == audio)
-				soundQueued++;
 			std::lock_guard<std::mutex> locker(readLock);
-			read.push_back(copy);
+			if (copy->stream_index == audio) {
+				soundQueued++;
+				soundRead.push_back(copy);
+				soundCome.notify_one();
+			} else
+				read.push_back(copy);
 		}
 		av_packet_free(&got);
 	};
@@ -1546,10 +1540,90 @@ Player::_LiveLoop()
 			}
 			std::lock_guard<std::mutex> locker(readLock);
 			readEnded = true;
+			soundCome.notify_one();
 		});
 	} catch (...) {
 		failed = true;
 		readEnded = true;
+	}
+
+	// the sound, on a thread of its own above the decoders of the pictures:
+	// decoded, evened and put in the ring as it is read, whatever the
+	// pictures do. It owns the decoder of the sound, the resampler, and
+	// fLivePcm; done once all that was read is in the ring
+	std::atomic<bool> soundDone(audio < 0);
+	auto soundLoop = [&]() {
+		rename_thread(find_thread(NULL), "player sound");
+		set_thread_priority(find_thread(NULL), B_URGENT_DISPLAY_PRIORITY);
+		AVFrame* got = av_frame_alloc();
+		while (got != NULL && !fQuit && !soundStop) {
+			AVPacket* next = NULL;
+			{
+				std::unique_lock<std::mutex> locker(readLock);
+				if (soundRead.empty() && !readEnded)
+					soundCome.wait_for(locker, std::chrono::milliseconds(20));
+				if (!soundRead.empty()) {
+					next = soundRead.front();
+					soundRead.pop_front();
+				} else if (readEnded)
+					break;
+			}
+			if (next == NULL)
+				continue;
+			lastSound = system_time();
+			int status = avcodec_send_packet(fLiveAudio, next);
+			av_packet_free(&next);
+			soundQueued--;
+			while (status >= 0 && !fQuit && !soundStop
+				&& avcodec_receive_frame(fLiveAudio, got) == 0) {
+				int64 micros = _LiveFrameMicros(audio, got);
+				if (micros != AV_NOPTS_VALUE && micros < fLiveSkipBefore) {
+					// before where it was asked to start
+					av_frame_unref(got);
+					continue;
+				}
+				if (fLiveBase == AV_NOPTS_VALUE && micros != AV_NOPTS_VALUE) {
+					// the clock starts where the sound does (the relay
+					// from fStartAt)
+					fLiveBase = micros - fClockBase;
+					fLiveSoundEnd = micros;
+				}
+				audioFrames++;
+				_LiveAlignSound(micros);
+				_LivePushSound(got);
+				av_frame_unref(got);
+				// waiting for room in the ring, which the sound player
+				// empties as it plays (not while paused)
+				size_t offset = 0;
+				while (offset < fLivePcm.size() && !fQuit && !soundStop) {
+					size_t room;
+					{
+						BAutolock ring(fRingLock);
+						room = fRing.size() - fRingFill;
+					}
+					room -= room % fFrameSize;
+					if (room == 0) {
+						snooze_until(system_time() + 5000, B_SYSTEM_TIMEBASE);
+						continue;
+					}
+					size_t bytes = std::min(room, fLivePcm.size() - offset);
+					_LiveQueueSound(fLivePcm.data() + offset, bytes);
+					offset += bytes;
+				}
+				fLivePcm.clear();
+			}
+		}
+		av_frame_free(&got);
+		soundDone = true;
+	};
+	std::thread sound;
+	if (audio >= 0 && !failed) {
+		try {
+			sound = std::thread(soundLoop);
+		} catch (...) {
+			failed = true;
+			soundDone = true;
+		}
 	}
 
 	// a file read from the network (a server of the home network, the
@@ -1590,8 +1664,6 @@ Player::_LiveLoop()
 			if (!read.empty()) {
 				next = read.front();
 				read.pop_front();
-				if (next->stream_index == audio)
-					soundQueued--;
 			}
 			ended = next == NULL && readEnded;
 		}
@@ -1607,11 +1679,8 @@ Player::_LiveLoop()
 			av_packet_free(&next);
 		}
 		if (ended) {
-			// the end: what is still there. The sound too, and then the
-			// clock goes on without it
-			fAudioEnded = true;
-			// an empty packet: the decoder gives the pictures it still
-			// holds, the last ones of the video
+			// the end: what is still there. An empty packet: the decoder
+			// gives the pictures it still holds, the last ones of the video
 			if (video >= 0) {
 				if (AVPacket* flush = av_packet_alloc())
 					packets.push_back(flush);
@@ -1620,6 +1689,10 @@ Player::_LiveLoop()
 				if (!pumpVideo(true) || !showFrames(true))
 					failed = true;
 			}
+			// the sound all in the ring, then the clock goes on without it
+			while (!fQuit && !failed && !soundDone)
+				snooze_until(system_time() + 10000, B_SYSTEM_TIMEBASE);
+			fAudioEnded = true;
 			break;
 		}
 
@@ -1627,52 +1700,10 @@ Player::_LiveLoop()
 			if (AVPacket* copy = av_packet_clone(packet))
 				packets.push_back(copy);
 			av_packet_unref(packet);
-		} else if (packet->stream_index == audio && audio >= 0) {
-			lastSound = system_time();
-			int status = avcodec_send_packet(fLiveAudio, packet);
-			av_packet_unref(packet);
-			while (status >= 0 && !fQuit
-				&& avcodec_receive_frame(fLiveAudio, frame) == 0) {
-				int64 micros = _LiveFrameMicros(audio, frame);
-				if (micros != AV_NOPTS_VALUE && micros < fLiveSkipBefore) {
-					// before where it was asked to start
-					av_frame_unref(frame);
-					continue;
-				}
-				if (fLiveBase == AV_NOPTS_VALUE && micros != AV_NOPTS_VALUE) {
-					// the clock starts where the sound does (the relay
-					// from fStartAt)
-					fLiveBase = micros - fClockBase;
-					fLiveSoundEnd = micros;
-				}
-				audioFrames++;
-				_LiveAlignSound(micros);
-				_LivePushSound(frame);
-				av_frame_unref(frame);
-				if (!queueSound()) {
-					failed = true;
-					break;
-				}
-			}
 		} else
 			av_packet_unref(packet);
 
-		// less than a second of sound, and sound read waiting: the pictures
-		// wait in their queue (as long as it is not full) and the loop reads
-		// on to the sound. A processor behind decoded the pictures one after
-		// the other while the sound read between them (an MP4 has a second
-		// of each in turn) came that slowly, and ran out; now the sound goes
-		// on, the clock with it, and the pictures late for it are dropped
-		bool soundWaiting;
-		{
-			std::lock_guard<std::mutex> locker(readLock);
-			soundWaiting = soundQueued > 0;
-		}
-		bool soundFirst = audio >= 0 && video >= 0 && !fAudioEnded
-			&& soundWaiting && queuedSpan() < maxQueuedVideo
-			&& soundQueuedSeconds() < 1.0;
-		if (video >= 0 && ((!soundFirst && !pumpVideo(false))
-				|| !showFrames(false)))
+		if (video >= 0 && (!pumpVideo(false) || !showFrames(false)))
 			failed = true;
 
 		if (debug && system_time() > nextReport) {
@@ -1703,7 +1734,7 @@ Player::_LiveLoop()
 				"(%.1fs) frames %zu read %zu sound %.2fs | %s cinema %.0f%% "
 				"system %.0f%% | level %.1f dB gain %+.1f dB%s\n", decoded,
 				shown, dropped,
-				lateCount, audioFrames, fLiveSkipLevel, _LiveClock() / 1e6,
+				lateCount, audioFrames.load(), fLiveSkipLevel, _LiveClock() / 1e6,
 				head / 1e6, packets.size(), queuedSpan() / 1e6, frames.size(),
 				readCount,
 				fFrameSize > 0 && fSound.frame_rate > 0
@@ -1778,9 +1809,15 @@ Player::_LiveLoop()
 	}
 
 	fLiveStopRead = true;
+	soundStop = true;
+	soundCome.notify_all();
 	if (reader.joinable())
 		reader.join();
+	if (sound.joinable())
+		sound.join();
 	for (AVPacket* queued : read)
+		av_packet_free(&queued);
+	for (AVPacket* queued : soundRead)
 		av_packet_free(&queued);
 	for (AVPacket* queued : packets)
 		av_packet_free(&queued);
