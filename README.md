@@ -56,8 +56,8 @@ YouTube a size larger or smaller, from 360p to 2160p as far as the screen
 and the processor allow (480p on 32-bit ARM, 1080p with fewer than four
 processors): it plays on until the
 new one is found, then goes on from the same point. The video
-quality is in the settings: Automatic means 360p on 32-bit ARM (480p for a
-download) and 720p elsewhere, never above what the screen shows, and you can
+quality is in the settings: Automatic means 480p on 32-bit ARM and 720p
+elsewhere, never above what the screen shows, and you can
 ask for anything from 360p to 2160p within that. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for
 the player: Cinema finds them through YouTube's client for visionOS, in a second

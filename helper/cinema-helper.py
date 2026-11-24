@@ -759,14 +759,14 @@ def limited(height):
 
 
 def wanted_height():
-	return limited(HEIGHT[0] or (360 if SLOW_MACHINE else 720))
+	"""The height of a video played: the one chosen, or 720p, 480p on a
+	slow machine (the AC100 plays it smoothly, and finds its two streams in
+	seconds through the quick client of YouTube)."""
+	return limited(HEIGHT[0] or (480 if SLOW_MACHINE else 720))
 
 
 def download_height():
-	"""The height of a download: as for playing, but 480p on a slow
-	machine, which plays a 480p file smoothly with FFmpeg and the overlay
-	(the AC100) while finding the two streams of YouTube to play them at
-	once takes it a minute and a half."""
+	"""The height of a download: as for playing."""
 	return limited(HEIGHT[0] or (480 if SLOW_MACHINE else 720))
 
 
@@ -1518,6 +1518,10 @@ class YouTubeProvider(Provider):
 			# 360p, which Cinema says, and short of memory only with
 			# enough of it free
 			javascript = bool(shutil.which("qjs") or shutil.which("node"))
+			# a slow machine left to choose: the 360p file rather than a
+			# minute and a half of JavaScript when the quick way fails
+			if SLOW_MACHINE and not HEIGHT[0]:
+				javascript = False
 			found = self.find_separate(url, wanted_height(), False)
 			if not found and javascript and not SHORT_OF_MEMORY:
 				found = self.find_separate(url, wanted_height())
@@ -1528,7 +1532,8 @@ class YouTubeProvider(Provider):
 						found = self.find_separate(url, wanted_height())
 					# else 360p, which needs no JavaScript, rather than the
 					# machine stopping
-			if not found and not javascript:
+			if not found and not javascript and not (SLOW_MACHINE
+					and not HEIGHT[0]):
 				NOTES[media_id] = "javascript"
 			if found:
 				return found
