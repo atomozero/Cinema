@@ -16,14 +16,16 @@
 	seconds since Cinema started, on stderr. What is measured to make it
 	quicker.
 */
+extern bigtime_t gTimingStart;
+	// when Cinema started (App.cpp): one for all the files
+
 static inline void
 TimingMark(const char* what, const char* detail = "")
 {
 	static const bool on = getenv("CINEMA_TIMING") != NULL;
-	static const bigtime_t start = system_time();
 	if (on)
 		fprintf(stderr, "timing %8.3f  %s %s\n",
-			(system_time() - start) / 1e6, what, detail);
+			(system_time() - gTimingStart) / 1e6, what, detail);
 }
 
 

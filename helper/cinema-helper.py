@@ -390,7 +390,23 @@ def finite(value):
 	return value
 
 
+# CINEMA_TIMING=1: when each request comes and is answered, on stderr
+TIMING = bool(os.environ.get("CINEMA_TIMING"))
+TIMING_START = time.time()
+
+
+def timing(what):
+	if TIMING:
+		sys.stderr.write("helper %8.3f  %s\n" % (time.time() - TIMING_START,
+			what))
+		sys.stderr.flush()
+
+
 def answer(message):
+	if TIMING and message.get("type") in ("results", "nothing", "found",
+			"details", "lost"):
+		timing("answer %s tag %s %s" % (message.get("type"),
+			message.get("tag", ""), message.get("id", "")))
 	# always a line: what cannot be written is written as text, and an
 	# answer is never lost to a value json does not take
 	try:
@@ -554,6 +570,7 @@ def cached(name, fetch, fresh=None, stale=None):
 		except (OSError, ValueError):
 			pass
 
+	timing("not cached: " + name[:60])
 	videos = fetch()
 	if path and videos:
 		store_videos(path, videos)
@@ -4151,6 +4168,11 @@ def job_check():
 
 
 def work(request):
+	if TIMING and request.get("type") in ("search", "channel", "find",
+			"details"):
+		timing("asked %s tag %s %s" % (request.get("type"),
+			request.get("tag", ""), str(request.get("query")
+			or request.get("channel") or request.get("id") or "")[:40]))
 	if "height" in request:
 		HEIGHT[0] = max(0, as_int(request.get("height"), 0))
 	if "limit" in request:

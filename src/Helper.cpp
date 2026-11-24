@@ -128,9 +128,13 @@ Helper::Start(const char* script, const char* cache)
 	if (fProcess == 0) {
 		dup2(toHelper[0], STDIN_FILENO);
 		dup2(fromHelper[1], STDOUT_FILENO);
-		int null = open("/dev/null", O_WRONLY);
-		if (null >= 0)
-			dup2(null, STDERR_FILENO);
+		// CINEMA_TIMING=1: the helper says when it answers, on Cinema's
+		// stderr; otherwise what it writes there is not kept
+		if (getenv("CINEMA_TIMING") == NULL) {
+			int null = open("/dev/null", O_WRONLY);
+			if (null >= 0)
+				dup2(null, STDERR_FILENO);
+		}
 		close(toHelper[0]);
 		close(toHelper[1]);
 		close(fromHelper[0]);

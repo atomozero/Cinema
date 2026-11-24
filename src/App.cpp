@@ -15,6 +15,9 @@
 #include <String.h>
 
 #include "Timing.h"
+
+
+bigtime_t gTimingStart = system_time();
 #include "Feeds.h"
 #include "LiveAddress.h"
 #include "CinemaWindow.h"
