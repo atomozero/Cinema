@@ -296,6 +296,7 @@ private:
 
 			BSoundPlayer*		fSoundPlayer;
 			std::vector<BSoundPlayer*> fOldSoundPlayers;
+			bool				fTimingShown = false;
 									// gone silent, kept until the close:
 									// other threads may still ask them
 			media_raw_audio_format fSound;

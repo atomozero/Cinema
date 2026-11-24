@@ -13,6 +13,7 @@
  */
 
 
+#include "Timing.h"
 #include "Player.h"
 
 extern "C" {
@@ -474,6 +475,7 @@ Player::_OpenLive()
 	fLiveStarveSince = 0;
 	fLiveKeyWait = 10000000;
 	fStruggleSent = false;
+	fTimingShown = false;
 	{
 		BAutolock locker(fStatsLock);
 		fHasStats = false;
@@ -1058,6 +1060,10 @@ keep_bitmap_bits(void*, uint8_t*)
 bool
 Player::_LiveRender(AVFrame* frame)
 {
+	if (!fTimingShown) {
+		fTimingShown = true;
+		TimingMark("first picture");
+	}
 	if (fBack == NULL)
 		return true;
 	int width = fBack->Bounds().IntegerWidth() + 1;

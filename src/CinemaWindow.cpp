@@ -4,6 +4,7 @@
  */
 
 
+#include "Timing.h"
 #include "CinemaWindow.h"
 
 #include <Alert.h>
@@ -568,6 +569,7 @@ CinemaWindow::_LowerQuality(int32 height)
 void
 CinemaWindow::_PlayerOpened()
 {
+	TimingMark("player opened");
 	// only sound, a podcast say: its picture in place of the pictures
 	if (!fPlayer->HasVideo()) {
 		BString picture(fWorker->Cache());
@@ -1285,6 +1287,7 @@ CinemaWindow::_Retranslate()
 void
 CinemaWindow::_LoadHome()
 {
+	TimingMark("home asked");
 	fHomeStale = false;
 	fHomeRequests.clear();
 	fHomeQueue.clear();
@@ -1375,6 +1378,9 @@ CinemaWindow::_StartHomeRequests()
 void
 CinemaWindow::_HomeResults(BMessage* message, int32 shelf)
 {
+	BString which;
+	which << shelf;
+	TimingMark("home shelf", which.String());
 	std::vector<MediaItem> videos = _Videos(message);
 	if (videos.empty())
 		fHome->SetShelfMessage(shelf, B_TRANSLATE("No videos found"));
@@ -1556,6 +1562,7 @@ CinemaWindow::_Find(const BString& id)
 	if (fFinding.count(id) != 0)
 		return;
 	fFinding.insert(id);
+	TimingMark("find", id.String());
 	fHelper->Find(id.String(), _ProviderOf(id).String());
 }
 
@@ -2055,6 +2062,14 @@ CinemaWindow::MessageReceived(BMessage* message)
 			break;
 		}
 		case kMsgThumbnail:
+		{
+			static int32 pictures = 0;
+			if (++pictures == 1 || pictures % 10 == 0) {
+				BString count;
+				count << pictures;
+				TimingMark("pictures", count.String());
+			}
+		}
 		{
 			int32 generation = message->GetInt32("generation", -1);
 			// read and made small by the worker already, as a bitmap of
@@ -2778,6 +2793,7 @@ CinemaWindow::MessageReceived(BMessage* message)
 				message->GetString("title", ""), true);
 			break;
 		case kMsgStreamReady:
+			TimingMark("stream ready");
 		{
 			BString id = message->GetString("id", "");
 			fFinding.erase(id);

@@ -14,6 +14,7 @@
 #include <Path.h>
 #include <String.h>
 
+#include "Timing.h"
 #include "Feeds.h"
 #include "LiveAddress.h"
 #include "CinemaWindow.h"
@@ -158,7 +159,9 @@ public:
 	virtual void ReadyToRun()
 	{
 		_RegisterTypes();
+		TimingMark("window made");
 		_Window()->Show();
+		TimingMark("window shown");
 	}
 
 private:
@@ -239,6 +242,7 @@ private:
 int
 main()
 {
+	TimingMark("start");
 	App app;
 	app.Run();
 	return 0;

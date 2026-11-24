@@ -4,6 +4,7 @@
  */
 
 
+#include "Timing.h"
 #include "Helper.h"
 
 #include <errno.h>
@@ -578,6 +579,7 @@ Helper::_Handle(const BString& line)
 	BString fallback = _Provider(NULL);
 
 	if (type == "ready") {
+		TimingMark("helper ready");
 		fReady = true;
 		return;
 	}
