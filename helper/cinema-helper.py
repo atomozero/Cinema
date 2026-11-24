@@ -1463,48 +1463,73 @@ class YouTubeProvider(Provider):
 		return ("bv*[height<=%d][height>1080][vcodec^=vp09.00]"
 			"+ba[acodec^=opus][protocol^=https]/" % height) + h264
 
-	def find_separate(self, url, height):
+	# the client of the visionOS player: the separate files of a video in
+	# a second or two, without its JavaScript, where the clients that need
+	# it take five to ten (and the memory of the AC100)
+	QUICK_CLIENT = {"youtube": {"player_client": ["visionos"]}}
+
+	def find_quick(self, url, height):
+		"""What find_separate() finds, through QUICK_CLIENT, or None."""
+		options = dict(self.OPTIONS, format=self.separate(height),
+			extractor_args=self.QUICK_CLIENT)
+		try:
+			with self.borrowed(self, ("quick", height), options) as ydl:
+				return ydl.extract_info(url, download=False)
+		except Exception:
+			return None
+
+	def find_separate(self, url, height, javascript=True):
 		"""The address of the relay that plays the picture and the sound
-		of the video together, or None. Only the web client gives them,
-		with JavaScript: slow on the AC100, a few seconds elsewhere."""
+		of the video together, or None. Through QUICK_CLIENT first; with
+		javascript, then through the web client, which runs the JavaScript
+		of YouTube: slow on the AC100, a few seconds elsewhere."""
 		if not shutil.which("ffmpeg"):
 			# the relay needs it
 			return None
-		options = dict(self.OPTIONS, format=self.separate(height),
-			js_runtimes=self.JS_RUNTIMES)
-		try:
-			with yt_dlp.YoutubeDL(options) as ydl:
-				info = ydl.extract_info(url, download=False)
-		except Exception:
+		info = self.find_quick(url, height)
+		if not self.separate_ok(info) and javascript:
+			options = dict(self.OPTIONS, format=self.separate(height),
+				js_runtimes=self.JS_RUNTIMES)
+			try:
+				with yt_dlp.YoutubeDL(options) as ydl:
+					info = ydl.extract_info(url, download=False)
+			except Exception:
+				return None
+		if not self.separate_ok(info):
 			return None
 		formats = info.get("requested_formats") or []
-		if len(formats) != 2 or not all(f.get("url") for f in formats) \
-				or as_int(formats[0].get("height"), 0) <= 360:
-			# not better than the single file
-			return None
 		inputs = [{"url": f["url"], "headers": f.get("http_headers") or {},
 			"codec": f.get("vcodec") or f.get("acodec") or ""}
 			for f in formats]
 		return RELAY.address(inputs, info.get("duration") or 0)
 
+	@staticmethod
+	def separate_ok(info):
+		"""Whether yt-dlp found a picture above 360p and its sound."""
+		formats = (info or {}).get("requested_formats") or []
+		return len(formats) == 2 and all(f.get("url") for f in formats) \
+			and as_int(formats[0].get("height"), 0) > 360
+
 	def find(self, media_id, kind="video"):
 		url = "https://www.youtube.com/watch?v=" + media_id
-		# above 360p needs the JavaScript of YouTube run: without QuickJS
-		# or Node.js it stays at 360p, which Cinema says
-		if wanted_height() > 360 and not (shutil.which("qjs")
-				or shutil.which("node")):
-			NOTES[media_id] = "javascript"
 		if wanted_height() > 360:
-			found = None
-			if not SHORT_OF_MEMORY:
+			# QUICK_CLIENT first, which needs no JavaScript; then the web
+			# client, which runs it: without QuickJS or Node.js it stays at
+			# 360p, which Cinema says, and short of memory only with
+			# enough of it free
+			javascript = bool(shutil.which("qjs") or shutil.which("node"))
+			found = self.find_separate(url, wanted_height(), False)
+			if not found and javascript and not SHORT_OF_MEMORY:
 				found = self.find_separate(url, wanted_height())
-			else:
+			elif not found and javascript:
 				with JS_LOCK:
 					free = free_memory()
 					if free is None or free >= JS_MEMORY:
 						found = self.find_separate(url, wanted_height())
 					# else 360p, which needs no JavaScript, rather than the
 					# machine stopping
+			if not found and not javascript:
+				NOTES[media_id] = "javascript"
 			if found:
 				return found
 		kept = kept_stream(media_id)
@@ -1641,7 +1666,19 @@ class YouTubeProvider(Provider):
 
 		if download_height() > 360 and shutil.which("ffmpeg"):
 			# above 360p, the picture and the sound that ffmpeg puts
-			# together; the single file if they cannot be had
+			# together: through QUICK_CLIENT, without JavaScript, first
+			quick = dict(options, format=self.separate(download_height()),
+				merge_output_format="mp4", extractor_args={"youtube": dict(
+					self.QUICK_CLIENT["youtube"], **youtube_lang())})
+			try:
+				with yt_dlp.YoutubeDL(quick) as ydl:
+					path = fetch(ydl, False)
+				if path:
+					return path
+			except Exception:
+				if media_id in CANCELLED or media_id in PAUSED:
+					raise
+			# then the web client; the single file if they cannot be had
 			better = dict(options, format=self.separate(download_height())
 				+ "/" + self.FORMAT, merge_output_format="mp4",
 				js_runtimes=self.JS_RUNTIMES)

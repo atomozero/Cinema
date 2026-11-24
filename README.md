@@ -60,8 +60,10 @@ quality is in the settings: Automatic means 360p on 32-bit ARM (480p for a
 download) and 720p elsewhere, never above what the screen shows, and you can
 ask for anything from 360p to 2160p within that. Above 360p YouTube
 sends the picture and the sound apart, and `ffmpeg` puts them back together for
-the player, so those videos take longer to start (about a minute and a half on
-the AC100). Up to 1080p they are H.264; 1440p and 2160p exist only in VP9,
+the player: Cinema finds them through YouTube's client for visionOS, in a second
+or two (a few on the AC100) and without running YouTube's JavaScript, and only
+when that fails through the web client, which needs QuickJS or Node.js and takes
+longer. Up to 1080p they are H.264; 1440p and 2160p exist only in VP9,
 which the processor decodes, and Cinema goes a size down by itself when it
 cannot keep up.
 
