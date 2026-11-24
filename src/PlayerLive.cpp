@@ -1567,6 +1567,12 @@ Player::_LiveLoop()
 	// pictures do. It owns the decoder of the sound, the resampler, and
 	// fLivePcm; done once all that was read is in the ring
 	std::atomic<bool> soundDone(audio < 0);
+	// the sound output stopped taking the sound (the media server gone, a
+	// driver stuck): the pictures go on by the time, the sound is let go
+	std::atomic<bool> soundDead(false);
+	bigtime_t stillClock = -1, stillSince = system_time();
+	// not before the clock moved once: the output takes a while to start
+	bool clockMoved = false;
 	auto soundLoop = [&]() {
 		rename_thread(find_thread(NULL), "player sound");
 		set_thread_priority(find_thread(NULL), B_URGENT_DISPLAY_PRIORITY);
@@ -1618,6 +1624,8 @@ Player::_LiveLoop()
 					}
 					room -= room % fFrameSize;
 					if (room == 0) {
+						if (soundDead)
+							break;
 						snooze_until(system_time() + 5000, B_SYSTEM_TIMEBASE);
 						continue;
 					}
@@ -1705,7 +1713,7 @@ Player::_LiveLoop()
 					failed = true;
 			}
 			// the sound all in the ring, then the clock goes on without it
-			while (!fQuit && !failed && !soundDone)
+			while (!fQuit && !failed && !soundDone && !soundDead)
 				snooze_until(system_time() + 10000, B_SYSTEM_TIMEBASE);
 			fAudioEnded = true;
 			break;
@@ -1816,6 +1824,33 @@ Player::_LiveLoop()
 		// pictures are decoded
 		if (started && video >= 0 && audio >= 0 && !fAudioEnded)
 			_LiveLoad();
+
+		// the clock still for two seconds, not paused, with sound waiting
+		// in the ring: the output no longer takes it. The clock follows
+		// what is heard, so the pictures would stop for good; they go on
+		// by the time instead, without the sound
+		if (audio >= 0 && !soundDead && !fClockFree) {
+			bigtime_t clockNow = _LiveClock();
+			bigtime_t now = system_time();
+			size_t fill;
+			{
+				BAutolock ring(fRingLock);
+				fill = fRingFill;
+			}
+			if (fPaused || clockNow != stillClock
+				|| fill < (size_t)fFrameSize * (size_t)fSound.frame_rate / 2) {
+				if (stillClock >= 0 && clockNow != stillClock)
+					clockMoved = true;
+				stillClock = clockNow;
+				stillSince = now;
+			} else if (clockMoved && now - stillSince > 2000000) {
+				if (debug)
+					fprintf(stderr, "live: the sound output stopped at %.2f: "
+						"the pictures go on without it\n", clockNow / 1e6);
+				soundDead = true;
+				_FreeClock();
+			}
+		}
 
 		// without sound nothing else paces the reading
 		if (!failed && video >= 0 && frames.size() >= mostFrames()
