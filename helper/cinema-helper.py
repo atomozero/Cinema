@@ -2189,19 +2189,25 @@ class Relay:
 			time = float(found[0].strip(",")) if found else None
 		except (OSError, ValueError, subprocess.SubprocessError):
 			return None
+		timing("relay key frame %s" % time)
 		if time is None or time < 0 or time > start + 0.001:
 			return None
 		return time
 
 	def command(self, inputs, start):
 		command = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin"]
+		starts = [start] * len(inputs)
 		if start > 0 and len(inputs) > 1:
-			# the picture starts at a key frame, seconds before start maybe:
-			# the sound starts there too, or it would be that much ahead
+			# the picture starts at the key frame before start, seconds
+			# before maybe: the sound starts there too, or it would be that
+			# much ahead. The picture is asked for at start itself, which
+			# lands on that key frame: asked for at the key frame, a file
+			# in blocks of seconds (YouTube's) lands a block earlier, the
+			# sound seconds after the picture
 			key = self.key_frame(inputs[0], start)
 			if key is not None:
-				start = key + 0.001
-		for entry in inputs:
+				starts[1:] = [key + 0.001] * (len(inputs) - 1)
+		for entry, start in zip(inputs, starts):
 			command += self.http_options(entry)
 			# a connection gone quiet ends ffmpeg, and the stream, rather
 			# than holding both forever
@@ -2211,6 +2217,10 @@ class Relay:
 			command += ["-reconnect", "1", "-reconnect_on_network_error", "1",
 				"-reconnect_delay_max", "5"]
 			if start > 0:
+				# times counted from the first one's start for all, or the
+				# sound sought elsewhere would be that much out of step
+				if start != starts[0]:
+					command += ["-itsoffset", "%.3f" % (start - starts[0])]
 				command += ["-ss", "%.3f" % start]
 			command += ["-i", entry["url"]]
 		if len(inputs) > 1:
@@ -2242,6 +2252,7 @@ class Relay:
 			start = max(0.0, float((query.get("t") or ["0"])[0]))
 		except ValueError:
 			start = 0.0
+		timing("relay asked %s at %.1f" % (request.command, start))
 		try:
 			process = subprocess.Popen(self.command(inputs, start),
 				stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
@@ -2262,10 +2273,14 @@ class Relay:
 				if self.container(inputs) == "matroska" else "video/mp2t")
 			request.send_header("Connection", "close")
 			request.end_headers()
+			first = True
 			while True:
 				data = process.stdout.read(65536)
 				if not data:
 					break
+				if first:
+					timing("relay first bytes")
+					first = False
 				request.wfile.write(data)
 		except (OSError, ValueError):
 			# the player went away, or another stream took its place

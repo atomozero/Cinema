@@ -385,6 +385,14 @@ Player::_OpenLive()
 		av_dict_set(&options, "rw_timeout",
 			live.url.StartsWith("http://localhost:") ? "600000000" : "15000000",
 			0);
+		// the relay of the helper: always MPEG-TS (or Matroska) of H.264
+		// and AAC whose parameters come with the first packets, so a second
+		// of it to look at rather than FFmpeg's five, which a video found
+		// again halfway waited for
+		if (fRelay) {
+			av_dict_set(&options, "analyzeduration", "1000000", 0);
+			av_dict_set(&options, "probesize", "1000000", 0);
+		}
 		// not to the relay of the helper: asked again, it would start the
 		// video over from where it was opened, the picture waiting for a
 		// time gone by; the window finds it again instead
