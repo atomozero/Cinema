@@ -202,6 +202,9 @@ Player::_Close(bool keepSubtitles)
 		fAudioThread = -1;
 	}
 	// after the threads that ask it the time
+	for (BSoundPlayer* old : fOldSoundPlayers)
+		delete old;
+	fOldSoundPlayers.clear();
 	delete fSoundPlayer;
 	fSoundPlayer = NULL;
 	_CloseLive();

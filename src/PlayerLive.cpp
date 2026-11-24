@@ -36,6 +36,7 @@ extern "C" {
 #include <Autolock.h>
 #include <Bitmap.h>
 #include <OS.h>
+#include <MediaRoster.h>
 #include <SoundPlayer.h>
 
 #include <algorithm>
@@ -1126,6 +1127,54 @@ Player::_LiveQueueSound(const void* data, size_t bytes)
 }
 
 
+/*!	A new sound output, the old one gone silent (the media server started
+	again): the ring emptied of what the old one did not play, the clock
+	counting again from the sound at micros, which comes next. The old
+	output is kept until the close, as other threads may still ask it the
+	time. False if none can be made yet.
+*/
+bool
+Player::_LiveReviveSound(int64 micros)
+{
+	if (micros == AV_NOPTS_VALUE)
+		return false;
+	BSoundPlayer* player = new(std::nothrow) BSoundPlayer(&fSound, "Cinema",
+		&_PlayBuffer, NULL, this);
+	if (player == NULL)
+		return false;
+	if (player->InitCheck() != B_OK) {
+		delete player;
+		return false;
+	}
+	{
+		BAutolock ring(fRingLock);
+		fRingRead = fRingFill = 0;
+	}
+	fPerformanceStart = 0;
+	{
+		BAutolock locker(fFillLock);
+		fFillCount = fFillNext = 0;
+		fSentFrames = 0;
+	}
+	fPlayed = 0;
+	fLiveSoundEnd = micros;
+	fClockBase = micros - fLiveBase;
+	if (fSoundPlayer != NULL)
+		fOldSoundPlayers.push_back(fSoundPlayer);
+	fSoundPlayer = player;
+	fLatency = player->Latency();
+	_ApplyVolume();
+	bigtime_t performance = player->PerformanceTime();
+	bigtime_t latency = player->Latency();
+	player->Start();
+	if (performance > 0)
+		fPerformanceStart = performance + latency + 5000;
+	player->SetHasData(true);
+	fClockFree = false;
+	return true;
+}
+
+
 /*!	The clock counts the sound played, so sound that never comes, a hole
 	in the stream, would leave it behind for good: short holes are filled
 	with silence, a jump of the times is followed.
@@ -1570,7 +1619,12 @@ Player::_LiveLoop()
 	// the sound output stopped taking the sound (the media server gone, a
 	// driver stuck): the pictures go on by the time, the sound is let go
 	std::atomic<bool> soundDead(false);
+	// the media server is there again: the thread of the sound makes a new
+	// output at its next frame, and the clock follows it again
+	std::atomic<bool> soundRevive(false);
+	std::atomic<bigtime_t> soundBackAt(0);
 	bigtime_t stillClock = -1, stillSince = system_time();
+	bigtime_t lastRevive = 0;
 	// not before the clock moved once: the output takes a while to start
 	bool clockMoved = false;
 	auto soundLoop = [&]() {
@@ -1610,6 +1664,22 @@ Player::_LiveLoop()
 					fLiveSoundEnd = micros;
 				}
 				audioFrames++;
+				if (soundDead) {
+					// no output: the sound kept with the pictures, not ahead
+					// of them, and let go; a new output starts from here
+					while (!soundRevive && !fQuit && !soundStop
+						&& micros != AV_NOPTS_VALUE
+						&& micros - fLiveBase > _LiveClock() + 100000)
+						snooze_until(system_time() + 10000, B_SYSTEM_TIMEBASE);
+					if (!soundRevive || !_LiveReviveSound(micros)) {
+						soundRevive = false;
+						av_frame_unref(got);
+						continue;
+					}
+					soundRevive = false;
+					soundBackAt = system_time();
+					soundDead = false;
+				}
 				_LiveAlignSound(micros);
 				_LivePushSound(got);
 				av_frame_unref(got);
@@ -1829,7 +1899,15 @@ Player::_LiveLoop()
 		// in the ring: the output no longer takes it. The clock follows
 		// what is heard, so the pictures would stop for good; they go on
 		// by the time instead, without the sound
-		if (audio >= 0 && !soundDead && !fClockFree) {
+		if (audio >= 0 && soundDead && !soundRevive
+			&& system_time() - stillSince > 3000000
+			&& system_time() - lastRevive > 3000000
+			&& BMediaRoster::IsRunning()) {
+			lastRevive = system_time();
+			soundRevive = true;
+		}
+		if (audio >= 0 && !soundDead && !fClockFree
+			&& system_time() - soundBackAt > 3000000) {
 			bigtime_t clockNow = _LiveClock();
 			bigtime_t now = system_time();
 			size_t fill;

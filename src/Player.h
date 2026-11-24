@@ -177,6 +177,7 @@ private:
 			void				_SeekTracks(bigtime_t time);
 			void				_CheckEnded();
 			void				_FreeClock();
+			bool				_LiveReviveSound(int64 micros);
 			void				_Failed();
 			status_t			_Tell(BMessage* message);
 			status_t			_Tell(uint32 what);
@@ -294,6 +295,9 @@ private:
 			bool				fHasFrame;
 
 			BSoundPlayer*		fSoundPlayer;
+			std::vector<BSoundPlayer*> fOldSoundPlayers;
+									// gone silent, kept until the close:
+									// other threads may still ask them
 			media_raw_audio_format fSound;
 			size_t				fFrameSize;		// of a sound frame, in bytes
 			bigtime_t			fLatency;
